@@ -2,7 +2,7 @@ require('dotenv').config();
 
 const mongoose = require('mongoose');
 
-const Task = require('./models/task');
+const Task = require('./models/Task');
 
 const migrateTasks = async () => {
 
