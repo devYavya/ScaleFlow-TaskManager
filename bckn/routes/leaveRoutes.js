@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const Leave = require('../models/leave');
-const User = require('../models/user');
+const Leave = require('../models/Leave');
+const User = require('../models/User');
 const { authenticate } = require('../middleware/auth');
 const { requireRole } = require('../middleware/roleCheck');
 const { sendLeaveRequestEmail, sendLeaveApprovalEmail } = require('../utils/emailService');
