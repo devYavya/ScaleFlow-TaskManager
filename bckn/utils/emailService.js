@@ -71,7 +71,7 @@ const sendInvitationEmail = async (email, name, tempPassword, role) => {
             return { success: true, message: 'Mock mode - email not sent' };
         }
         
-        const resetLink = `https://scaleflow-taskmanager.onrender.com/reset-password.html?email=${encodeURIComponent(email)}`;
+        const resetLink = `https://task-tracker.scaleflowsoftware.com/reset-password.html?email=${encodeURIComponent(email)}`;
         
         const mailOptions = {
             from: `"${senderName}" <${senderEmail}>`,
@@ -173,7 +173,7 @@ const sendResetPasswordEmail = async (email, resetToken, name) => {
             return { success: true, message: 'Mock mode' };
         }
         
-        const resetLink = `https://scaleflow-taskmanager.onrender.com/reset-password.html?token=${resetToken}&email=${encodeURIComponent(email)}`;
+        const resetLink = `https://task-tracker.scaleflowsoftware.com/reset-password.html?token=${resetToken}&email=${encodeURIComponent(email)}`;
         
         const mailOptions = {
             from: `"${senderName}" <${senderEmail}>`,
@@ -276,7 +276,7 @@ const sendWelcomeEmail = async (email, name) => {
                             <p>Your account has been successfully activated. You can now log in to ScaleFlow and start managing your tasks.</p>
                             
                             <div style="text-align: center;">
-                                <a href="https://scaleflow-taskmanager.onrender.com" class="btn">🚀 Go to ScaleFlow</a>
+                                <a href="https://task-tracker.scaleflowsoftware.com" class="btn">🚀 Go to ScaleFlow</a>
                             </div>
                             
                             <h3>✨ What you can do:</h3>
@@ -298,7 +298,7 @@ const sendWelcomeEmail = async (email, name) => {
                 </body>
                 </html>
             `,
-            text: `Welcome to ScaleFlow!\n\nHello ${name},\n\nYour account has been activated.\n\nLogin at: https://scaleflow-taskmanager.onrender.com\n\nWhat you can do:\n- Create and manage tasks\n- Collaborate with team members\n- Track your progress\n- Add comments and reviews\n\nBest regards,\nScaleFlow Team`
+            text: `Welcome to ScaleFlow!\n\nHello ${name},\n\nYour account has been activated.\n\nLogin at: https://task-tracker.scaleflowsoftware.com\n\nWhat you can do:\n- Create and manage tasks\n- Collaborate with team members\n- Track your progress\n- Add comments and reviews\n\nBest regards,\nScaleFlow Team`
         };
         
         const info = await transporter.sendMail(mailOptions);
@@ -334,13 +334,13 @@ const sendTaskAssignmentEmail = async (email, name, taskTitle, assignedBy) => {
                     <div style="background: linear-gradient(135deg, #f0f0ff 0%, #e8e8ff 100%); padding: 20px; border-radius: 10px; margin: 20px 0;">
                         <h3 style="margin: 0 0 10px 0;">Task: ${taskTitle}</h3>
                     </div>
-                    <a href="https://scaleflow-taskmanager.onrender.com/developer" 
+                    <a href="https://task-tracker.scaleflowsoftware.com/developer" 
                        style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; display: inline-block;">
                         View Task
                     </a>
                 </div>
             `,
-            text: `New Task Assigned: ${taskTitle}\n\nHello ${name},\n\nYou have been assigned a new task by ${assignedBy}.\n\nLogin to view: https://scaleflow-taskmanager.onrender.com/developer`
+            text: `New Task Assigned: ${taskTitle}\n\nHello ${name},\n\nYou have been assigned a new task by ${assignedBy}.\n\nLogin to view: https://task-tracker.scaleflowsoftware.com/developer`
         };
         
         const info = await transporter.sendMail(mailOptions);
@@ -402,7 +402,7 @@ const sendLeaveRequestEmail = async (leave, developer) => {
                     <p><strong>Reason:</strong> ${leave.reason}</p>
                     <p><strong>Applied On:</strong> ${new Date(leave.appliedOn).toLocaleString()}</p>
                     <hr>
-                    <a href="https://scaleflow-taskmanager.onrender.com/admin" style="background: #6366f1; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Review Request</a>
+                    <a href="https://task-tracker.scaleflowsoftware.com/admin" style="background: #6366f1; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Review Request</a>
                 </div>
             `
         };
@@ -454,7 +454,7 @@ const sendLeaveApprovalEmail = async (leave, developer, status, adminName) => {
                     <p><strong>Reviewed by:</strong> ${adminName}</p>
                     <p><strong>Reviewed on:</strong> ${new Date(leave.approvedAt).toLocaleString()}</p>
                     <hr>
-                    <a href="https://scaleflow-taskmanager.onrender.com/developer" style="background: #6366f1; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">View Dashboard</a>
+                    <a href="https://task-tracker.scaleflowsoftware.com/developer" style="background: #6366f1; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">View Dashboard</a>
                 </div>
             `
         };

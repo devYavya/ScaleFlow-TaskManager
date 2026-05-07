@@ -19,7 +19,12 @@ const leaveRoutes = require('./routes/leaveRoutes');
 const app = express();
 
 // Middleware
-app.use(cors());
+app.use(cors({
+    origin: [
+        'https://task-tracker.scaleflowsoftware.com'
+    ],
+    credentials: true
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
