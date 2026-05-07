@@ -387,7 +387,14 @@
 </div>
 
 <script>
-    const API_URL = 'http://localhost:9040/api';
+    // Use same-origin API in production, localhost backend for local HTML dev.
+    const API_URL = (() => {
+        const host = window.location.hostname;
+        if (host === 'localhost' || host === '127.0.0.1') {
+            return 'http://localhost:9040/api';
+        }
+        return `${window.location.origin}/api`;
+    })();
     let authToken = localStorage.getItem('token') || sessionStorage.getItem('token');
     let currentUser = null;
     let usersData = { all: [] };

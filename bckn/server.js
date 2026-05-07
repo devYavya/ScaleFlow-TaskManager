@@ -137,12 +137,12 @@ mongoose.connect(process.env.MONGODB_URI)
         console.log('MongoDB Connected!');
         console.log('Database:', mongoose.connection.name);
         app.listen(PORT, () => {
-            console.log(`ScaleFlow Server running on http://localhost:${PORT}`);
-            console.log(`Login Page: http://localhost:${PORT}/`);
-            console.log(`Admin Dashboard: http://localhost:${PORT}/admin`);
-            console.log(`User Dashboard: http://localhost:${PORT}/dashboard`);
-            console.log(`Health Check: http://localhost:${PORT}/health`);
-            console.log(`API Endpoint: http://localhost:${PORT}/api\n`);
+            console.log(`ScaleFlow Server running on https://task-tracker.scaleflowsoftware.com`);
+            console.log(`Login Page: https://task-tracker.scaleflowsoftware.com/`);
+            console.log(`Admin Dashboard: https://task-tracker.scaleflowsoftware.com/admin`);
+            console.log(`User Dashboard: https://task-tracker.scaleflowsoftware.com/dashboard`);
+            console.log(`Health Check: https://task-tracker.scaleflowsoftware.com/health`);
+            console.log(`API Endpoint: https://task-tracker.scaleflowsoftware.com/api\n`);
         });
     })
     .catch(err => {
