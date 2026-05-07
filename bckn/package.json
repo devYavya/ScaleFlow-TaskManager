@@ -10,6 +10,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "@getbrevo/brevo": "^5.0.4",
     "bcryptjs": "^2.4.3",
     "brevo": "^1.0.0",
     "cors": "^2.8.6",
