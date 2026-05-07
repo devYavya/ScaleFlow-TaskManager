@@ -1,0 +1,15 @@
+node_modules/
+.env
+logs/
+*.log
+.DS_Store
+dist/
+build/
+coverage/
+.vscode/
+.idea/
+.migrate-task.js
+.seed.js
+.diagnose.js
+.developer-checker.js
+.brevo-verify.js

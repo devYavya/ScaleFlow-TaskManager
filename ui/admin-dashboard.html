@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScaleFlow - Admin Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #f1f5f9; overflow-x: hidden; }
+        
+        .sidebar {
+            position: fixed; left: 0; top: 0; width: 280px; height: 100%;
+            background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
+            color: white; z-index: 100; overflow-y: auto; box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        }
+        .sidebar-header { padding: 30px 24px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .sidebar-header h2 { font-size: 24px; display: flex; align-items: center; gap: 12px; }
+        .sidebar-header h2 i { color: #667eea; font-size: 28px; }
+        .user-profile { padding: 24px; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 12px; }
+        .user-avatar { width: 50px; height: 50px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: bold; }
+        .sidebar-nav { padding: 20px 0; }
+        .nav-item { padding: 12px 24px; margin: 4px 12px; border-radius: 12px; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; gap: 12px; color: #cbd5e1; }
+        .nav-item:hover { background: rgba(102,126,234,0.2); color: white; transform: translateX(5px); }
+        .nav-item.active { background: #667eea; color: white; box-shadow: 0 4px 12px rgba(102,126,234,0.3); }
+        .logout-btn {
+            margin-top: 20px; width: 100%; padding: 12px;
+            background: rgba(239,68,68,0.2); border: none; border-radius: 12px; color: #ef4444;
+            cursor: pointer; display: flex; align-items: center; gap: 10px; justify-content: center; font-weight: 600;
+        }
+        .logout-btn:hover { background: #ef4444; color: white; }
+        
+        .main-content { margin-left: 280px; padding: 24px 32px; min-height: 100vh; }
+        .top-bar { background: white; border-radius: 16px; padding: 20px 24px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        .page-title h1 { font-size: 24px; color: #1e293b; }
+        
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 24px; }
+        .stat-card { background: white; padding: 20px; border-radius: 16px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 8px rgba(0,0,0,0.05); cursor: pointer; transition: all 0.3s; }
+        .stat-card:hover { transform: translateY(-4px); box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
+        .stat-info h3 { font-size: 28px; font-weight: 700; color: #1e293b; }
+        .stat-icon { width: 50px; height: 50px; background: #e0e7ff; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #667eea; font-size: 24px; }
+        
+        .charts-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px; margin-bottom: 24px; }
+        .chart-card { background: white; border-radius: 16px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        .chart-card h3 { margin-bottom: 16px; color: #1e293b; font-size: 16px; }
+        canvas { max-height: 250px; }
+        
+        .section { background: white; border-radius: 16px; padding: 24px; margin-bottom: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px; }
+        .tabs { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+        .tab { padding: 8px 16px; background: #f1f5f9; border: none; cursor: pointer; border-radius: 8px; font-weight: 500; }
+        .tab.active { background: #667eea; color: white; }
+        .table-container { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #e2e8f0; }
+        th { background: #f8fafc; font-weight: 600; color: #1e293b; }
+        
+        .role-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+        .role-admin { background: #e0e7ff; color: #3730a3; }
+        .role-client { background: #fed7aa; color: #9a3412; }
+        .role-developer { background: #d1fae5; color: #065f46; }
+        
+        .status-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+        .status-present { background: #dcfce7; color: #166534; }
+        .status-absent { background: #fee2e2; color: #991b1b; }
+        .status-late { background: #fef3c7; color: #92400e; }
+        .status-half-day { background: #dbeafe; color: #1e40af; }
+        .status-pending { background: #fef3c7; color: #92400e; }
+        .status-approved { background: #dcfce7; color: #166534; }
+        .status-rejected { background: #fee2e2; color: #991b1b; }
+        
+        .btn { background: #667eea; color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: 500; display: inline-flex; align-items: center; gap: 8px; }
+        .btn-success { background: #10b981; }
+        .btn-danger { background: #ef4444; }
+        .btn-warning { background: #f59e0b; }
+        .icon-btn { background: none; border: none; cursor: pointer; padding: 6px; border-radius: 6px; color: #667eea; }
+        .icon-btn:hover { background: #e2e8f0; }
+        
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; z-index: 1000; }
+        .modal-content { background: white; border-radius: 20px; padding: 30px; max-width: 750px; width: 90%; max-height: 85vh; overflow-y: auto; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #e2e8f0; }
+        .close-modal { background: none; border: none; font-size: 24px; cursor: pointer; color: #94a3b8; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: 500; color: #1e293b; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px 12px; border: 1px solid #e2e8f0; border-radius: 8px; font-family: 'Inter', sans-serif; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        
+        .notification { position: fixed; bottom: 20px; right: 20px; padding: 12px 20px; border-radius: 8px; color: white; z-index: 2000; animation: slideInRight 0.3s ease; }
+        .notification.success { background: #10b981; }
+        .notification.error { background: #ef4444; }
+        @keyframes slideInRight { from { transform: translateX(100px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        
+        @media (max-width: 768px) { .sidebar { transform: translateX(-100%); } .main-content { margin-left: 0; padding: 20px; } .form-row { grid-template-columns: 1fr; } }
+        .loading { text-align: center; padding: 40px; color: #94a3b8; }
+        .task-number { font-size: 11px; color: #6366f1; font-weight: 600; margin-bottom: 4px; }
+        
+        .activity-timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+        .activity-item {
+            position: relative;
+            padding: 15px 0 15px 25px;
+            border-left: 2px solid #e2e8f0;
+            margin-left: 10px;
+        }
+        .activity-item:before {
+            content: '';
+            position: absolute;
+            left: -9px;
+            top: 20px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #667eea;
+            border: 2px solid white;
+        }
+        .activity-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+        .activity-status-update { background: #dbeafe; color: #1e40af; }
+        .activity-comment { background: #dcfce7; color: #166534; }
+        .activity-checklist { background: #fef3c7; color: #92400e; }
+        .activity-hours { background: #e0e7ff; color: #3730a3; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="sidebar-header"><h2><i class="fas fa-tasks"></i> ScaleFlow</h2><p>Enterprise Admin Portal</p></div>
+        <div class="user-profile"><div class="user-avatar" id="userAvatar">A</div><div class="user-info"><h4 id="userName">Admin</h4><p>System Administrator</p></div></div>
+        <div class="sidebar-nav">
+            <div class="nav-item active" onclick="showSection('dashboard')"><i class="fas fa-chart-line"></i> Dashboard</div>
+            <div class="nav-item" onclick="showSection('users')"><i class="fas fa-users"></i> User Management</div>
+            <div class="nav-item" onclick="showSection('tasks')"><i class="fas fa-tasks"></i> Task Management</div>
+            <div class="nav-item" onclick="showSection('activity')"><i class="fas fa-history"></i> Developer Activity</div>
+            <div class="nav-item" onclick="showSection('clients')"><i class="fas fa-building"></i> Clients</div>
+            <div class="nav-item" onclick="showSection('attendance')"><i class="fas fa-calendar-check"></i> Attendance</div>
+            <div class="nav-item" onclick="showSection('leaves')"><i class="fas fa-umbrella-beach"></i> Leave Requests</div>
+        </div>
+        <button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+    </div>
+
+    <div class="main-content">
+        <div class="top-bar"><div class="page-title"><h1 id="pageTitle">Dashboard</h1><p id="pageSubtitle">Welcome back! Here's what's happening</p></div></div>
+        <div id="dashboardSection"><div class="stats-grid" id="stats"></div><div class="charts-grid"><div class="chart-card"><h3>Task Status Distribution</h3><canvas id="taskStatusChart"></canvas></div><div class="chart-card"><h3>User Role Distribution</h3><canvas id="userRoleChart"></canvas></div></div></div>
+        <div id="usersSection" style="display:none;"><div class="section"><div class="section-header"><h2>User Management</h2><button class="btn btn-success" onclick="openAddUserModal()"><i class="fas fa-plus"></i> Add User</button></div><div class="tabs"><button class="tab active" onclick="filterUsers('all')">All</button><button class="tab" onclick="filterUsers('admin')">Admins</button><button class="tab" onclick="filterUsers('client')">Clients</button><button class="tab" onclick="filterUsers('developer')">Developers</button></div><div class="table-container"><table id="usersTable"><thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Company</th><th>Status</th><th>Actions</th></tr></thead><tbody></td><td colspan="6" class="loading">Loading...</td></tr></tbody></table></div></div></div>
+        <div id="tasksSection" style="display:none;"><div class="section"><div class="section-header"><h2>Task Management</h2><button class="btn btn-success" onclick="openCreateTaskModal()"><i class="fas fa-plus"></i> Create Task</button></div><div class="table-container"><table id="tasksTable"><thead><tr><th>Task #</th><th>Title</th><th>Assigned To</th><th>Client</th><th>Status</th><th>Priority</th><th>Last Updated</th><th>Actions</th></tr></thead><tbody><tr><td colspan="8" class="loading">Loading...</td></tr></tbody></table></div></div></div>
+        <div id="activitySection" style="display:none;"><div class="section"><div class="section-header"><h2>Developer Task Activity</h2><div class="tabs"><button class="tab active" onclick="filterActivity('all')">All Activities</button><button class="tab" onclick="filterActivity('status')">Status Updates</button><button class="tab" onclick="filterActivity('comment')">Comments</button><button class="tab" onclick="filterActivity('checklist')">Checklist</button><button class="tab" onclick="filterActivity('hours')">Hours Logged</button></div></div><div class="activity-timeline" id="activityContainer"></div></div></div>
+        <div id="clientsSection" style="display:none;"><div class="section"><div class="section-header"><h2>Client Companies</h2></div><div class="table-container"><table id="clientsTable"><thead><tr><th>Company</th><th>Contact</th><th>Email</th><th>Tasks</th><th>Actions</th></tr></thead><tbody><tr><td colspan="5" class="loading">Loading...</td></tr></tbody></table></div></div></div>
+        <div id="attendanceSection" style="display:none;"><div class="section"><div class="section-header"><h2>Attendance Records</h2><button class="btn btn-success" onclick="openMarkAttendanceModal()"><i class="fas fa-plus"></i> Mark Attendance</button></div><div class="table-container"><table id="attendanceTable"><thead><tr><th>Developer</th><th>Date</th><th>Status</th><th>Check In</th><th>Check Out</th><th>Hours</th><th>Work</th><th>Actions</th></tr></thead><tbody><tr><td colspan="8" class="loading">Loading...</td></tr></tbody></table></div></div></div>
+        <div id="leavesSection" style="display:none;"><div class="section"><div class="section-header"><h2>Leave Requests</h2><div class="tabs"><button class="tab active" onclick="filterLeaves('pending')">Pending</button><button class="tab" onclick="filterLeaves('approved')">Approved</button><button class="tab" onclick="filterLeaves('rejected')">Rejected</button></div></div><div class="table-container"><table id="leavesTable"><thead><tr><th>Developer</th><th>Type</th><th>Dates</th><th>Reason</th><th>Status</th><th>Admin Comment</th><th>Actions</th></tr></thead><tbody><tr><td colspan="7" class="loading">Loading...</td></tr></tbody></table></div></div></div>
+    </div>
+
+    <!-- Modals -->
+    <div id="userModal" class="modal"><div class="modal-content"><div class="modal-header"><h2>Add New User</h2><button class="close-modal" onclick="closeModal('userModal')">&times;</button></div><form id="userForm"><div class="form-group"><label>Full Name *</label><input type="text" id="fullName"></div><div class="form-group"><label>Email *</label><input type="email" id="userEmail"></div><div class="form-group"><label>Role *</label><select id="userRole"><option value="admin">Admin</option><option value="client" selected>Client</option><option value="developer">Developer</option></select></div><div class="form-group"><label>Company</label><input type="text" id="userCompany"></div><div style="display:flex;gap:10px;"><button type="button" class="btn" onclick="closeModal('userModal')" style="background:#94a3b8;">Cancel</button><button type="submit" class="btn btn-success">Create User</button></div></form></div></div>
+
+    <div id="taskModal" class="modal"><div class="modal-content"><div class="modal-header"><h2>Create Task</h2><button class="close-modal" onclick="closeModal('taskModal')">&times;</button></div><form id="taskForm"><div class="form-group"><label>Task Title *</label><input type="text" id="taskTitle" required></div><div class="form-group"><label>Description *</label><textarea id="taskDesc" rows="4" required></textarea></div><div class="form-row"><div class="form-group"><label>Client *</label><select id="taskClient" required><option value="">-- Select Client --</option></select></div><div class="form-group"><label>Developer *</label><select id="taskDeveloper" required><option value="">-- Select Developer --</option></select></div></div><div class="form-row"><div class="form-group"><label>Priority</label><select id="taskPriority"><option value="low">Low</option><option value="medium" selected>Medium</option><option value="high">High</option></select></div><div class="form-group"><label>Due Date</label><input type="date" id="dueDate"></div></div><div style="display:flex;gap:10px;"><button type="button" class="btn" onclick="closeModal('taskModal')" style="background:#94a3b8;">Cancel</button><button type="submit" class="btn btn-success">Create Task</button></div></form></div></div>
+
+    <div id="editTaskModal" class="modal"><div class="modal-content"><div class="modal-header"><h2>Edit Task</h2><button class="close-modal" onclick="closeModal('editTaskModal')">&times;</button></div><form id="editTaskForm"><div class="form-group"><label>Task Title</label><input type="text" id="editTaskTitle"></div><div class="form-group"><label>Description</label><textarea id="editTaskDesc" rows="3"></textarea></div><div class="form-row"><div class="form-group"><label>Status</label><select id="editTaskStatus"><option value="todo">Todo</option><option value="in-progress">In Progress</option><option value="completed">Completed</option></select></div><div class="form-group"><label>Priority</label><select id="editTaskPriority"><option value="low">Low</option><option value="medium">Medium</option><option value="high">High</option></select></div></div><div style="display:flex;gap:10px;"><button type="button" class="btn" onclick="closeModal('editTaskModal')" style="background:#94a3b8;">Cancel</button><button type="submit" class="btn btn-success">Save Changes</button></div></form></div></div>
+
+    <div id="attendanceModal" class="modal"><div class="modal-content"><div class="modal-header"><h2>Mark Attendance</h2><button class="close-modal" onclick="closeModal('attendanceModal')">&times;</button></div><form id="attendanceForm"><div class="form-group"><label>Developer</label><select id="attendanceDeveloper" required><option value="">-- Select Developer --</option></select></div><div class="form-group"><label>Date</label><input type="date" id="attendanceDate"></div><div class="form-group"><label>Status</label><select id="attendanceStatus"><option value="present">Present</option><option value="absent">Absent</option><option value="late">Late</option><option value="half-day">Half Day</option></select></div><div class="form-row"><div class="form-group"><label>Check In</label><input type="time" id="checkIn"></div><div class="form-group"><label>Check Out</label><input type="time" id="checkOut"></div></div><div class="form-group"><label>Work Description</label><textarea id="workDescription" rows="2" placeholder="Work done today..."></textarea></div><div style="display:flex;gap:10px;"><button type="button" class="btn" onclick="closeModal('attendanceModal')" style="background:#94a3b8;">Cancel</button><button type="submit" class="btn btn-success">Save Attendance</button></div></form></div></div>
+
+    <div id="leaveActionModal" class="modal"><div class="modal-content"><div class="modal-header"><h2 id="leaveActionTitle">Process Leave Request</h2><button class="close-modal" onclick="closeModal('leaveActionModal')">&times;</button></div><form id="leaveActionForm"><div class="form-group"><label>Admin Comments</label><textarea id="adminComments" rows="3" placeholder="Add comments..."></textarea></div><div style="display:flex;gap:10px;"><button type="button" class="btn" onclick="closeModal('leaveActionModal')" style="background:#94a3b8;">Cancel</button><button type="submit" id="approveBtn" class="btn btn-success">Approve</button><button type="submit" id="rejectBtn" class="btn btn-danger">Reject</button></div></form></div></div>
+
+    <script>
+        const API_URL = 'http://localhost:9040/api';
+        let authToken = localStorage.getItem('token') || sessionStorage.getItem('token');
+        let currentUser = null;
+        let usersData = { all: [] };
+        let tasksData = [];
+        let currentFilter = 'all';
+        let allUsers = [];
+        let attendanceRecords = [];
+        let leavesData = { pending: [], approved: [], rejected: [] };
+        let currentLeaveAction = null;
+        let taskChart = null, userChart = null;
+        let activityFilter = 'all';
+
+        if (!authToken) window.location.href = '/';
+        
+        const savedUser = localStorage.getItem('user') || sessionStorage.getItem('user');
+        if (savedUser) {
+            currentUser = JSON.parse(savedUser);
+            document.getElementById('userName').textContent = currentUser.name;
+            document.getElementById('userAvatar').textContent = currentUser.name.charAt(0);
+        }
+
+        async function loadDashboard() {
+            try {
+                await Promise.all([loadUsers(), loadTasks(), loadAttendance(), loadLeaves()]);
+                updateStats();
+                updateCharts();
+                renderUsersTable();
+                renderTasksTable();
+                renderClientsTable();
+                renderAttendanceTable();
+                renderLeavesTable();
+                renderActivityFeed();
+            } catch (error) { showNotification('Error loading data', 'error'); }
+        }
+
+        async function loadUsers() {
+            const res = await fetch(`${API_URL}/admin/users`, { headers: { 'Authorization': `Bearer ${authToken}` } });
+            const data = await res.json();
+            if (data.users) { usersData = data.users; allUsers = usersData.all || []; }
+        }
+
+        async function loadTasks() {
+            const res = await fetch(`${API_URL}/tasks`, { headers: { 'Authorization': `Bearer ${authToken}` } });
+            const data = await res.json();
+            tasksData = data.tasks || [];
+        }
+
+        async function loadAttendance() {
+            const res = await fetch(`${API_URL}/attendance/all`, { headers: { 'Authorization': `Bearer ${authToken}` } });
+            const data = await res.json();
+            attendanceRecords = data.attendance || [];
+        }
+
+        async function loadLeaves() {
+            const res = await fetch(`${API_URL}/leaves/all`, { headers: { 'Authorization': `Bearer ${authToken}` } });
+            const data = await res.json();
+            leavesData = data.leaves || { pending: [], approved: [], rejected: [] };
+        }
+
+        function getAllActivities() {
+            let activities = [];
+            tasksData.forEach(task => {
+                if (task.activityLogs && task.activityLogs.length) {
+                    task.activityLogs.forEach(log => {
+                        activities.push({
+                            id: log._id,
+                            taskId: task._id,
+                            taskTitle: task.title,
+                            taskNumber: task.taskNumber,
+                            action: log.action,
+                            performedBy: log.performedBy?.name || 'Unknown',
+                            performedByRole: log.performedBy?.role,
+                            oldValue: log.oldValue,
+                            newValue: log.newValue,
+                            timestamp: log.createdAt,
+                            type: log.action === 'TASK_UPDATED' ? 'status' : 
+                                  log.action === 'COMMENT_ADDED' ? 'comment' :
+                                  log.action === 'CHECKLIST_ITEM_ADDED' ? 'checklist' : 'other'
+                        });
+                    });
+                }
+                if (task.comments && task.comments.length) {
+                    task.comments.forEach(comment => {
+                        activities.push({
+                            id: comment._id,
+                            taskId: task._id,
+                            taskTitle: task.title,
+                            taskNumber: task.taskNumber,
+                            action: 'COMMENT_ADDED',
+                            performedBy: comment.author,
+                            performedByRole: comment.authorRole,
+                            newValue: { comment: comment.text },
+                            timestamp: comment.createdAt,
+                            type: 'comment'
+                        });
+                    });
+                }
+            });
+            return activities.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+        }
+
+        function renderActivityFeed() {
+            let activities = getAllActivities();
+            if (activityFilter !== 'all') {
+                activities = activities.filter(a => a.type === activityFilter);
+            }
+            
+            const container = document.getElementById('activityContainer');
+            if (!activities.length) {
+                container.innerHTML = '<div class="loading">No activities found</div>';
+                return;
+            }
+            
+            container.innerHTML = activities.map(act => {
+                let badgeClass = '', badgeText = '';
+                if (act.type === 'status') { badgeClass = 'activity-status-update'; badgeText = 'Status Update'; }
+                else if (act.type === 'comment') { badgeClass = 'activity-comment'; badgeText = 'Comment'; }
+                else if (act.type === 'checklist') { badgeClass = 'activity-checklist'; badgeText = 'Checklist'; }
+                else { badgeClass = 'activity-hours'; badgeText = 'Update'; }
+                
+                let description = '';
+                if (act.action === 'TASK_UPDATED' && act.oldValue?.status && act.newValue?.status) {
+                    description = `Changed status from <strong>${act.oldValue.status}</strong> to <strong>${act.newValue.status}</strong>`;
+                } else if (act.action === 'COMMENT_ADDED') {
+                    description = `Added comment: "${act.newValue?.comment?.substring(0, 100)}${act.newValue?.comment?.length > 100 ? '...' : ''}"`;
+                } else if (act.action === 'CHECKLIST_ITEM_ADDED') {
+                    description = `Added checklist item: "${act.newValue?.text}"`;
+                } else if (act.action === 'TASK_UPDATED' && act.newValue?.actualHours) {
+                    description = `Logged ${act.newValue.actualHours} hours on this task`;
+                } else if (act.action === 'TASK_UPDATED' && act.newValue?.workflowStage) {
+                    description = `Moved workflow to <strong>${act.newValue.workflowStage}</strong>`;
+                } else {
+                    description = act.action?.replace(/_/g, ' ') || 'Updated task';
+                }
+                
+                return `
+                    <div class="activity-item">
+                        <div style="margin-bottom:5px;">
+                            <strong>${escapeHtml(act.performedBy)}</strong> 
+                            <span class="activity-badge ${badgeClass}">${badgeText}</span>
+                        </div>
+                        <div style="font-size:13px; margin:5px 0;">
+                            on task <strong>${escapeHtml(act.taskTitle)}</strong> (${act.taskNumber || act.taskId.slice(-6).toUpperCase()})
+                        </div>
+                        <div style="color:#475569; font-size:13px;">${description}</div>
+                        <div style="font-size:11px; color:#94a3b8; margin-top:5px;">${new Date(act.timestamp).toLocaleString()}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function filterActivity(type) {
+            activityFilter = type;
+            renderActivityFeed();
+            document.querySelectorAll('#activitySection .tabs .tab').forEach(tab => {
+                tab.classList.remove('active');
+                if (tab.textContent.toLowerCase().includes(type === 'all' ? 'all' : 
+                    (type === 'status' ? 'status' : type === 'comment' ? 'comments' : type))) {
+                    tab.classList.add('active');
+                }
+            });
+        }
+
+        async function updateTask(taskId, updates) {
+            const res = await fetch(`${API_URL}/tasks/${taskId}`, {
+                method: 'PUT', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
+                body: JSON.stringify(updates)
+            });
+            if (res.ok) { showNotification('Task updated!', 'success'); await loadTasks(); renderTasksTable(); renderActivityFeed(); return true; }
+            else { showNotification('Update failed', 'error'); return false; }
+        }
+
+        async function deleteTask(taskId) {
+            if (!confirm('Delete this task?')) return;
+            const res = await fetch(`${API_URL}/tasks/${taskId}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${authToken}` } });
+            if (res.ok) { showNotification('Task deleted!', 'success'); loadDashboard(); }
+            else { showNotification('Delete failed', 'error'); }
+        }
+
+        async function deleteUser(userId) {
+            if (!confirm('Delete this user?')) return;
+            const res = await fetch(`${API_URL}/admin/users/${userId}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${authToken}` } });
+            if (res.ok) { showNotification('User deleted!', 'success'); loadDashboard(); }
+            else { showNotification('Delete failed', 'error'); }
+        }
+
+        async function toggleUserStatus(userId, newStatus) {
+            const res = await fetch(`${API_URL}/admin/users/${userId}`, { method: 'PUT', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` }, body: JSON.stringify({ isActive: newStatus }) });
+            if (res.ok) { showNotification(`User ${newStatus ? 'activated' : 'deactivated'}`, 'success'); loadDashboard(); }
+        }
+
+        function updateStats() {
+            const admins = usersData.admins || allUsers.filter(u => u.role === 'admin');
+            const clients = usersData.clients || allUsers.filter(u => u.role === 'client');
+            const developers = usersData.developers || allUsers.filter(u => u.role === 'developer');
+            document.getElementById('stats').innerHTML = `
+                <div class="stat-card" onclick="showSection('users')"><div><h3>${allUsers.length}</h3><p>Total Users</p></div><div class="stat-icon"><i class="fas fa-users"></i></div></div>
+                <div class="stat-card" onclick="showSection('users')"><div><h3>${admins.length}</h3><p>Admins</p></div><div class="stat-icon"><i class="fas fa-shield-alt"></i></div></div>
+                <div class="stat-card" onclick="showSection('clients')"><div><h3>${clients.length}</h3><p>Clients</p></div><div class="stat-icon"><i class="fas fa-building"></i></div></div>
+                <div class="stat-card" onclick="showSection('users')"><div><h3>${developers.length}</h3><p>Developers</p></div><div class="stat-icon"><i class="fas fa-code"></i></div></div>
+            `;
+        }
+
+        function updateCharts() {
+            const todo = tasksData.filter(t => t.status === 'todo').length;
+            const inProgress = tasksData.filter(t => t.status === 'in-progress').length;
+            const completed = tasksData.filter(t => t.status === 'completed').length;
+            const admins = usersData.admins?.length || allUsers.filter(u => u.role === 'admin').length;
+            const clients = usersData.clients?.length || allUsers.filter(u => u.role === 'client').length;
+            const developers = usersData.developers?.length || allUsers.filter(u => u.role === 'developer').length;
+
+            const taskCtx = document.getElementById('taskStatusChart')?.getContext('2d');
+            if (taskCtx) {
+                if (taskChart) taskChart.destroy();
+                taskChart = new Chart(taskCtx, { type: 'doughnut', data: { labels: ['Todo', 'In Progress', 'Completed'], datasets: [{ data: [todo, inProgress, completed], backgroundColor: ['#94a3b8', '#3b82f6', '#10b981'], borderWidth: 0 }] } });
+            }
+            const userCtx = document.getElementById('userRoleChart')?.getContext('2d');
+            if (userCtx) {
+                if (userChart) userChart.destroy();
+                userChart = new Chart(userCtx, { type: 'bar', data: { labels: ['Admins', 'Clients', 'Developers'], datasets: [{ label: 'Count', data: [admins, clients, developers], backgroundColor: '#667eea', borderRadius: 8 }] }, options: { scales: { y: { beginAtZero: true } } } });
+            }
+        }
+
+        function renderUsersTable() {
+            let users = currentFilter === 'all' ? usersData.all || [] : (usersData[currentFilter] || []);
+            const tbody = document.querySelector('#usersTable tbody');
+            if (!users.length) { tbody.innerHTML = '<tr><td colspan="6" class="loading">No users found</td></tr>'; return; }
+            tbody.innerHTML = users.map(u => `<tr><td><strong>${escapeHtml(u.name)}</strong></td><td>${escapeHtml(u.email)}</td><td><span class="role-badge role-${u.role}">${u.role}</span></td><td>${escapeHtml(u.company || '-')}</td><td>${u.isActive ? 'Active' : 'Inactive'}</td><td><button class="icon-btn" onclick="openEditUserModal('${u._id}')"><i class="fas fa-edit"></i></button><button class="icon-btn" onclick="deleteUser('${u._id}')" style="color:#ef4444;"><i class="fas fa-trash"></i></button><button class="icon-btn" onclick="toggleUserStatus('${u._id}', ${!u.isActive})"><i class="fas ${u.isActive ? 'fa-ban' : 'fa-check-circle'}"></i></button></td></tr>`).join('');
+        }
+
+        function renderTasksTable() {
+            const tbody = document.querySelector('#tasksTable tbody');
+            if (!tasksData.length) { tbody.innerHTML = '</td><td colspan="8" class="loading">No tasks found</tr>'; return; }
+            tbody.innerHTML = tasksData.map(t => `<tr><td><span class="task-number">${t.taskNumber || t._id.slice(-6).toUpperCase()}</span></td><td><strong>${escapeHtml(t.title)}</strong></td><td>${escapeHtml(t.assignedTo?.name || 'Unassigned')}</td><td>${escapeHtml(t.clientId?.name || 'N/A')}</td><td><span class="status-badge">${t.status || 'todo'}</span></td><td>${t.priority || 'medium'}</td><td>${new Date(t.updatedAt).toLocaleString()}</td><td><button class="icon-btn" onclick="openEditTaskModal('${t._id}')"><i class="fas fa-edit"></i></button><button class="icon-btn" onclick="deleteTask('${t._id}')" style="color:#ef4444;"><i class="fas fa-trash"></i></button></td></tr>`).join('');
+        }
+
+        function renderClientsTable() {
+            const clients = allUsers.filter(u => u.role === 'client');
+            const tbody = document.querySelector('#clientsTable tbody');
+            if (!clients.length) { tbody.innerHTML = '<tr><td colspan="5" class="loading">No clients found</tr>'; return; }
+            tbody.innerHTML = clients.map(c => `<tr><td><strong>${escapeHtml(c.company || c.name)}</strong></td><td>${escapeHtml(c.name)}</td><td>${escapeHtml(c.email)}</td><td>${tasksData.filter(t => t.clientId?._id === c._id).length}</td><td><button class="icon-btn" onclick="openCreateTaskForClient('${c._id}')"><i class="fas fa-plus-circle"></i></button></td></tr>`).join('');
+        }
+
+        function renderAttendanceTable() {
+            const tbody = document.querySelector('#attendanceTable tbody');
+            if (!attendanceRecords.length) { tbody.innerHTML = '<tr><td colspan="8" class="loading">No records</tr>'; return; }
+            tbody.innerHTML = attendanceRecords.map(a => `<tr><td>${escapeHtml(a.developerId?.name || 'Unknown')}</td><td>${new Date(a.date).toLocaleDateString()}</td><td><span class="status-badge status-${a.status}">${a.status}</span></td><td>${a.checkIn || '-'}</td><td>${a.checkOut || '-'}</td><td>${a.hoursWorked || '-'}</td><td>${escapeHtml(a.workDescription?.substring(0, 20) || '-')}</td><td><button class="icon-btn" onclick="editAttendance('${a._id}')"><i class="fas fa-edit"></i></button></td></tr>`).join('');
+        }
+
+        function renderLeavesTable() {
+            const leaves = leavesData.pending || [];
+            const tbody = document.querySelector('#leavesTable tbody');
+            if (!leaves.length) { tbody.innerHTML = '<tr><td colspan="7" class="loading">No pending requests</tr>'; return; }
+            tbody.innerHTML = leaves.map(l => `<tr><td>${escapeHtml(l.developerId?.name || 'Unknown')}</td><td>${l.type}</td><td>${new Date(l.startDate).toLocaleDateString()} - ${new Date(l.endDate).toLocaleDateString()}</td><td>${escapeHtml(l.reason)}</td><td><span class="status-badge status-${l.status}">${l.status}</span></td><td>${escapeHtml(l.adminComments || '-')}</td><td><button class="btn btn-success" onclick="openLeaveAction('${l._id}', 'approve')">Approve</button> <button class="btn btn-danger" onclick="openLeaveAction('${l._id}', 'reject')">Reject</button></td></tr>`).join('');
+        }
+
+        function openLeaveAction(leaveId, action) {
+            currentLeaveAction = { id: leaveId, action };
+            document.getElementById('leaveActionTitle').innerHTML = action === 'approve' ? 'Approve Leave Request' : 'Reject Leave Request';
+            document.getElementById('adminComments').value = '';
+            document.getElementById('leaveActionModal').style.display = 'flex';
+        }
+
+        document.getElementById('leaveActionForm')?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const comments = document.getElementById('adminComments').value;
+            const success = await processLeave(currentLeaveAction.id, currentLeaveAction.action, comments);
+            if (success) {
+                showNotification(`Leave ${currentLeaveAction.action}d! Email sent.`, 'success');
+                closeModal('leaveActionModal');
+                await loadLeaves();
+                renderLeavesTable();
+            }
+        });
+
+        async function processLeave(leaveId, action, comments) {
+            const res = await fetch(`${API_URL}/leaves/${leaveId}/${action}`, {
+                method: 'PUT', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
+                body: JSON.stringify({ adminComments: comments })
+            });
+            return res.ok;
+        }
+
+        async function markAttendance(developerId, date, status, checkIn, checkOut, workDescription) {
+            const res = await fetch(`${API_URL}/attendance/mark`, {
+                method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
+                body: JSON.stringify({ developerId, date, status, checkIn, checkOut, workDescription })
+            });
+            return res.ok;
+        }
+
+        document.getElementById('attendanceForm')?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const success = await markAttendance(
+                document.getElementById('attendanceDeveloper').value,
+                document.getElementById('attendanceDate').value,
+                document.getElementById('attendanceStatus').value,
+                document.getElementById('checkIn').value,
+                document.getElementById('checkOut').value,
+                document.getElementById('workDescription').value
+            );
+            if (success) { showNotification('Attendance marked!', 'success'); closeModal('attendanceModal'); await loadAttendance(); renderAttendanceTable(); }
+        });
+
+        document.getElementById('taskForm')?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const res = await fetch(`${API_URL}/tasks`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` }, body: JSON.stringify({ title: document.getElementById('taskTitle').value, description: document.getElementById('taskDesc').value, clientId: document.getElementById('taskClient').value, assignedTo: document.getElementById('taskDeveloper').value, priority: document.getElementById('taskPriority').value, dueDate: document.getElementById('dueDate').value }) });
+            if (res.ok) { showNotification('Task created!', 'success'); closeModal('taskModal'); loadDashboard(); }
+        });
+
+        document.getElementById('userForm')?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const res = await fetch(`${API_URL}/admin/users`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` }, body: JSON.stringify({ name: document.getElementById('fullName').value, email: document.getElementById('userEmail').value, role: document.getElementById('userRole').value, company: document.getElementById('userCompany').value }) });
+            if (res.ok) { showNotification('User created!', 'success'); closeModal('userModal'); loadDashboard(); }
+        });
+
+        function showSection(section) {
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            if (event && event.target) event.target.closest('.nav-item').classList.add('active');
+            const sections = ['dashboard', 'users', 'tasks', 'activity', 'clients', 'attendance', 'leaves'];
+            sections.forEach(s => document.getElementById(`${s}Section`).style.display = s === section ? 'block' : 'none');
+            const titles = { dashboard: 'Dashboard', users: 'User Management', tasks: 'Task Management', activity: 'Developer Activity', clients: 'Client Management', attendance: 'Attendance Tracker', leaves: 'Leave Requests' };
+            document.getElementById('pageTitle').textContent = titles[section];
+            if (section === 'activity') renderActivityFeed();
+            if (section === 'leaves') renderLeavesTable();
+        }
+
+        function filterUsers(role) { currentFilter = role; renderUsersTable(); }
+        
+        function openAddUserModal() { document.getElementById('userModal').style.display = 'flex'; }
+        function openCreateTaskModal() {
+            const clients = allUsers.filter(u => u.role === 'client');
+            const devs = allUsers.filter(u => u.role === 'developer');
+            document.getElementById('taskClient').innerHTML = '<option value="">-- Select --</option>' + clients.map(c => `<option value="${c._id}">${escapeHtml(c.name)}</option>`).join('');
+            document.getElementById('taskDeveloper').innerHTML = '<option value="">-- Select --</option>' + devs.map(d => `<option value="${d._id}">${escapeHtml(d.name)}</option>`).join('');
+            document.getElementById('taskModal').style.display = 'flex';
+        }
+        function openCreateTaskForClient(clientId) { openCreateTaskModal(); setTimeout(() => { document.getElementById('taskClient').value = clientId; }, 100); }
+        function openMarkAttendanceModal() {
+            const devs = allUsers.filter(u => u.role === 'developer');
+            document.getElementById('attendanceDeveloper').innerHTML = '<option value="">-- Select --</option>' + devs.map(d => `<option value="${d._id}">${escapeHtml(d.name)}</option>`).join('');
+            document.getElementById('attendanceDate').value = new Date().toISOString().split('T')[0];
+            document.getElementById('attendanceModal').style.display = 'flex';
+        }
+        
+        let currentEditTaskId = null;
+        function openEditTaskModal(taskId) { const task = tasksData.find(t => t._id === taskId); if (task) { currentEditTaskId = taskId; document.getElementById('editTaskTitle').value = task.title; document.getElementById('editTaskDesc').value = task.description || ''; document.getElementById('editTaskStatus').value = task.status || 'todo'; document.getElementById('editTaskPriority').value = task.priority || 'medium'; document.getElementById('editTaskModal').style.display = 'flex'; } }
+        document.getElementById('editTaskForm')?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            await updateTask(currentEditTaskId, { title: document.getElementById('editTaskTitle').value, description: document.getElementById('editTaskDesc').value, status: document.getElementById('editTaskStatus').value, priority: document.getElementById('editTaskPriority').value });
+            closeModal('editTaskModal');
+        });
+        
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+        function showNotification(msg, type) { const n = document.createElement('div'); n.className = `notification ${type}`; n.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i> ${msg}`; document.body.appendChild(n); setTimeout(() => n.remove(), 3000); }
+        function escapeHtml(text) { if (!text) return ''; const div = document.createElement('div'); div.textContent = text; return div.innerHTML; }
+        function logout() { localStorage.clear(); sessionStorage.clear(); window.location.href = '/login.html'; }
+        
+        loadDashboard();
+    </script>
+</body>
+</html>
