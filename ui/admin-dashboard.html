@@ -170,7 +170,7 @@
     <div id="leaveActionModal" class="modal"><div class="modal-content"><div class="modal-header"><h2 id="leaveActionTitle">Process Leave Request</h2><button class="close-modal" onclick="closeModal('leaveActionModal')">&times;</button></div><form id="leaveActionForm"><div class="form-group"><label>Admin Comments</label><textarea id="adminComments" rows="3" placeholder="Add comments..."></textarea></div><div style="display:flex;gap:10px;"><button type="button" class="btn" onclick="closeModal('leaveActionModal')" style="background:#94a3b8;">Cancel</button><button type="submit" id="approveBtn" class="btn btn-success">Approve</button><button type="submit" id="rejectBtn" class="btn btn-danger">Reject</button></div></form></div></div>
 
     <script>
-        const API_URL = 'http://localhost:9040/api';
+        const API_URL = 'https://scaleflow-taskmanager.onrender.com/api';
         let authToken = localStorage.getItem('token') || sessionStorage.getItem('token');
         let currentUser = null;
         let usersData = { all: [] };
