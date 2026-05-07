@@ -21,7 +21,8 @@ const app = express();
 // Middleware
 app.use(cors({
     origin: [
-        'https://task-tracker.scaleflowsoftware.com'
+        'https://task-tracker.scaleflowsoftware.com',
+        'http://localhost:9040'
     ],
     credentials: true
 }));
