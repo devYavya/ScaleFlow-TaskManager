@@ -37,7 +37,11 @@ const taskSchema = new mongoose.Schema({
     priority: { type: String, enum: ['low', 'medium', 'high', 'critical'], default: 'medium' },
     workflowStage: { type: String, enum: ['planning', 'development', 'testing', 'review', 'deployment'], default: 'planning' },
     createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-    assignedTo: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    assignedTo: { 
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'User',
+        default: null
+    },
     clientId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     startDate: { type: Date },
     dueDate: { type: Date },

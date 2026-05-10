@@ -574,8 +574,13 @@ textarea {
 <div id="app"></div>
 
 <script>
-const API_URL = 'https://task-tracker.scaleflowsoftware.com/api';
-let currentUser = null;
+const API_URL = (() => {
+        const host = window.location.hostname;
+        if (host === 'localhost' || host === '127.0.0.1') {
+            return 'http://localhost:9040/api';
+        }
+        return `${window.location.origin}/api`;
+    })();let currentUser = null;
 let authToken = null;
 let allTasks = [];
 let currentTask = null;

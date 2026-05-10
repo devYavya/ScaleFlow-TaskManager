@@ -1,490 +1,680 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
 <title>ScaleFlow - Client Workspace</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
 }
 
-:root {
-    --bg: #f1f5f9;
-    --card: #ffffff;
-    --primary: #6366f1;
-    --text: #0f172a;
-    --muted: #64748b;
-    --border: #e2e8f0;
-    --success: #10b981;
-    --warning: #f59e0b;
-    --danger: #ef4444;
+:root{
+    --bg:#f1f5f9;
+    --card:#ffffff;
+    --primary:#6366f1;
+    --primary-dark:#4f46e5;
+    --text:#0f172a;
+    --muted:#64748b;
+    --border:#e2e8f0;
+    --success:#10b981;
+    --warning:#f59e0b;
+    --danger:#ef4444;
+    --purple:#9333ea;
 }
 
-body {
-    font-family: 'Inter', sans-serif;
-    background: var(--bg);
-    color: var(--text);
+body{
+    font-family:'Inter',sans-serif;
+    background:var(--bg);
+    color:var(--text);
 }
 
-.app {
-    display: flex;
-    min-height: 100vh;
+.app{
+    display:flex;
+    min-height:100vh;
 }
 
-.sidebar {
-    width: 260px;
-    background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
-    color: white;
-    position: fixed;
-    height: 100vh;
-    overflow-y: auto;
-    padding: 20px;
+/* =========================
+SIDEBAR
+========================= */
+
+.sidebar{
+    width:260px;
+    position:fixed;
+    left:0;
+    top:0;
+    height:100vh;
+    background:linear-gradient(180deg,#0f172a 0%,#1e293b 100%);
+    color:white;
+    padding:20px;
+    overflow-y:auto;
 }
 
-.logo {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 24px;
-    padding-bottom: 20px;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
+.logo{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-bottom:25px;
+    padding-bottom:20px;
+    border-bottom:1px solid rgba(255,255,255,0.08);
 }
 
-.logo-icon {
-    width: 36px;
-    height: 36px;
-    background: linear-gradient(135deg, #6366f1, #8b5cf6);
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 16px;
+.logo-icon{
+    width:42px;
+    height:42px;
+    border-radius:12px;
+    background:linear-gradient(135deg,#6366f1,#8b5cf6);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:18px;
 }
 
-.logo h2 { font-size: 18px; }
-.logo small { font-size: 10px; opacity: 0.6; }
-
-.user-card {
-    background: rgba(255,255,255,0.05);
-    border-radius: 12px;
-    padding: 12px;
-    display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
+.logo h2{
+    font-size:18px;
 }
 
-.avatar {
-    width: 40px;
-    height: 40px;
-    background: linear-gradient(135deg, #6366f1, #7c3aed);
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 600;
-    font-size: 16px;
+.logo small{
+    font-size:11px;
+    opacity:0.7;
 }
 
-.user-info h4 { font-size: 14px; }
-.user-info small { font-size: 10px; opacity: 0.7; }
-
-.company-pill {
-    background: rgba(99,102,241,0.2);
-    padding: 3px 8px;
-    border-radius: 12px;
-    font-size: 10px;
-    display: inline-block;
-    margin-top: 6px;
+.user-card{
+    background:rgba(255,255,255,0.06);
+    padding:14px;
+    border-radius:14px;
+    display:flex;
+    gap:12px;
+    margin-bottom:22px;
 }
 
-.nav-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 12px;
-    border-radius: 10px;
-    margin-bottom: 6px;
-    cursor: pointer;
-    transition: 0.2s;
-    font-size: 14px;
-    color: #cbd5e1;
+.avatar{
+    width:44px;
+    height:44px;
+    border-radius:12px;
+    background:linear-gradient(135deg,#6366f1,#7c3aed);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:700;
+    font-size:18px;
 }
 
-.nav-item:hover { background: rgba(255,255,255,0.08); }
-.nav-item.active { background: #6366f1; color: white; }
-
-.logout-btn {
-            position: absolute; bottom: 20px; left: 20px; right: 20px; padding: 12px;
-            background: rgba(239,68,68,0.2); border: none; border-radius: 12px; color: #ef4444;
-            cursor: pointer; display: flex; align-items: center; gap: 10px; justify-content: center; font-weight: 600;
-        }
-        .logout-btn:hover { background: #ef4444; color: white; }
-        
-
-.main {
-    flex: 1;
-    margin-left: 260px;
-    padding: 20px;
+.user-info h4{
+    font-size:14px;
 }
 
-.top-bar {
-    background: white;
-    border-radius: 16px;
-    padding: 16px 20px;
-    margin-bottom: 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-    flex-wrap: wrap;
-    gap: 12px;
+.user-info small{
+    opacity:0.7;
+    font-size:11px;
 }
 
-.welcome h1 { font-size: 20px; }
-.welcome p { font-size: 13px; color: #64748b; margin-top: 4px; }
-
-.search-box {
-    position: relative;
-    width: 260px;
+.company-pill{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    margin-top:8px;
+    padding:5px 10px;
+    border-radius:20px;
+    background:rgba(99,102,241,0.18);
+    font-size:10px;
 }
 
-.search-box i {
-    position: absolute;
-    left: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #94a3b8;
-    font-size: 14px;
+.nav-item{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:12px 14px;
+    border-radius:12px;
+    cursor:pointer;
+    margin-bottom:8px;
+    transition:0.2s;
+    color:#cbd5e1;
 }
 
-.search-box input {
-    width: 100%;
-    padding: 10px 12px 10px 36px;
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    font-size: 13px;
-    outline: none;
+.nav-item:hover{
+    background:rgba(255,255,255,0.06);
 }
 
-.btn-create {
-    background: linear-gradient(135deg, #6366f1, #8b5cf6);
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 12px;
-    font-weight: 600;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    transition: 0.2s;
-}
-.btn-create:hover { transform: translateY(-2px); }
-
-.stats-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 16px;
-    margin-bottom: 20px;
+.nav-item.active{
+    background:#6366f1;
+    color:white;
 }
 
-.stat-card {
-    background: white;
-    border-radius: 16px;
-    padding: 16px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+.logout-btn{
+    position:absolute;
+    left:20px;
+    right:20px;
+    bottom:20px;
+    border:none;
+    background:rgba(239,68,68,0.15);
+    color:#ef4444;
+    padding:12px;
+    border-radius:12px;
+    cursor:pointer;
+    font-weight:600;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    transition:0.2s;
 }
 
-.stat-info h3 { font-size: 28px; font-weight: 700; }
-.stat-info p { font-size: 13px; color: #64748b; margin-top: 4px; }
-
-.stat-icon {
-    width: 48px;
-    height: 48px;
-    border-radius: 14px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 20px;
+.logout-btn:hover{
+    background:#ef4444;
+    color:white;
 }
 
-.primary-bg { background: #e0e7ff; color: #4f46e5; }
-.success-bg { background: #dcfce7; color: #166534; }
-.warning-bg { background: #fef3c7; color: #92400e; }
-.danger-bg { background: #fee2e2; color: #991b1b; }
+/* =========================
+MAIN
+========================= */
 
-.charts-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 16px;
-    margin-bottom: 20px;
+.main{
+    flex:1;
+    margin-left:260px;
+    padding:20px;
 }
 
-.chart-card {
-    background: white;
-    border-radius: 16px;
-    padding: 16px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+.top-bar{
+    background:white;
+    padding:18px 20px;
+    border-radius:18px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:16px;
+    margin-bottom:20px;
+    box-shadow:0 2px 10px rgba(0,0,0,0.04);
 }
 
-.chart-card h3 {
-    font-size: 14px;
-    margin-bottom: 16px;
-    color: var(--text);
+.welcome h1{
+    font-size:22px;
 }
 
-canvas { max-height: 200px; }
-
-.tasks-section {
-    background: white;
-    border-radius: 16px;
-    padding: 20px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+.welcome p{
+    font-size:13px;
+    color:var(--muted);
+    margin-top:5px;
 }
 
-.tasks-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-    flex-wrap: wrap;
-    gap: 12px;
+.search-box{
+    position:relative;
+    width:260px;
 }
 
-.tasks-header h2 { font-size: 18px; }
-.tasks-header p { font-size: 12px; color: #64748b; margin-top: 2px; }
-
-.filter-group {
-    display: flex;
-    gap: 8px;
+.search-box i{
+    position:absolute;
+    left:14px;
+    top:50%;
+    transform:translateY(-50%);
+    color:#94a3b8;
 }
 
-.filter-btn {
-    padding: 6px 14px;
-    background: #f1f5f9;
-    border: none;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: 0.2s;
+.search-box input{
+    width:100%;
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:11px 14px 11px 40px;
+    outline:none;
+    font-size:13px;
 }
 
-.filter-btn.active {
-    background: #6366f1;
-    color: white;
+.btn-create{
+    border:none;
+    background:linear-gradient(135deg,#6366f1,#8b5cf6);
+    color:white;
+    padding:12px 20px;
+    border-radius:14px;
+    cursor:pointer;
+    font-weight:600;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    transition:0.2s;
 }
 
-.tasks-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 16px;
+.btn-create:hover{
+    transform:translateY(-2px);
 }
 
-.task-card {
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 16px;
-    cursor: pointer;
-    transition: 0.2s;
+/* =========================
+STATS
+========================= */
+
+.stats-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:16px;
+    margin-bottom:20px;
 }
 
-.task-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+.stat-card{
+    background:white;
+    padding:18px;
+    border-radius:18px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    box-shadow:0 2px 10px rgba(0,0,0,0.04);
 }
 
-.task-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: start;
-    margin-bottom: 10px;
+.stat-info h3{
+    font-size:30px;
+    font-weight:700;
 }
 
-.task-id {
-    font-size: 11px;
-    color: #6366f1;
-    font-weight: 600;
+.stat-info p{
+    font-size:13px;
+    color:var(--muted);
+    margin-top:4px;
 }
 
-.task-title {
-    font-size: 16px;
-    font-weight: 600;
-    margin-top: 6px;
+.stat-icon{
+    width:50px;
+    height:50px;
+    border-radius:16px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:20px;
 }
 
-.task-desc {
-    font-size: 13px;
-    color: #64748b;
-    line-height: 1.5;
-    margin: 10px 0;
+.primary-bg{
+    background:#e0e7ff;
+    color:#4338ca;
 }
 
-.badge {
-    padding: 4px 10px;
-    border-radius: 20px;
-    font-size: 10px;
-    font-weight: 600;
+.warning-bg{
+    background:#fef3c7;
+    color:#92400e;
 }
 
-.status-todo { background: #fef3c7; color: #92400e; }
-.status-in-progress { background: #dbeafe; color: #1e40af; }
-.status-completed { background: #dcfce7; color: #166534; }
-
-.priority-high { background: #fee2e2; color: #991b1b; }
-.priority-medium { background: #fef3c7; color: #92400e; }
-.priority-low { background: #dcfce7; color: #166534; }
-
-.progress-wrapper {
-    margin: 12px 0;
+.success-bg{
+    background:#dcfce7;
+    color:#166534;
 }
 
-.progress-bar {
-    height: 6px;
-    background: #e2e8f0;
-    border-radius: 10px;
-    overflow: hidden;
+.purple-bg{
+    background:#f3e8ff;
+    color:#7e22ce;
 }
 
-.progress-fill {
-    height: 100%;
-    background: linear-gradient(90deg, #6366f1, #8b5cf6);
+/* =========================
+CHARTS
+========================= */
+
+.charts-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:16px;
+    margin-bottom:20px;
 }
 
-.task-meta {
-    display: flex;
-    justify-content: space-between;
-    font-size: 11px;
-    color: #94a3b8;
-    margin-top: 10px;
+.chart-card{
+    background:white;
+    border-radius:18px;
+    padding:18px;
+    box-shadow:0 2px 10px rgba(0,0,0,0.04);
 }
 
-.modal {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.5);
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-    padding: 16px;
+.chart-card h3{
+    margin-bottom:18px;
+    font-size:15px;
 }
 
-.modal-content {
-    background: white;
-    border-radius: 20px;
-    width: 100%;
-    max-width: 600px;
-    max-height: 85vh;
-    overflow-y: auto;
-    padding: 24px;
+canvas{
+    max-height:220px;
 }
 
-.modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-    padding-bottom: 12px;
-    border-bottom: 1px solid var(--border);
+/* =========================
+TASKS
+========================= */
+
+.tasks-section{
+    background:white;
+    border-radius:18px;
+    padding:20px;
+    box-shadow:0 2px 10px rgba(0,0,0,0.04);
 }
 
-.close-btn {
-    width: 32px;
-    height: 32px;
-    border: none;
-    background: #f1f5f9;
-    border-radius: 8px;
-    cursor: pointer;
+.tasks-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:12px;
+    margin-bottom:20px;
 }
 
-.detail-card {
-    background: #f8fafc;
-    border-radius: 14px;
-    padding: 16px;
-    margin-bottom: 16px;
+.tasks-header h2{
+    font-size:20px;
 }
 
-.detail-card h3 {
-    font-size: 14px;
-    margin-bottom: 12px;
+.tasks-header p{
+    font-size:13px;
+    color:var(--muted);
+    margin-top:4px;
 }
 
-.comment-item {
-    background: white;
-    border-radius: 12px;
-    padding: 12px;
-    margin-bottom: 10px;
-    border: 1px solid var(--border);
+.filter-group{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
 }
 
-.comment-top {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 8px;
-    font-size: 12px;
-}
-.comment-author { font-weight: 600; color: #6366f1; }
-.comment-role { font-size: 10px; padding: 2px 6px; background: #e2e8f0; border-radius: 10px; margin-left: 6px; }
-.comment-text { font-size: 13px; color: #475569; line-height: 1.5; }
-
-textarea, input, select {
-    width: 100%;
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 12px;
-    font-family: inherit;
-    font-size: 13px;
-    margin-top: 8px;
+.filter-btn{
+    border:none;
+    background:#f1f5f9;
+    padding:8px 14px;
+    border-radius:20px;
+    cursor:pointer;
+    font-size:12px;
+    font-weight:600;
 }
 
-.primary-btn {
-    background: linear-gradient(135deg, #6366f1, #7c3aed);
-    color: white;
-    border: none;
-    padding: 10px 18px;
-    border-radius: 10px;
-    cursor: pointer;
-    font-weight: 500;
-    margin-top: 10px;
-    width: 100%;
+.filter-btn.active{
+    background:#6366f1;
+    color:white;
 }
 
-.empty-state {
-    text-align: center;
-    padding: 40px;
-    color: #94a3b8;
+.tasks-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
+    gap:16px;
 }
 
-.empty-state i {
-    font-size: 48px;
-    margin-bottom: 12px;
+.task-card{
+    border:1px solid var(--border);
+    border-radius:16px;
+    padding:16px;
+    cursor:pointer;
+    transition:0.2s;
 }
 
-@media (max-width: 1000px) {
-    .stats-grid { grid-template-columns: repeat(2, 1fr); }
-    .charts-grid { grid-template-columns: 1fr; }
+.task-card:hover{
+    transform:translateY(-3px);
+    box-shadow:0 8px 20px rgba(0,0,0,0.08);
 }
 
-@media (max-width: 768px) {
-    .sidebar { display: none; }
-    .main { margin-left: 0; }
-    .top-bar { flex-direction: column; align-items: stretch; }
-    .search-box { width: 100%; }
-    .stats-grid { grid-template-columns: 1fr; }
-    .tasks-grid { grid-template-columns: 1fr; }
+.task-top{
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
 }
+
+.task-id{
+    font-size:11px;
+    font-weight:700;
+    color:#6366f1;
+}
+
+.task-title{
+    margin-top:6px;
+    font-size:17px;
+    font-weight:700;
+}
+
+.task-desc{
+    margin:12px 0;
+    font-size:13px;
+    color:var(--muted);
+    line-height:1.6;
+}
+
+.badge{
+    padding:5px 10px;
+    border-radius:20px;
+    font-size:10px;
+    font-weight:700;
+}
+
+.status-pending{
+    background:#f3e8ff;
+    color:#7e22ce;
+}
+
+.status-todo{
+    background:#fef3c7;
+    color:#92400e;
+}
+
+.status-in-progress{
+    background:#dbeafe;
+    color:#1d4ed8;
+}
+
+.status-completed{
+    background:#dcfce7;
+    color:#166534;
+}
+
+.priority-high{
+    background:#fee2e2;
+    color:#991b1b;
+}
+
+.priority-medium{
+    background:#fef3c7;
+    color:#92400e;
+}
+
+.priority-low{
+    background:#dcfce7;
+    color:#166534;
+}
+
+.progress-wrapper{
+    margin:14px 0;
+}
+
+.progress-bar{
+    height:6px;
+    background:#e2e8f0;
+    border-radius:10px;
+    overflow:hidden;
+}
+
+.progress-fill{
+    height:100%;
+    background:linear-gradient(90deg,#6366f1,#8b5cf6);
+}
+
+.task-meta{
+    display:flex;
+    justify-content:space-between;
+    font-size:11px;
+    color:#94a3b8;
+    margin-top:12px;
+}
+
+/* =========================
+MODAL
+========================= */
+
+.modal{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.5);
+    z-index:1000;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+}
+
+.modal-content{
+    width:100%;
+    max-width:650px;
+    background:white;
+    border-radius:22px;
+    max-height:90vh;
+    overflow-y:auto;
+    padding:24px;
+}
+
+.modal-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
+    padding-bottom:16px;
+    border-bottom:1px solid var(--border);
+}
+
+.close-btn{
+    width:34px;
+    height:34px;
+    border:none;
+    background:#f1f5f9;
+    border-radius:10px;
+    cursor:pointer;
+}
+
+.detail-card{
+    background:#f8fafc;
+    border-radius:16px;
+    padding:16px;
+    margin-bottom:16px;
+}
+
+.detail-card h3{
+    margin-bottom:14px;
+    font-size:15px;
+}
+
+textarea,
+input,
+select{
+    width:100%;
+    margin-top:8px;
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:12px;
+    outline:none;
+    font-family:inherit;
+}
+
+.primary-btn{
+    width:100%;
+    border:none;
+    background:linear-gradient(135deg,#6366f1,#8b5cf6);
+    color:white;
+    padding:12px;
+    border-radius:12px;
+    cursor:pointer;
+    margin-top:14px;
+    font-weight:600;
+}
+
+.info-box{
+    background:#eef2ff;
+    color:#4338ca;
+    padding:14px;
+    border-radius:14px;
+    margin-top:14px;
+    font-size:12px;
+    line-height:1.6;
+}
+
+.comment-item{
+    background:white;
+    border-radius:14px;
+    border:1px solid var(--border);
+    padding:14px;
+    margin-bottom:12px;
+}
+
+.comment-top{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:8px;
+}
+
+.comment-author{
+    font-weight:700;
+    color:#4338ca;
+}
+
+.comment-role{
+    font-size:10px;
+    background:#e2e8f0;
+    padding:3px 8px;
+    border-radius:20px;
+    margin-left:6px;
+}
+
+.comment-text{
+    color:#475569;
+    font-size:13px;
+    line-height:1.6;
+}
+
+.empty-state{
+    text-align:center;
+    padding:40px;
+    color:#94a3b8;
+}
+
+.empty-state i{
+    font-size:48px;
+    margin-bottom:12px;
+}
+
+/* =========================
+RESPONSIVE
+========================= */
+
+@media(max-width:1000px){
+
+    .stats-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .charts-grid{
+        grid-template-columns:1fr;
+    }
+
+}
+
+@media(max-width:768px){
+
+    .sidebar{
+        display:none;
+    }
+
+    .main{
+        margin-left:0;
+    }
+
+    .stats-grid{
+        grid-template-columns:1fr;
+    }
+
+    .tasks-grid{
+        grid-template-columns:1fr;
+    }
+
+    .top-bar{
+        flex-direction:column;
+        align-items:stretch;
+    }
+
+    .search-box{
+        width:100%;
+    }
+
+}
+
 </style>
 </head>
 <body>
@@ -492,414 +682,1158 @@ textarea, input, select {
 <div id="app"></div>
 
 <script>
-const API_URL = 'https://task-tracker.scaleflowsoftware.com/api';
+
+const API_URL = (() => {
+        const host = window.location.hostname;
+        if (host === 'localhost' || host === '127.0.0.1') {
+            return 'http://localhost:9040/api';
+        }
+        return `${window.location.origin}/api`;
+    })();
+
 let currentUser = null;
 let authToken = null;
 let tasks = [];
-let currentFilter = 'all';
 let currentTask = null;
+let currentFilter = 'all';
+
 let statusChart = null;
 let priorityChart = null;
-let developers = [];
 
-const savedToken = localStorage.getItem('token') || sessionStorage.getItem('token');
-const savedUser = localStorage.getItem('user') || sessionStorage.getItem('user');
+const savedToken =
+    localStorage.getItem('token') ||
+    sessionStorage.getItem('token');
 
-if (savedToken && savedUser) {
+const savedUser =
+    localStorage.getItem('user') ||
+    sessionStorage.getItem('user');
+
+if(savedToken && savedUser){
+
     authToken = savedToken;
     currentUser = JSON.parse(savedUser);
-    if (currentUser.role !== 'client') {
+
+    if(currentUser.role !== 'client'){
         window.location.href = '/';
-    } else {
+    }else{
         initDashboard();
     }
-} else {
+
+}else{
     window.location.href = '/';
 }
 
-async function initDashboard() {
-    await loadDevelopers();
+/* =========================
+INIT
+========================= */
+
+async function initDashboard(){
+
     await loadTasks();
+
     renderDashboard();
-    setInterval(loadTasksSilently, 30000);
+
+    setInterval(loadTasksSilently,30000);
+
 }
 
-async function loadDevelopers() {
-    try {
-        const res = await fetch(`${API_URL}/admin/users`, {
-            headers: { 'Authorization': `Bearer ${authToken}` }
-        });
-        const data = await res.json();
-        if (data.users) {
-            developers = data.users.developers || [];
-        }
-    } catch (error) {
-        console.error('Error loading developers:', error);
-    }
-}
+/* =========================
+API
+========================= */
 
-async function loadTasks() {
-    try {
-        const res = await fetch(`${API_URL}/tasks`, {
-            headers: { 'Authorization': `Bearer ${authToken}` }
+async function loadTasks(){
+
+    try{
+
+        const res = await fetch(`${API_URL}/tasks`,{
+            headers:{
+                'Authorization':`Bearer ${authToken}`
+            }
         });
+
         const data = await res.json();
+
         tasks = data.tasks || [];
-    } catch (error) {
+
+    }catch(error){
+
         console.error(error);
-        showNotification('Failed to load tasks', 'error');
+
+        showNotification(
+            'Failed to load tasks',
+            'error'
+        );
+
     }
+
 }
 
-async function loadTasksSilently() {
-    try {
-        const res = await fetch(`${API_URL}/tasks`, {
-            headers: { 'Authorization': `Bearer ${authToken}` }
+async function loadTasksSilently(){
+
+    try{
+
+        const res = await fetch(`${API_URL}/tasks`,{
+            headers:{
+                'Authorization':`Bearer ${authToken}`
+            }
         });
+
         const data = await res.json();
+
         tasks = data.tasks || [];
-        if (document.getElementById('tasksGrid')) updateTasksGrid();
-    } catch (error) { console.error(error); }
-}
 
-async function addComment(taskId, text) {
-    try {
-        const res = await fetch(`${API_URL}/tasks/${taskId}/comments`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
-            body: JSON.stringify({ text })
-        });
-        return res.ok;
-    } catch (error) { return false; }
-}
+        updateTasksGrid();
 
-async function createTask(title, description, priority, assignedTo) {
-    try {
-        const res = await fetch(`${API_URL}/tasks`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
-            body: JSON.stringify({ title, description, priority, assignedTo })
-        });
-        return res.ok;
-    } catch (error) { return false; }
-}
-
-function getFilteredTasks() {
-    if (currentFilter === 'all') return tasks;
-    return tasks.filter(task => task.status === currentFilter);
-}
-
-function calculateProgress(task) {
-    if (!task.checklist || task.checklist.length === 0) {
-        return task.status === 'completed' ? 100 : (task.status === 'in-progress' ? 60 : 20);
+    }catch(error){
+        console.error(error);
     }
-    const completed = task.checklist.filter(i => i.completed).length;
-    return Math.round((completed / task.checklist.length) * 100);
+
 }
 
-function getStats() {
-    return {
-        total: tasks.length,
-        todo: tasks.filter(t => t.status === 'todo' || t.status === 'pending').length,
-        inProgress: tasks.filter(t => t.status === 'in-progress').length,
-        completed: tasks.filter(t => t.status === 'completed').length,
-        highPriority: tasks.filter(t => t.priority === 'high' || t.priority === 'critical').length,
-        mediumPriority: tasks.filter(t => t.priority === 'medium').length,
-        lowPriority: tasks.filter(t => t.priority === 'low').length
+async function createTask(title,description,priority){
+
+    try{
+
+        const res = await fetch(`${API_URL}/tasks`,{
+            method:'POST',
+            headers:{
+                'Content-Type':'application/json',
+                'Authorization':`Bearer ${authToken}`
+            },
+            body:JSON.stringify({
+                title,
+                description,
+                priority
+            })
+        });
+
+        return res.ok;
+
+    }catch(error){
+
+        console.error(error);
+
+        return false;
+    }
+
+}
+
+async function addComment(taskId,text){
+
+    try{
+
+        const res = await fetch(`${API_URL}/tasks/${taskId}/comments`,{
+            method:'POST',
+            headers:{
+                'Content-Type':'application/json',
+                'Authorization':`Bearer ${authToken}`
+            },
+            body:JSON.stringify({ text })
+        });
+
+        return res.ok;
+
+    }catch(error){
+
+        return false;
+
+    }
+
+}
+
+/* =========================
+STATS
+========================= */
+
+function getStats(){
+
+    return{
+        total:tasks.length,
+        pending:tasks.filter(t=>t.status === 'pending').length,
+        inProgress:tasks.filter(t=>t.status === 'in-progress').length,
+        completed:tasks.filter(t=>t.status === 'completed').length,
+        highPriority:tasks.filter(t=>t.priority === 'high' || t.priority === 'critical').length,
+        mediumPriority:tasks.filter(t=>t.priority === 'medium').length,
+        lowPriority:tasks.filter(t=>t.priority === 'low').length
     };
+
 }
 
-function renderDashboard() {
+function getFilteredTasks(){
+
+    if(currentFilter === 'all'){
+        return tasks;
+    }
+
+    return tasks.filter(
+        task => task.status === currentFilter
+    );
+
+}
+
+function calculateProgress(task){
+
+    if(!task.checklist || task.checklist.length === 0){
+
+        if(task.status === 'completed'){
+            return 100;
+        }
+
+        if(task.status === 'in-progress'){
+            return 60;
+        }
+
+        if(task.status === 'pending'){
+            return 10;
+        }
+
+        return 20;
+    }
+
+    const completed =
+        task.checklist.filter(i=>i.completed).length;
+
+    return Math.round(
+        (completed / task.checklist.length) * 100
+    );
+
+}
+
+/* =========================
+RENDER
+========================= */
+
+function renderDashboard(){
+
     const stats = getStats();
+
     const filteredTasks = getFilteredTasks();
 
     document.getElementById('app').innerHTML = `
+    
     <div class="app">
+
         <aside class="sidebar">
+
             <div class="logo">
-                <div class="logo-icon"><i class="fas fa-tasks"></i></div>
-                <div><h2>ScaleFlow</h2><small>Client Portal</small></div>
+                <div class="logo-icon">
+                    <i class="fas fa-layer-group"></i>
+                </div>
+                <div>
+                    <h2>ScaleFlow</h2>
+                    <small>Client Workspace</small>
+                </div>
             </div>
+
             <div class="user-card">
-                <div class="avatar">${currentUser.name.charAt(0).toUpperCase()}</div>
+                <div class="avatar">
+                    ${currentUser.name.charAt(0).toUpperCase()}
+                </div>
                 <div class="user-info">
                     <h4>${escapeHtml(currentUser.name)}</h4>
                     <small>Client</small>
-                    <div class="company-pill"><i class="fas fa-building"></i> ${escapeHtml(currentUser.company || 'Organization')}</div>
+
+                    <div class="company-pill">
+                        <i class="fas fa-building"></i>
+                        ${escapeHtml(currentUser.company || 'Organization')}
+                    </div>
                 </div>
             </div>
-            <div class="nav-item active"><i class="fas fa-chart-line"></i> Dashboard</div>
-            <button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+
+            <div class="nav-item active">
+                <i class="fas fa-chart-line"></i>
+                Dashboard
+            </div>
+
+            <button class="logout-btn" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i>
+                Logout
+            </button>
+
         </aside>
 
         <main class="main">
+
             <div class="top-bar">
+
                 <div class="welcome">
-                    <h1>Welcome, ${escapeHtml(currentUser.name.split(' ')[0])}</h1>
-                    <p>Track your project tasks and collaborate with your team</p>
+                    <h1>
+                        Welcome back,
+                        ${escapeHtml(currentUser.name.split(' ')[0])}
+                    </h1>
+
+                    <p>
+                        Create project requests, track progress and collaborate with the ScaleFlow team.
+                    </p>
                 </div>
-                <div style="display: flex; gap: 12px;">
+
+                <div style="display:flex; gap:12px;">
+
                     <div class="search-box">
                         <i class="fas fa-search"></i>
-                        <input type="text" id="searchInput" placeholder="Search tasks..." onkeyup="searchTasks()">
+
+                        <input
+                            type="text"
+                            placeholder="Search tasks..."
+                            id="searchInput"
+                            onkeyup="searchTasks()"
+                        />
                     </div>
-                    <button class="btn-create" onclick="openCreateTaskModal()">
-                        <i class="fas fa-plus"></i> New Task
+
+                    <button
+                        class="btn-create"
+                        onclick="openCreateTaskModal()"
+                    >
+                        <i class="fas fa-plus"></i>
+                        New Request
                     </button>
+
                 </div>
+
             </div>
 
             <div class="stats-grid">
-                <div class="stat-card"><div class="stat-info"><h3>${stats.total}</h3><p>Total Tasks</p></div><div class="stat-icon primary-bg"><i class="fas fa-tasks"></i></div></div>
-                <div class="stat-card"><div class="stat-info"><h3>${stats.todo}</h3><p>Pending</p></div><div class="stat-icon warning-bg"><i class="fas fa-clock"></i></div></div>
-                <div class="stat-card"><div class="stat-info"><h3>${stats.inProgress}</h3><p>In Progress</p></div><div class="stat-icon primary-bg"><i class="fas fa-spinner"></i></div></div>
-                <div class="stat-card"><div class="stat-info"><h3>${stats.completed}</h3><p>Completed</p></div><div class="stat-icon success-bg"><i class="fas fa-check-circle"></i></div></div>
+
+                <div class="stat-card">
+                    <div class="stat-info">
+                        <h3>${stats.total}</h3>
+                        <p>Total Requests</p>
+                    </div>
+
+                    <div class="stat-icon primary-bg">
+                        <i class="fas fa-tasks"></i>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-info">
+                        <h3>${stats.pending}</h3>
+                        <p>Pending Review</p>
+                    </div>
+
+                    <div class="stat-icon purple-bg">
+                        <i class="fas fa-hourglass-half"></i>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-info">
+                        <h3>${stats.inProgress}</h3>
+                        <p>In Progress</p>
+                    </div>
+
+                    <div class="stat-icon warning-bg">
+                        <i class="fas fa-spinner"></i>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-info">
+                        <h3>${stats.completed}</h3>
+                        <p>Completed</p>
+                    </div>
+
+                    <div class="stat-icon success-bg">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                </div>
+
             </div>
 
             <div class="charts-grid">
-                <div class="chart-card"><h3><i class="fas fa-chart-pie"></i> Task Status</h3><canvas id="statusChart"></canvas></div>
-                <div class="chart-card"><h3><i class="fas fa-chart-bar"></i> Priority</h3><canvas id="priorityChart"></canvas></div>
+
+                <div class="chart-card">
+                    <h3>
+                        <i class="fas fa-chart-pie"></i>
+                        Request Status
+                    </h3>
+
+                    <canvas id="statusChart"></canvas>
+                </div>
+
+                <div class="chart-card">
+                    <h3>
+                        <i class="fas fa-chart-bar"></i>
+                        Priority Distribution
+                    </h3>
+
+                    <canvas id="priorityChart"></canvas>
+                </div>
+
             </div>
 
-            <div class="tasks-section" id="tasksSection">
+            <div class="tasks-section">
+
                 <div class="tasks-header">
-                    <div><h2>Tasks</h2><p>Click any task to view details</p></div>
-                    <div class="filter-group">
-                        <button class="filter-btn ${currentFilter === 'all' ? 'active' : ''}" onclick="setFilter('all')">All</button>
-                        <button class="filter-btn ${currentFilter === 'todo' ? 'active' : ''}" onclick="setFilter('todo')">Todo</button>
-                        <button class="filter-btn ${currentFilter === 'in-progress' ? 'active' : ''}" onclick="setFilter('in-progress')">In Progress</button>
-                        <button class="filter-btn ${currentFilter === 'completed' ? 'active' : ''}" onclick="setFilter('completed')">Completed</button>
+
+                    <div>
+                        <h2>Project Requests</h2>
+                        <p>
+                            Monitor request progress and collaborate with the team.
+                        </p>
                     </div>
+
+                    <div class="filter-group">
+
+                        <button
+                            class="filter-btn ${currentFilter === 'all' ? 'active' : ''}"
+                            onclick="setFilter('all')"
+                        >
+                            All
+                        </button>
+
+                        <button
+                            class="filter-btn ${currentFilter === 'pending' ? 'active' : ''}"
+                            onclick="setFilter('pending')"
+                        >
+                            Pending
+                        </button>
+
+                        <button
+                            class="filter-btn ${currentFilter === 'in-progress' ? 'active' : ''}"
+                            onclick="setFilter('in-progress')"
+                        >
+                            In Progress
+                        </button>
+
+                        <button
+                            class="filter-btn ${currentFilter === 'completed' ? 'active' : ''}"
+                            onclick="setFilter('completed')"
+                        >
+                            Completed
+                        </button>
+
+                    </div>
+
                 </div>
+
                 <div class="tasks-grid" id="tasksGrid">
                     ${renderTaskCards(filteredTasks)}
                 </div>
+
             </div>
+
         </main>
+
     </div>
 
-    <!-- Task Details Modal -->
-    <div class="modal" id="taskModal"><div class="modal-content"><div class="modal-header"><h2 id="modalTitle">Task Details</h2><button class="close-btn" onclick="closeModal('taskModal')"><i class="fas fa-times"></i></button></div><div id="modalBody"></div></div></div>
+    <!-- TASK MODAL -->
 
-    <!-- Create Task Modal -->
-    <div class="modal" id="createTaskModal">
+    <div class="modal" id="taskModal">
+
         <div class="modal-content">
-            <div class="modal-header"><h2><i class="fas fa-plus-circle"></i> Create New Task</h2><button class="close-btn" onclick="closeModal('createTaskModal')"><i class="fas fa-times"></i></button></div>
-            <div>
-                <div class="detail-card"><h3>Task Details</h3>
-                    <label>Title *</label>
-                    <input type="text" id="taskTitle" placeholder="Enter task title">
-                    <label>Description</label>
-                    <textarea id="taskDesc" rows="3" placeholder="Enter task description"></textarea>
-                    <label>Priority</label>
-                    <select id="taskPriority">
-                        <option value="low">Low</option>
-                        <option value="medium" selected>Medium</option>
-                        <option value="high">High</option>
-                    </select>
-                    <label>Assign to Developer *</label>
-                    <select id="taskDeveloper">
-                        <option value="">-- Select Developer --</option>
-                        ${developers.map(d => `<option value="${d._id}">${escapeHtml(d.name)} (${escapeHtml(d.email)})</option>`).join('')}
-                    </select>
-                    <button class="primary-btn" onclick="submitCreateTask()">Create Task</button>
-                </div>
+
+            <div class="modal-header">
+
+                <h2 id="modalTitle"></h2>
+
+                <button
+                    class="close-btn"
+                    onclick="closeModal('taskModal')"
+                >
+                    <i class="fas fa-times"></i>
+                </button>
+
             </div>
+
+            <div id="modalBody"></div>
+
         </div>
+
     </div>
+
+    <!-- CREATE TASK -->
+
+    <div class="modal" id="createTaskModal">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+
+                <h2>
+                    <i class="fas fa-plus-circle"></i>
+                    Create New Request
+                </h2>
+
+                <button
+                    class="close-btn"
+                    onclick="closeModal('createTaskModal')"
+                >
+                    <i class="fas fa-times"></i>
+                </button>
+
+            </div>
+
+            <div class="detail-card">
+
+                <h3>Request Details</h3>
+
+                <label>Title *</label>
+
+                <input
+                    type="text"
+                    id="taskTitle"
+                    placeholder="Enter request title"
+                />
+
+                <label>Description *</label>
+
+                <textarea
+                    id="taskDesc"
+                    rows="4"
+                    placeholder="Describe your request..."
+                ></textarea>
+
+                <label>Priority</label>
+
+                <select id="taskPriority">
+                    <option value="low">Low</option>
+                    <option value="medium" selected>Medium</option>
+                    <option value="high">High</option>
+                </select>
+
+                <div class="info-box">
+                    <i class="fas fa-info-circle"></i>
+                    Your request will first be reviewed by the ScaleFlow team before developer assignment and execution begins.
+                </div>
+
+                <button
+                    class="primary-btn"
+                    onclick="submitCreateTask()"
+                >
+                    Submit Request
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
     `;
 
     initializeCharts(stats);
+
 }
 
-function renderTaskCards(tasksList) {
-    if (tasksList.length === 0) {
-        return `<div class="empty-state"><i class="fas fa-inbox"></i><p>No tasks found</p></div>`;
-    }
-    return tasksList.map(task => {
-        const progress = calculateProgress(task);
-        const statusClass = task.status === 'in-progress' ? 'in-progress' : (task.status === 'completed' ? 'completed' : 'todo');
+function renderTaskCards(tasksList){
+
+    if(tasksList.length === 0){
+
         return `
-        <div class="task-card" onclick="openTask('${task._id}')">
-            <div class="task-top">
-                <div><div class="task-id">${escapeHtml(task.taskNumber || task._id.slice(-6).toUpperCase())}</div><div class="task-title">${escapeHtml(task.title)}</div></div>
-                <div class="badge status-${statusClass}">${statusClass.replace('-', ' ')}</div>
+            <div class="empty-state">
+                <i class="fas fa-inbox"></i>
+                <p>No requests found</p>
             </div>
-            <div class="task-desc">${escapeHtml((task.description || '').substring(0, 100))}${(task.description || '').length > 100 ? '...' : ''}</div>
-            <div><span class="badge priority-${task.priority || 'medium'}">${(task.priority || 'medium').toUpperCase()}</span></div>
-            <div class="progress-wrapper"><div class="progress-bar"><div class="progress-fill" style="width:${progress}%"></div></div></div>
-            <div class="task-meta"><span><i class="fas fa-user"></i> ${escapeHtml(task.assignedTo?.name || 'Unassigned')}</span><span><i class="fas fa-comment"></i> ${task.comments?.length || 0}</span></div>
-        </div>`;
+        `;
+
+    }
+
+    return tasksList.map(task=>{
+
+        const progress = calculateProgress(task);
+
+        let statusClass = 'todo';
+
+        if(task.status === 'pending'){
+            statusClass = 'pending';
+        }
+        else if(task.status === 'in-progress'){
+            statusClass = 'in-progress';
+        }
+        else if(task.status === 'completed'){
+            statusClass = 'completed';
+        }
+
+        return `
+
+        <div
+            class="task-card"
+            onclick="openTask('${task._id}')"
+        >
+
+            <div class="task-top">
+
+                <div>
+
+                    <div class="task-id">
+                        ${escapeHtml(task.taskNumber || task._id.slice(-6))}
+                    </div>
+
+                    <div class="task-title">
+                        ${escapeHtml(task.title)}
+                    </div>
+
+                </div>
+
+                <div class="badge status-${statusClass}">
+                    ${statusClass.replace('-', ' ')}
+                </div>
+
+            </div>
+
+            <div class="task-desc">
+                ${escapeHtml(
+                    (task.description || '').substring(0,120)
+                )}
+            </div>
+
+            <div>
+                <span class="badge priority-${task.priority || 'medium'}">
+                    ${(task.priority || 'medium').toUpperCase()}
+                </span>
+            </div>
+
+            <div class="progress-wrapper">
+                <div class="progress-bar">
+                    <div
+                        class="progress-fill"
+                        style="width:${progress}%"
+                    ></div>
+                </div>
+            </div>
+
+            <div class="task-meta">
+
+                <span>
+                    <i class="fas fa-user"></i>
+                    ${escapeHtml(task.assignedTo?.name || 'Awaiting Assignment')}
+                </span>
+
+                <span>
+                    <i class="fas fa-comment"></i>
+                    ${task.comments?.length || 0}
+                </span>
+
+            </div>
+
+        </div>
+
+        `;
+
     }).join('');
+
 }
 
-function updateTasksGrid() {
+function updateTasksGrid(){
+
     const filteredTasks = getFilteredTasks();
-    const grid = document.getElementById('tasksGrid');
-    if (grid) grid.innerHTML = renderTaskCards(filteredTasks);
+
+    const grid =
+        document.getElementById('tasksGrid');
+
+    if(grid){
+        grid.innerHTML =
+            renderTaskCards(filteredTasks);
+    }
+
 }
 
-function setFilter(filter) {
-    currentFilter = filter;
-    updateTasksGrid();
-    document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-    if (event && event.target) event.target.classList.add('active');
-}
+/* =========================
+TASK MODAL
+========================= */
 
-function searchTasks() {
-    const keyword = document.getElementById('searchInput').value.toLowerCase();
-    const cards = document.querySelectorAll('.task-card');
-    cards.forEach(card => {
-        const text = card.innerText.toLowerCase();
-        card.style.display = text.includes(keyword) ? 'block' : 'none';
-    });
-}
+async function openTask(taskId){
 
-function scrollToTasks() {
-    document.getElementById('tasksSection').scrollIntoView({ behavior: 'smooth' });
-}
+    const task =
+        tasks.find(t=>t._id === taskId);
 
-function openCreateTaskModal() {
-    if (developers.length === 0) {
-        showNotification('Please Contact Development Team', 'error');
+    if(!task){
         return;
     }
+
+    currentTask = task;
+
+    let statusClass = 'todo';
+
+    if(task.status === 'pending'){
+        statusClass = 'pending';
+    }
+    else if(task.status === 'in-progress'){
+        statusClass = 'in-progress';
+    }
+    else if(task.status === 'completed'){
+        statusClass = 'completed';
+    }
+
+    document.getElementById('modalTitle').innerHTML = `
+        <i class="fas fa-tasks"></i>
+        ${escapeHtml(task.title)}
+    `;
+
+    document.getElementById('modalBody').innerHTML = `
+
+        <div style="display:grid; gap:16px;">
+
+            <div class="detail-card">
+
+                <h3>Description</h3>
+
+                <p style="line-height:1.7; color:#475569;">
+                    ${escapeHtml(task.description || 'No description')}
+                </p>
+
+            </div>
+
+            <div class="detail-card">
+
+                <h3>Request Details</h3>
+
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+
+                    <div>
+                        <small>Request #</small>
+                        <h4>${escapeHtml(task.taskNumber || task._id.slice(-6))}</h4>
+                    </div>
+
+                    <div>
+                        <small>Status</small>
+                        <h4>
+                            <span class="badge status-${statusClass}">
+                                ${task.status}
+                            </span>
+                        </h4>
+                    </div>
+
+                    <div>
+                        <small>Priority</small>
+                        <h4>
+                            <span class="badge priority-${task.priority || 'medium'}">
+                                ${(task.priority || 'medium').toUpperCase()}
+                            </span>
+                        </h4>
+                    </div>
+
+                    <div>
+                        <small>Assigned Developer</small>
+                        <h4>
+                            ${escapeHtml(task.assignedTo?.name || 'Awaiting Assignment')}
+                        </h4>
+                    </div>
+
+                    <div>
+                        <small>Workflow Stage</small>
+                        <h4>
+                            ${escapeHtml(task.workflowStage || 'planning')}
+                        </h4>
+                    </div>
+
+                    <div>
+                        <small>Created At</small>
+                        <h4>
+                            ${new Date(task.createdAt).toLocaleDateString()}
+                        </h4>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="detail-card">
+
+                <h3>
+                    💬 Comments
+                    (${(task.comments || []).length})
+                </h3>
+
+                <div
+                    style="max-height:300px; overflow-y:auto; margin-bottom:14px;"
+                >
+
+                    ${(task.comments || []).length === 0
+
+                        ? `
+                            <p style="text-align:center; color:#94a3b8; padding:20px;">
+                                No comments yet
+                            </p>
+                        `
+
+                        : task.comments.map(comment=>`
+
+                            <div class="comment-item">
+
+                                <div class="comment-top">
+
+                                    <div>
+                                        <span class="comment-author">
+                                            ${escapeHtml(comment.author)}
+                                        </span>
+
+                                        <span class="comment-role">
+                                            ${comment.authorRole}
+                                        </span>
+                                    </div>
+
+                                    <small>
+                                        ${new Date(comment.createdAt).toLocaleString()}
+                                    </small>
+
+                                </div>
+
+                                <div class="comment-text">
+                                    ${escapeHtml(comment.text)}
+                                </div>
+
+                            </div>
+
+                        `).join('')
+                    }
+
+                </div>
+
+                <textarea
+                    id="commentInput"
+                    rows="3"
+                    placeholder="Add your feedback or response..."
+                ></textarea>
+
+                <button
+                    class="primary-btn"
+                    onclick="postComment()"
+                >
+                    <i class="fas fa-paper-plane"></i>
+                    Post Comment
+                </button>
+
+            </div>
+
+        </div>
+
+    `;
+
+    document.getElementById('taskModal').style.display = 'flex';
+
+}
+
+/* =========================
+ACTIONS
+========================= */
+
+function setFilter(filter){
+
+    currentFilter = filter;
+
+    renderDashboard();
+
+}
+
+function searchTasks(){
+
+    const keyword =
+        document.getElementById('searchInput')
+        .value
+        .toLowerCase();
+
+    const cards =
+        document.querySelectorAll('.task-card');
+
+    cards.forEach(card=>{
+
+        const text =
+            card.innerText.toLowerCase();
+
+        card.style.display =
+            text.includes(keyword)
+            ? 'block'
+            : 'none';
+
+    });
+
+}
+
+function openCreateTaskModal(){
+
     document.getElementById('taskTitle').value = '';
     document.getElementById('taskDesc').value = '';
     document.getElementById('taskPriority').value = 'medium';
-    document.getElementById('taskDeveloper').value = '';
+
     document.getElementById('createTaskModal').style.display = 'flex';
+
 }
 
-async function submitCreateTask() {
-    const title = document.getElementById('taskTitle').value.trim();
-    const description = document.getElementById('taskDesc').value.trim();
-    const priority = document.getElementById('taskPriority').value;
-    const assignedTo = document.getElementById('taskDeveloper').value;
+async function submitCreateTask(){
 
-    if (!title) {
-        showNotification('Please enter a task title', 'error');
+    const title =
+        document.getElementById('taskTitle')
+        .value
+        .trim();
+
+    const description =
+        document.getElementById('taskDesc')
+        .value
+        .trim();
+
+    const priority =
+        document.getElementById('taskPriority')
+        .value;
+
+    if(!title){
+
+        showNotification(
+            'Please enter request title',
+            'error'
+        );
+
         return;
     }
-    if (!assignedTo) {
-        showNotification('Please select a developer', 'error');
+
+    if(!description){
+
+        showNotification(
+            'Please enter request description',
+            'error'
+        );
+
         return;
     }
 
-    const success = await createTask(title, description, priority, assignedTo);
-    if (success) {
-        showNotification('Task created successfully!', 'success');
+    const success = await createTask(
+        title,
+        description,
+        priority
+    );
+
+    if(success){
+
+        showNotification(
+            'Request submitted successfully!',
+            'success'
+        );
+
         closeModal('createTaskModal');
+
         await loadTasks();
+
         renderDashboard();
-    } else {
-        showNotification('Failed to create task', 'error');
+
+    }else{
+
+        showNotification(
+            'Failed to submit request',
+            'error'
+        );
+
     }
+
 }
 
-async function openTask(taskId) {
-    const task = tasks.find(t => t._id === taskId);
-    if (!task) return;
-    currentTask = task;
+async function postComment(){
 
-    document.getElementById('modalTitle').innerHTML = `<i class="fas fa-tasks"></i> ${escapeHtml(task.title)}`;
-    document.getElementById('modalBody').innerHTML = `
-        <div style="display:grid; gap:16px;">
-            <div class="detail-card"><h3>Description</h3><p style="color:#475569; line-height:1.6;">${escapeHtml(task.description || 'No description')}</p></div>
-            
-            <div class="detail-card"><h3>Task Details</h3>
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
-                    <div><small>Task #</small><h4>${escapeHtml(task.taskNumber || task._id.slice(-6).toUpperCase())}</h4></div>
-                    <div><small>Status</small><h4><span class="badge status-${task.status === 'in-progress' ? 'in-progress' : (task.status === 'completed' ? 'completed' : 'todo')}">${task.status || 'todo'}</span></h4></div>
-                    <div><small>Priority</small><h4><span class="badge priority-${task.priority || 'medium'}">${(task.priority || 'medium').toUpperCase()}</span></h4></div>
-                    <div><small>Assigned To</small><h4>${escapeHtml(task.assignedTo?.name || 'Unassigned')}</h4></div>
-                    <div><small>Workflow</small><h4>${escapeHtml(task.workflowStage || 'planning')}</h4></div>
-                    <div><small>Created</small><h4>${new Date(task.createdAt).toLocaleDateString()}</h4></div>
-                    ${task.dueDate ? `<div><small>Due Date</small><h4>${new Date(task.dueDate).toLocaleDateString()}</h4></div>` : ''}
-                </div>
-            </div>
-            <div class="detail-card"><h3>💬 Comments (${(task.comments || []).length})</h3>
-                <div id="commentsList" style="max-height:300px; overflow-y:auto; margin-bottom:12px;">
-                    ${(task.comments || []).length === 0 ? '<p style="color:#94a3b8; text-align:center; padding:20px;">No comments yet</p>' : task.comments.map(c => `
-                        <div class="comment-item">
-                            <div class="comment-top">
-                                <div><strong class="comment-author">${escapeHtml(c.author)}</strong><span class="comment-role">${c.authorRole}</span></div>
-                                <small>${new Date(c.createdAt).toLocaleString()}</small>
-                            </div>
-                            <div class="comment-text">${escapeHtml(c.text)}</div>
-                        </div>
-                    `).join('')}
-                </div>
-                <textarea id="commentInput" rows="2" placeholder="Add your feedback..."></textarea>
-                <button class="primary-btn" onclick="postComment()"><i class="fas fa-paper-plane"></i> Post Comment</button>
-            </div>
-        </div>
-    `;
-    document.getElementById('taskModal').style.display = 'flex';
-}
+    const input =
+        document.getElementById('commentInput');
 
-function closeModal(modalId) {
-    document.getElementById(modalId).style.display = 'none';
-}
+    const text =
+        input.value.trim();
 
-async function postComment() {
-    const input = document.getElementById('commentInput');
-    const text = input.value.trim();
-    if (!text) { showNotification('Please enter a comment', 'error'); return; }
-    
-    const success = await addComment(currentTask._id, text);
-    if (success) {
+    if(!text){
+
+        showNotification(
+            'Please enter comment',
+            'error'
+        );
+
+        return;
+    }
+
+    const success =
+        await addComment(currentTask._id,text);
+
+    if(success){
+
         input.value = '';
-        showNotification('Comment added!', 'success');
+
+        showNotification(
+            'Comment added successfully',
+            'success'
+        );
+
         await loadTasks();
+
         openTask(currentTask._id);
-    } else {
-        showNotification('Failed to add comment', 'error');
+
+    }else{
+
+        showNotification(
+            'Failed to add comment',
+            'error'
+        );
+
     }
+
 }
 
-function initializeCharts(stats) {
-    const statusCtx = document.getElementById('statusChart');
-    const priorityCtx = document.getElementById('priorityChart');
-    if (statusChart) statusChart.destroy();
-    if (priorityChart) priorityChart.destroy();
-    
-    if (statusCtx) {
-        statusChart = new Chart(statusCtx, {
-            type: 'doughnut',
-            data: { labels: ['Todo', 'In Progress', 'Completed'], datasets: [{ data: [stats.todo, stats.inProgress, stats.completed], backgroundColor: ['#f59e0b', '#3b82f6', '#10b981'], borderWidth: 0 }] },
-            options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'bottom', labels: { font: { size: 11 } } } } }
-        });
-    }
-    if (priorityCtx) {
-        priorityChart = new Chart(priorityCtx, {
-            type: 'bar',
-            data: { labels: ['High', 'Medium', 'Low'], datasets: [{ label: 'Tasks', data: [stats.highPriority, stats.mediumPriority, stats.lowPriority], backgroundColor: ['#ef4444', '#f59e0b', '#10b981'], borderRadius: 8 }] },
-            options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } }
-        });
-    }
+function closeModal(modalId){
+
+    document.getElementById(modalId)
+        .style.display = 'none';
+
 }
 
-function showNotification(msg, type) {
-    const toast = document.createElement('div');
-    toast.style.cssText = `position:fixed; bottom:20px; right:20px; background:${type === 'success' ? '#10b981' : '#ef4444'}; color:white; padding:10px 16px; border-radius:10px; z-index:2000; font-size:13px; font-weight:500;`;
-    toast.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i> ${msg}`;
+/* =========================
+CHARTS
+========================= */
+
+function initializeCharts(stats){
+
+    if(statusChart){
+        statusChart.destroy();
+    }
+
+    if(priorityChart){
+        priorityChart.destroy();
+    }
+
+    const statusCtx =
+        document.getElementById('statusChart');
+
+    const priorityCtx =
+        document.getElementById('priorityChart');
+
+    if(statusCtx){
+
+        statusChart = new Chart(statusCtx,{
+            type:'doughnut',
+            data:{
+                labels:[
+                    'Pending',
+                    'In Progress',
+                    'Completed'
+                ],
+                datasets:[{
+                    data:[
+                        stats.pending,
+                        stats.inProgress,
+                        stats.completed
+                    ],
+                    backgroundColor:[
+                        '#9333ea',
+                        '#3b82f6',
+                        '#10b981'
+                    ],
+                    borderWidth:0
+                }]
+            },
+            options:{
+                responsive:true,
+                plugins:{
+                    legend:{
+                        position:'bottom'
+                    }
+                }
+            }
+        });
+
+    }
+
+    if(priorityCtx){
+
+        priorityChart = new Chart(priorityCtx,{
+            type:'bar',
+            data:{
+                labels:[
+                    'High',
+                    'Medium',
+                    'Low'
+                ],
+                datasets:[{
+                    data:[
+                        stats.highPriority,
+                        stats.mediumPriority,
+                        stats.lowPriority
+                    ],
+                    backgroundColor:[
+                        '#ef4444',
+                        '#f59e0b',
+                        '#10b981'
+                    ],
+                    borderRadius:10
+                }]
+            },
+            options:{
+                responsive:true,
+                plugins:{
+                    legend:{
+                        display:false
+                    }
+                },
+                scales:{
+                    y:{
+                        beginAtZero:true
+                    }
+                }
+            }
+        });
+
+    }
+
+}
+
+/* =========================
+UTILS
+========================= */
+
+function showNotification(message,type){
+
+    const toast =
+        document.createElement('div');
+
+    toast.style.cssText = `
+        position:fixed;
+        bottom:20px;
+        right:20px;
+        background:${type === 'success' ? '#10b981' : '#ef4444'};
+        color:white;
+        padding:12px 18px;
+        border-radius:12px;
+        z-index:2000;
+        font-size:13px;
+        font-weight:600;
+        box-shadow:0 10px 25px rgba(0,0,0,0.15);
+    `;
+
+    toast.innerHTML = `
+        <i class="fas ${
+            type === 'success'
+            ? 'fa-check-circle'
+            : 'fa-exclamation-circle'
+        }"></i>
+        ${message}
+    `;
+
     document.body.appendChild(toast);
-    setTimeout(() => toast.remove(), 3000);
+
+    setTimeout(()=>{
+        toast.remove();
+    },3000);
+
 }
 
-function escapeHtml(text) {
-    if (!text) return '';
-    const div = document.createElement('div');
+function escapeHtml(text){
+
+    if(!text){
+        return '';
+    }
+
+    const div =
+        document.createElement('div');
+
     div.textContent = text;
+
     return div.innerHTML;
+
 }
 
-function logout() {
+function logout(){
+
     localStorage.clear();
+
     sessionStorage.clear();
+
     window.location.href = '/';
+
 }
+
 </script>
+
 </body>
 </html>

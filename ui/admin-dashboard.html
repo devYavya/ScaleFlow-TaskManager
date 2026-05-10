@@ -70,6 +70,15 @@
         .status-pending { background: #fef3c7; color: #92400e; }
         .status-approved { background: #dcfce7; color: #166534; }
         .status-rejected { background: #fee2e2; color: #991b1b; }
+        .status-todo { background: #e2e8f0; color: #334155; }
+        .status-in-progress { background: #dbeafe; color: #1d4ed8; }
+        .status-completed { background: #dcfce7; color: #166534; }
+        .status-blocked { background: #fee2e2; color: #991b1b; }
+        .status-in-review { background: #ede9fe; color: #6d28d9; }
+        .status-pending { background: #f3e8ff; color: #7e22ce; }
+        .priority-high { color: #dc2626; font-weight: 700; }
+        .priority-medium { color: #d97706; font-weight: 700; }
+        .priority-low { color: #16a34a; font-weight: 700; }
         
         .btn { background: #667eea; color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: 500; display: inline-flex; align-items: center; gap: 8px; transition: opacity 0.2s; }
         .btn:disabled { opacity: 0.6; cursor: not-allowed; }
@@ -201,7 +210,7 @@
     <div class="top-bar"><div class="page-title"><h1 id="pageTitle">Dashboard</h1><p id="pageSubtitle">Welcome back! Here's what's happening</p></div></div>
     <div id="dashboardSection"><div class="stats-grid" id="stats"></div><div class="charts-grid"><div class="chart-card"><h3>Task Status Distribution</h3><canvas id="taskStatusChart"></canvas></div><div class="chart-card"><h3>User Role Distribution</h3><canvas id="userRoleChart"></canvas></div></div></div>
     <div id="usersSection" style="display:none;"><div class="section"><div class="section-header"><h2>User Management</h2><button class="btn btn-success" onclick="openAddUserModal()"><i class="fas fa-plus"></i> Add User</button></div><div class="tabs"><button class="tab active" onclick="filterUsers('all',this)">All</button><button class="tab" onclick="filterUsers('admin',this)">Admins</button><button class="tab" onclick="filterUsers('client',this)">Clients</button><button class="tab" onclick="filterUsers('developer',this)">Developers</button></div><div class="table-container"><table id="usersTable"><thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Company</th><th>Status</th><th>Actions</th></tr></thead><tbody><tr><td colspan="6" class="loading">Loading...</td></tr></tbody></table></div></div></div>
-    <div id="tasksSection" style="display:none;"><div class="section"><div class="section-header"><h2>Task Management</h2><button class="btn btn-success" onclick="openCreateTaskModal()"><i class="fas fa-plus"></i> Create Task</button></div><div class="table-container"><table id="tasksTable"><thead><tr><th>Task #</th><th>Title</th><th>Assigned To</th><th>Client</th><th>Status</th><th>Priority</th><th>Est. Hours</th><th>Last Updated</th><th>Actions</th></tr></thead><tbody><tr><td colspan="9" class="loading">Loading...</td></tr></tbody></table></div></div></div>
+    <div id="tasksSection" style="display:none;"><div class="section"><div class="section-header"><h2>Task Management</h2><button class="btn btn-success" onclick="openCreateTaskModal()"><i class="fas fa-plus"></i> Create Task</button></div><div class="tabs"><button class="tab active" onclick="filterTasks('all',this)">All</button><button class="tab" onclick="filterTasks('pending',this)">Pending Review</button><button class="tab" onclick="filterTasks('unassigned',this)">Awaiting Assignment</button><button class="tab" onclick="filterTasks('in-progress',this)">In Progress</button><button class="tab" onclick="filterTasks('completed',this)">Completed</button></div><div class="table-container"><table id="tasksTable"><thead><tr><th>Task #</th><th>Title</th><th>Assigned To</th><th>Client</th><th>Status</th><th>Priority</th><th>Estimated Hours</th><th>Updated</th><th>Actions</th></tr></thead><tbody><tr><td colspan="9" class="loading">Loading...</td></tr></tbody></table></div></div></div>
     <div id="activitySection" style="display:none;"><div class="section"><div class="section-header"><h2>Developer Task Activity</h2><div class="tabs"><button class="tab active" onclick="filterActivity('all',this)">All Activities</button><button class="tab" onclick="filterActivity('status',this)">Status Updates</button><button class="tab" onclick="filterActivity('comment',this)">Comments</button><button class="tab" onclick="filterActivity('checklist',this)">Checklist</button><button class="tab" onclick="filterActivity('hours',this)">Hours Logged</button></div></div><div class="activity-timeline" id="activityContainer"></div></div></div>
     <div id="clientsSection" style="display:none;"><div class="section"><div class="section-header"><h2>Client Companies</h2></div><div class="table-container"><table id="clientsTable"><thead><tr><th>Company</th><th>Contact</th><th>Email</th><th>Tasks</th><th>Actions</th></tr></thead><tbody><tr><td colspan="5" class="loading">Loading...</td></tr></tbody></table></div></div></div>
     <div id="attendanceSection" style="display:none;"><div class="section"><div class="section-header"><h2>Attendance Records</h2><button class="btn btn-success" onclick="openMarkAttendanceModal()"><i class="fas fa-plus"></i> Mark Attendance</button></div><div class="table-container"><table id="attendanceTable"><thead><tr><th>Developer</th><th>Date</th><th>Status</th><th>Check In</th><th>Check Out</th><th>Hours</th><th>Work</th><th>Actions</th></tr></thead><tbody><tr><td colspan="8" class="loading">Loading...</td></tr></tbody></table></div></div></div>
@@ -308,12 +317,16 @@
             <div class="form-row">
                 <div class="form-group">
                     <label>Status</label>
-                    <select id="editTaskStatus"><option value="todo">Todo</option><option value="in-progress">In Progress</option><option value="completed">Completed</option></select>
+                    <select id="editTaskStatus"><option value="pending">Pending Review</option><option value="todo">Todo</option><option value="in-progress">In Progress</option><option value="in-review">In Review</option><option value="blocked">Blocked</option><option value="completed">Completed</option></select>
                 </div>
                 <div class="form-group">
                     <label>Priority</label>
                     <select id="editTaskPriority"><option value="low">Low</option><option value="medium">Medium</option><option value="high">High</option></select>
                 </div>
+            </div>
+            <div class="form-group">
+                <label>Assign Developer</label>
+                <select id="editAssignedDeveloper"><option value="">-- Select Developer --</option></select>
             </div>
             <div class="form-row">
                 <div class="form-group">
@@ -691,21 +704,48 @@
     }
 
     function updateCharts() {
-        const todo       = tasksData.filter(t => t.status === 'todo').length;
+        const pending = tasksData.filter(t => t.status === 'pending').length;
+        const todo = tasksData.filter(t => t.status === 'todo').length;
         const inProgress = tasksData.filter(t => t.status === 'in-progress').length;
-        const completed  = tasksData.filter(t => t.status === 'completed').length;
-        const admins     = usersData.admins?.length     || allUsers.filter(u => u.role === 'admin').length;
-        const clients    = usersData.clients?.length    || allUsers.filter(u => u.role === 'client').length;
+        const completed = tasksData.filter(t => t.status === 'completed').length;
+        const admins = usersData.admins?.length || allUsers.filter(u => u.role === 'admin').length;
+        const clients = usersData.clients?.length || allUsers.filter(u => u.role === 'client').length;
         const developers = usersData.developers?.length || allUsers.filter(u => u.role === 'developer').length;
+
         const taskCtx = document.getElementById('taskStatusChart')?.getContext('2d');
         if (taskCtx) {
             if (taskChart) taskChart.destroy();
-            taskChart = new Chart(taskCtx, { type: 'doughnut', data: { labels: ['Todo', 'In Progress', 'Completed'], datasets: [{ data: [todo, inProgress, completed], backgroundColor: ['#94a3b8', '#3b82f6', '#10b981'], borderWidth: 0 }] } });
+            taskChart = new Chart(taskCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Pending Review', 'Todo', 'In Progress', 'Completed'],
+                    datasets: [{
+                        data: [pending, todo, inProgress, completed],
+                        backgroundColor: ['#9333ea', '#94a3b8', '#3b82f6', '#10b981'],
+                        borderWidth: 0
+                    }]
+                }
+            });
         }
+
         const userCtx = document.getElementById('userRoleChart')?.getContext('2d');
         if (userCtx) {
             if (userChart) userChart.destroy();
-            userChart = new Chart(userCtx, { type: 'bar', data: { labels: ['Admins', 'Clients', 'Developers'], datasets: [{ label: 'Count', data: [admins, clients, developers], backgroundColor: '#667eea', borderRadius: 8 }] }, options: { scales: { y: { beginAtZero: true } } } });
+            userChart = new Chart(userCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Admins', 'Clients', 'Developers'],
+                    datasets: [{
+                        label: 'Count',
+                        data: [admins, clients, developers],
+                        backgroundColor: '#667eea',
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    scales: { y: { beginAtZero: true } }
+                }
+            });
         }
     }
 
@@ -731,29 +771,30 @@
             </tr>`).join('');
     }
 
-    function renderTasksTable() {
+    function renderTasksTable(filteredTasks = tasksData) {
         const tbody = document.querySelector('#tasksTable tbody');
-        if (!tasksData.length) { tbody.innerHTML = '<tr><td colspan="9" class="loading">No tasks found</td></tr>'; return; }
-        tbody.innerHTML = tasksData.map(t => {
-            const estHours = t.estimateHours != null
-                ? `<span class="est-hours-badge"><i class="fas fa-clock"></i> ${t.estimateHours}h</span>`
-                : '<span style="color:#94a3b8;">—</span>';
-            return `
+        if (!filteredTasks.length) {
+            tbody.innerHTML = '<tr><td colspan="9" class="loading">No tasks found</td></tr>';
+            return;
+        }
+
+        tbody.innerHTML = filteredTasks.map(t => `
             <tr>
                 <td><span class="task-number">${escapeHtml(t.taskNumber || (t._id || '').slice(-6).toUpperCase())}</span></td>
                 <td><strong>${escapeHtml(t.title)}</strong></td>
-                <td>${escapeHtml(t.assignedTo?.name || 'Unassigned')}</td>
+                <td>${t.assignedTo?.name ? escapeHtml(t.assignedTo.name) : '<span style="color:#9333ea;font-weight:600;">Awaiting Assignment</span>'}</td>
                 <td>${escapeHtml(t.clientId?.name || 'N/A')}</td>
-                <td><span class="status-badge">${t.status || 'todo'}</span></td>
-                <td>${t.priority || 'medium'}</td>
-                <td>${estHours}</td>
+                <td><span class="status-badge status-${t.status || 'todo'}">${(t.status || 'todo').replace('-', ' ')}</span></td>
+                <td><span class="priority-${t.priority || 'medium'}">${(t.priority || 'medium').toUpperCase()}</span></td>
+                <td>${t.estimatedHours || 0}h</td>
                 <td>${new Date(t.updatedAt).toLocaleString()}</td>
                 <td>
+                    ${t.status === 'pending' ? `<button class="icon-btn" title="Review Request" style="color:#9333ea;" onclick="openEditTaskModal('${t._id}')"><i class="fas fa-clipboard-check"></i></button>` : ''}
                     <button class="icon-btn" title="Edit" onclick="openEditTaskModal('${t._id}')"><i class="fas fa-edit"></i></button>
                     <button class="icon-btn" title="Delete" onclick="deleteTask('${t._id}')" style="color:#ef4444;"><i class="fas fa-trash"></i></button>
                 </td>
-            </tr>`;
-        }).join('');
+            </tr>
+        `).join('');
     }
 
     function renderClientsTable() {
@@ -979,12 +1020,16 @@
         const task = tasksData.find(t => t._id === taskId);
         if (!task) { showNotification('Task not found.', 'error'); return; }
         currentEditTaskId = taskId;
-        document.getElementById('editTaskTitle').value    = task.title || '';
-        document.getElementById('editTaskDesc').value     = task.description || '';
-        document.getElementById('editTaskStatus').value   = task.status || 'todo';
+        document.getElementById('editTaskTitle').value = task.title || '';
+        document.getElementById('editTaskDesc').value = task.description || '';
+        document.getElementById('editTaskStatus').value = task.status || 'todo';
         document.getElementById('editTaskPriority').value = task.priority || 'medium';
-        document.getElementById('editEstimateHours').value = task.estimateHours != null ? task.estimateHours : '';
-        document.getElementById('editActualHours').value   = task.actualHours != null ? task.actualHours : '';
+        document.getElementById('editEstimateHours').value = task.estimatedHours != null ? task.estimatedHours : '';
+        document.getElementById('editActualHours').value = task.actualHours != null ? task.actualHours : '';
+        const developers = allUsers.filter(u => u.role === 'developer');
+        document.getElementById('editAssignedDeveloper').innerHTML =
+            '<option value="">-- Select Developer --</option>' +
+            developers.map(dev => `<option value="${dev._id}" ${task.assignedTo?._id === dev._id ? 'selected' : ''}>${escapeHtml(dev.name)}</option>`).join('');
         clearFormErrors([['editTaskTitle','editTaskTitleError'],['editEstimateHours','editEstimateHoursError']]);
         document.getElementById('editTaskModal').style.display = 'flex';
     }
@@ -1008,11 +1053,14 @@
             title,
             description: document.getElementById('editTaskDesc').value.trim(),
             status: document.getElementById('editTaskStatus').value,
-            priority: document.getElementById('editTaskPriority').value
+            priority: document.getElementById('editTaskPriority').value,
+            estimatedHours: parseFloat(document.getElementById('editEstimateHours').value) || 0,
+            actualHours: parseFloat(document.getElementById('editActualHours').value) || 0,
+            assignedTo: document.getElementById('editAssignedDeveloper').value || null
         };
-        if (estHours !== null) payload.estimateHours = estHours;
-        const actHoursRaw = document.getElementById('editActualHours').value;
-        if (actHoursRaw !== '') payload.actualHours = parseFloat(actHoursRaw);
+        if (payload.assignedTo && payload.status === 'pending') {
+            payload.status = 'todo';
+        }
 
         const success = await updateTask(currentEditTaskId, payload);
         resetBtn(btn);
@@ -1087,6 +1135,20 @@
         currentFilter = role;
         renderUsersTable();
         document.querySelectorAll('#usersSection .tabs .tab').forEach(t => t.classList.remove('active'));
+        if (el) el.classList.add('active');
+    }
+
+    function filterTasks(type, el) {
+        let filtered = tasksData;
+        if (type === 'pending') {
+            filtered = tasksData.filter(t => t.status === 'pending');
+        } else if (type === 'unassigned') {
+            filtered = tasksData.filter(t => !t.assignedTo);
+        } else if (type !== 'all') {
+            filtered = tasksData.filter(t => t.status === type);
+        }
+        renderTasksTable(filtered);
+        document.querySelectorAll('#tasksSection .tabs .tab').forEach(tab => tab.classList.remove('active'));
         if (el) el.classList.add('active');
     }
 
