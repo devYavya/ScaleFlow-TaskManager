@@ -5,8 +5,8 @@ const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
 const User = require('../models/User');
 const { authenticate } = require('../middleware/auth');
+const { sendResetPasswordEmail, sendWelcomeEmail } = require('../utils/emailService');
 
-// Mock email service for now
 const sendMockEmail = (to, subject, body) => {
     console.log('\n📧 ========== EMAIL ==========');
     console.log(`   To: ${to}`);
@@ -15,7 +15,6 @@ const sendMockEmail = (to, subject, body) => {
     console.log('   ============================\n');
 };
 
-// @route   POST /api/auth/register
 router.post('/register', async (req, res, next) => {
     try {
         const { name, email, password, role, company } = req.body;
@@ -50,7 +49,6 @@ router.post('/register', async (req, res, next) => {
     }
 });
 
-// @route   POST /api/auth/login
 router.post('/login', async (req, res, next) => {
     try {
         const { email, password } = req.body;
@@ -93,37 +91,70 @@ router.post('/login', async (req, res, next) => {
     }
 });
 
-// @route   POST /api/auth/forgot-password
-router.post('/forgot-password', async (req, res, next) => {
+router.post('/forgot-password', async (req, res) => {
+    console.log('🔵 FORGOT PASSWORD REQUEST RECEIVED');
+    console.log('📧 Email:', req.body.email);
+    
     try {
         const { email } = req.body;
         
+        if (!email) {
+            return res.status(400).json({ error: 'Email is required' });
+        }
+        
         const user = await User.findOne({ email });
+        console.log('🔍 User found:', user ? 'Yes' : 'No');
+        
         if (!user) {
-            return res.json({ message: 'If account exists, reset link will be sent' });
+            console.log('⚠️ User not found, but returning success for security');
+            return res.status(200).json({ 
+                message: 'If an account exists with this email, you will receive reset instructions.' 
+            });
         }
         
         const resetToken = crypto.randomBytes(32).toString('hex');
+        const resetTokenExpiry = Date.now() + 3600000;
+        
         user.resetToken = resetToken;
-        user.resetTokenExpiry = Date.now() + 3600000; // 1 hour
+        user.resetTokenExpiry = resetTokenExpiry;
         await user.save();
         
-        const resetLink = `https://scaleflow-taskmanager.onrender.com/reset-password.html?token=${resetToken}&email=${email}`;
-        sendMockEmail(email, 'Reset Your Password', `Click here to reset: ${resetLink}`);
+        console.log('✅ Reset token generated and saved');
         
-        res.json({ message: 'Password reset instructions sent to your email' });
+        console.log('📧 Attempting to send reset email to:', email);
+        const emailResult = await sendResetPasswordEmail(email, resetToken, user.name);
+        
+        console.log('📧 Email send result:', emailResult);
+        
+        if (!emailResult.success) {
+            console.error('❌ Failed to send reset email:', emailResult.error);
+            return res.status(500).json({ 
+                error: 'Failed to send reset email. Please try again later.' 
+            });
+        }
+        
+        res.status(200).json({ 
+            message: 'Password reset instructions have been sent to your email.' 
+        });
+        
     } catch (error) {
-        next(error);
+        console.error('🔴 Forgot password error:', error);
+        res.status(500).json({ error: 'Server error. Please try again later.' });
     }
 });
 
-// @route   POST /api/auth/reset-password
-router.post('/reset-password', async (req, res, next) => {
+router.post('/reset-password', async (req, res) => {
+    console.log('🔵 RESET PASSWORD REQUEST RECEIVED');
+    
     try {
-        const { email, token, newPassword } = req.body;
+        const { token, email, newPassword } = req.body;
+        
+        if (!token || !email || !newPassword) {
+            return res.status(400).json({ error: 'Token, email, and new password are required' });
+        }
         
         const user = await User.findOne({
-            email,
+            email: email,
             resetToken: token,
             resetTokenExpiry: { $gt: Date.now() }
         });
@@ -137,16 +168,24 @@ router.post('/reset-password', async (req, res, next) => {
         user.resetTokenExpiry = undefined;
         await user.save();
         
-        sendMockEmail(email, 'Password Reset Successful', 'Your password has been reset successfully!');
+        console.log('✅ Password reset successful for:', email);
         
-        res.json({ success: true, message: 'Password reset successful' });
+        try {
+            await sendWelcomeEmail(email, user.name);
+        } catch (emailError) {
+            console.error('Failed to send welcome email:', emailError);
+        }
+        
+        res.status(200).json({ 
+            message: 'Password has been reset successfully. You can now login with your new password.' 
+        });
+        
     } catch (error) {
-        next(error);
+        console.error('🔴 Reset password error:', error);
+        res.status(500).json({ error: 'Server error. Please try again later.' });
     }
 });
 
-// @route   POST /api/auth/setup-account
-// @desc    Setup account for new users (first time password set)
 router.post('/setup-account', async (req, res, next) => {
     try {
         const { email, password } = req.body;
@@ -160,16 +199,12 @@ router.post('/setup-account', async (req, res, next) => {
             return res.status(404).json({ error: 'User not found' });
         }
         
-        // Check if user already has a password set (not temporary)
-        // You can add a flag like isFirstLogin, but for now just update password
         user.password = password;
         user.isActive = true;
         await user.save();
         
-        // Send welcome email
         sendMockEmail(email, 'Welcome to ScaleFlow', `Your account has been activated! Login at: https://scaleflow-taskmanager.onrender.com/login.html`);
         
-        // Generate token for auto-login
         const token = jwt.sign(
             { userId: user._id, role: user.role },
             process.env.JWT_SECRET || 'secret',
@@ -194,12 +229,10 @@ router.post('/setup-account', async (req, res, next) => {
     }
 });
 
-// @route   GET /api/auth/me
 router.get('/me', authenticate, async (req, res) => {
     res.json({ user: req.user });
 });
 
-// @route   POST /api/auth/logout
 router.post('/logout', authenticate, async (req, res) => {
     res.json({ message: 'Logged out successfully' });
 });

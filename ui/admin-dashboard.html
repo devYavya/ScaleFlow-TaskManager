@@ -25,12 +25,30 @@
         .nav-item { padding: 12px 24px; margin: 4px 12px; border-radius: 12px; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; gap: 12px; color: #cbd5e1; }
         .nav-item:hover { background: rgba(102,126,234,0.2); color: white; transform: translateX(5px); }
         .nav-item.active { background: #667eea; color: white; box-shadow: 0 4px 12px rgba(102,126,234,0.3); }
-        .logout-btn {
-            margin-top: 20px; width: 100%; padding: 12px;
-            background: rgba(239,68,68,0.2); border: none; border-radius: 12px; color: #ef4444;
-            cursor: pointer; display: flex; align-items: center; gap: 10px; justify-content: center; font-weight: 600;
-        }
-        .logout-btn:hover { background: #ef4444; color: white; }
+        .logout-btn{
+    width: 230px;
+    position:absolute;
+    left:20px;
+    right:20px;
+    bottom:20px;
+    border:none;
+    background:rgba(239,68,68,0.15);
+    color:#ef4444;
+    padding:12px;
+    border-radius:12px;
+    cursor:pointer;
+    font-weight:600;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    transition:0.2s;
+}
+
+.logout-btn:hover{
+    background:#ef4444;
+    color:white;
+}
         
         .main-content { margin-left: 280px; padding: 24px 32px; min-height: 100vh; }
         .top-bar { background: white; border-radius: 16px; padding: 20px 24px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
@@ -170,7 +188,7 @@
         .activity-checklist { background: #fef3c7; color: #92400e; }
         .activity-hours { background: #e0e7ff; color: #3730a3; }
 
-        /* Estimate hours badge */
+        /* estimated hours badge */
         .est-hours-badge {
             display: inline-flex; align-items: center; gap: 4px;
             background: #f0fdf4; color: #166534;
@@ -210,7 +228,7 @@
     <div class="top-bar"><div class="page-title"><h1 id="pageTitle">Dashboard</h1><p id="pageSubtitle">Welcome back! Here's what's happening</p></div></div>
     <div id="dashboardSection"><div class="stats-grid" id="stats"></div><div class="charts-grid"><div class="chart-card"><h3>Task Status Distribution</h3><canvas id="taskStatusChart"></canvas></div><div class="chart-card"><h3>User Role Distribution</h3><canvas id="userRoleChart"></canvas></div></div></div>
     <div id="usersSection" style="display:none;"><div class="section"><div class="section-header"><h2>User Management</h2><button class="btn btn-success" onclick="openAddUserModal()"><i class="fas fa-plus"></i> Add User</button></div><div class="tabs"><button class="tab active" onclick="filterUsers('all',this)">All</button><button class="tab" onclick="filterUsers('admin',this)">Admins</button><button class="tab" onclick="filterUsers('client',this)">Clients</button><button class="tab" onclick="filterUsers('developer',this)">Developers</button></div><div class="table-container"><table id="usersTable"><thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Company</th><th>Status</th><th>Actions</th></tr></thead><tbody><tr><td colspan="6" class="loading">Loading...</td></tr></tbody></table></div></div></div>
-    <div id="tasksSection" style="display:none;"><div class="section"><div class="section-header"><h2>Task Management</h2><button class="btn btn-success" onclick="openCreateTaskModal()"><i class="fas fa-plus"></i> Create Task</button></div><div class="tabs"><button class="tab active" onclick="filterTasks('all',this)">All</button><button class="tab" onclick="filterTasks('pending',this)">Pending Review</button><button class="tab" onclick="filterTasks('unassigned',this)">Awaiting Assignment</button><button class="tab" onclick="filterTasks('in-progress',this)">In Progress</button><button class="tab" onclick="filterTasks('completed',this)">Completed</button></div><div class="table-container"><table id="tasksTable"><thead><tr><th>Task #</th><th>Title</th><th>Assigned To</th><th>Client</th><th>Status</th><th>Priority</th><th>Estimated Hours</th><th>Updated</th><th>Actions</th></tr></thead><tbody><tr><td colspan="9" class="loading">Loading...</td></tr></tbody></table></div></div></div>
+    <div id="tasksSection" style="display:none;"><div class="section"><div class="section-header"><h2>Task Management</h2><button class="btn btn-success" onclick="openCreateTaskModal()"><i class="fas fa-plus"></i> Create Task</button></div><div class="tabs"><button class="tab active" onclick="filterTasks('all',this)">All</button><button class="tab" onclick="filterTasks('pending',this)">Pending Review</button><button class="tab" onclick="filterTasks('unassigned',this)">Awaiting Assignment</button><button class="tab" onclick="filterTasks('in-progress',this)">In Progress</button><button class="tab" onclick="filterTasks('completed',this)">Completed</button></div><div class="table-container"><table id="tasksTable"><thead><tr><th>Task #</th><th>Title</th><th>Assigned To</th><th>Client</th><th>Status</th><th>Priority</th><th>estimated Hours</th><th>Updated</th><th>Actions</th></tr></thead><tbody><tr><td colspan="9" class="loading">Loading...</td></tr></tbody></table></div></div></div>
     <div id="activitySection" style="display:none;"><div class="section"><div class="section-header"><h2>Developer Task Activity</h2><div class="tabs"><button class="tab active" onclick="filterActivity('all',this)">All Activities</button><button class="tab" onclick="filterActivity('status',this)">Status Updates</button><button class="tab" onclick="filterActivity('comment',this)">Comments</button><button class="tab" onclick="filterActivity('checklist',this)">Checklist</button><button class="tab" onclick="filterActivity('hours',this)">Hours Logged</button></div></div><div class="activity-timeline" id="activityContainer"></div></div></div>
     <div id="clientsSection" style="display:none;"><div class="section"><div class="section-header"><h2>Client Companies</h2></div><div class="table-container"><table id="clientsTable"><thead><tr><th>Company</th><th>Contact</th><th>Email</th><th>Tasks</th><th>Actions</th></tr></thead><tbody><tr><td colspan="5" class="loading">Loading...</td></tr></tbody></table></div></div></div>
     <div id="attendanceSection" style="display:none;"><div class="section"><div class="section-header"><h2>Attendance Records</h2><button class="btn btn-success" onclick="openMarkAttendanceModal()"><i class="fas fa-plus"></i> Mark Attendance</button></div><div class="table-container"><table id="attendanceTable"><thead><tr><th>Developer</th><th>Date</th><th>Status</th><th>Check In</th><th>Check Out</th><th>Hours</th><th>Work</th><th>Actions</th></tr></thead><tbody><tr><td colspan="8" class="loading">Loading...</td></tr></tbody></table></div></div></div>
@@ -283,9 +301,9 @@
                     <select id="taskPriority"><option value="low">Low</option><option value="medium" selected>Medium</option><option value="high">High</option></select>
                 </div>
                 <div class="form-group">
-                    <label>Estimate Hours</label>
-                    <input type="number" id="estimateHours" min="0.5" max="999" step="0.5" placeholder="e.g. 8">
-                    <span class="field-error" id="estimateHoursError">Enter a positive number (0.5–999).</span>
+                    <label>estimated Hours</label>
+                    <input type="number" id="estimatedHours" min="0.5" max="999" step="0.5" placeholder="e.g. 8">
+                    <span class="field-error" id="estimatedHoursError">Enter a positive number (0.5–999).</span>
                 </div>
                 <div class="form-group">
                     <label>Due Date</label>
@@ -330,9 +348,9 @@
             </div>
             <div class="form-row">
                 <div class="form-group">
-                    <label>Estimate Hours</label>
-                    <input type="number" id="editEstimateHours" min="0.5" max="999" step="0.5" placeholder="e.g. 8">
-                    <span class="field-error" id="editEstimateHoursError">Enter a positive number (0.5–999).</span>
+                    <label>estimated Hours</label>
+                    <input type="number" id="editestimatedHours" min="0.5" max="999" step="0.5" placeholder="e.g. 8">
+                    <span class="field-error" id="editestimatedHoursError">Enter a positive number (0.5–999).</span>
                 </div>
                 <div class="form-group">
                     <label>Actual Hours</label>
@@ -936,7 +954,7 @@
         const desc     = document.getElementById('taskDesc').value.trim();
         const clientId = document.getElementById('taskClient').value;
         const devId    = document.getElementById('taskDeveloper').value;
-        const estHoursRaw = document.getElementById('estimateHours').value;
+        const estHoursRaw = document.getElementById('estimatedHours').value;
         const estHours = estHoursRaw !== '' ? parseFloat(estHoursRaw) : null;
 
         valid = !setFieldError('taskTitle','taskTitleError', !title) && valid;
@@ -944,15 +962,15 @@
         valid = !setFieldError('taskClient','taskClientError', !clientId) && valid;
         valid = !setFieldError('taskDeveloper','taskDeveloperError', !devId) && valid;
         if (estHours !== null && (isNaN(estHours) || estHours < 0.5 || estHours > 999)) {
-            setFieldError('estimateHours','estimateHoursError', true); valid = false;
-        } else { setFieldError('estimateHours','estimateHoursError', false); }
+            setFieldError('estimatedHours','estimatedHoursError', true); valid = false;
+        } else { setFieldError('estimatedHours','estimatedHoursError', false); }
         if (!valid) return;
 
         const btn = document.getElementById('createTaskBtn');
         setBtnLoading(btn, 'Creating…');
         try {
             const payload = { title, description: desc, clientId, assignedTo: devId, priority: document.getElementById('taskPriority').value, dueDate: document.getElementById('dueDate').value };
-            if (estHours !== null) payload.estimateHours = estHours;
+            if (estHours !== null) payload.estimatedHours = estHours;
             const res = await apiFetch('/tasks', { method: 'POST', body: JSON.stringify(payload) });
             if (res.ok) {
                 showNotification('Task created!', 'success');
@@ -1024,27 +1042,27 @@
         document.getElementById('editTaskDesc').value = task.description || '';
         document.getElementById('editTaskStatus').value = task.status || 'todo';
         document.getElementById('editTaskPriority').value = task.priority || 'medium';
-        document.getElementById('editEstimateHours').value = task.estimatedHours != null ? task.estimatedHours : '';
+        document.getElementById('editestimatedHours').value = task.estimatedHours != null ? task.estimatedHours : '';
         document.getElementById('editActualHours').value = task.actualHours != null ? task.actualHours : '';
         const developers = allUsers.filter(u => u.role === 'developer');
         document.getElementById('editAssignedDeveloper').innerHTML =
             '<option value="">-- Select Developer --</option>' +
             developers.map(dev => `<option value="${dev._id}" ${task.assignedTo?._id === dev._id ? 'selected' : ''}>${escapeHtml(dev.name)}</option>`).join('');
-        clearFormErrors([['editTaskTitle','editTaskTitleError'],['editEstimateHours','editEstimateHoursError']]);
+        clearFormErrors([['editTaskTitle','editTaskTitleError'],['editestimatedHours','editestimatedHoursError']]);
         document.getElementById('editTaskModal').style.display = 'flex';
     }
 
     document.getElementById('editTaskForm')?.addEventListener('submit', async (e) => {
         e.preventDefault();
         const title = document.getElementById('editTaskTitle').value.trim();
-        const estHoursRaw = document.getElementById('editEstimateHours').value;
+        const estHoursRaw = document.getElementById('editestimatedHours').value;
         const estHours = estHoursRaw !== '' ? parseFloat(estHoursRaw) : null;
         let valid = true;
 
         valid = !setFieldError('editTaskTitle','editTaskTitleError', !title) && valid;
         if (estHours !== null && (isNaN(estHours) || estHours < 0.5 || estHours > 999)) {
-            setFieldError('editEstimateHours','editEstimateHoursError', true); valid = false;
-        } else { setFieldError('editEstimateHours','editEstimateHoursError', false); }
+            setFieldError('editestimatedHours','editestimatedHoursError', true); valid = false;
+        } else { setFieldError('editestimatedHours','editestimatedHoursError', false); }
         if (!valid) return;
 
         const btn = document.getElementById('saveTaskBtn');
@@ -1054,7 +1072,7 @@
             description: document.getElementById('editTaskDesc').value.trim(),
             status: document.getElementById('editTaskStatus').value,
             priority: document.getElementById('editTaskPriority').value,
-            estimatedHours: parseFloat(document.getElementById('editEstimateHours').value) || 0,
+            estimatedHours: parseFloat(document.getElementById('editestimatedHours').value) || 0,
             actualHours: parseFloat(document.getElementById('editActualHours').value) || 0,
             assignedTo: document.getElementById('editAssignedDeveloper').value || null
         };
@@ -1082,7 +1100,7 @@
         document.getElementById('taskClient').innerHTML     = '<option value="">-- Select Client --</option>' + clients.map(c => `<option value="${c._id}">${escapeHtml(c.name)}</option>`).join('');
         document.getElementById('taskDeveloper').innerHTML  = '<option value="">-- Select Developer --</option>' + devs.map(d => `<option value="${d._id}">${escapeHtml(d.name)}</option>`).join('');
         document.getElementById('taskForm').reset();
-        clearFormErrors([['taskTitle','taskTitleError'],['taskDesc','taskDescError'],['taskClient','taskClientError'],['taskDeveloper','taskDeveloperError'],['estimateHours','estimateHoursError']]);
+        clearFormErrors([['taskTitle','taskTitleError'],['taskDesc','taskDescError'],['taskClient','taskClientError'],['taskDeveloper','taskDeveloperError'],['estimatedHours','estimatedHoursError']]);
         document.getElementById('taskModal').style.display = 'flex';
     }
 

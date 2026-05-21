@@ -436,7 +436,14 @@
     </div>
 
     <script>
-        const API_URL = 'https://task-tracker.scaleflowsoftware.com/api';
+
+        const API_URL = (() => {
+        const host = window.location.hostname;
+        if (host === 'localhost' || host === '127.0.0.1') {
+            return 'http://localhost:9040/api';
+        }
+        return `${window.location.origin}/api`;
+    })();
 
         // Check if already logged in
         const savedToken = localStorage.getItem('token');
@@ -491,6 +498,10 @@
                     } else if(data.user.role === 'client')
                     {
                         window.location.href = '/client-dashboard.html';
+                    }
+                    else if (data.user.role === 'client-team')
+                    {
+                        window.location.href= '/client-team.html';
                     }
                     else {
                     

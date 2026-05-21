@@ -247,6 +247,116 @@ MAIN
     transform:translateY(-2px);
 }
 
+/* Create Task Card */
+.create-task-card{
+    background:white;
+    border-radius:18px;
+    padding:20px;
+    margin-bottom:20px;
+    box-shadow:0 2px 10px rgba(0,0,0,0.04);
+}
+
+.create-task-header{
+    margin-bottom:20px;
+    padding-bottom:15px;
+    border-bottom:1px solid var(--border);
+}
+
+.create-task-header h2{
+    font-size:20px;
+    margin-bottom:5px;
+}
+
+.create-task-header p{
+    font-size:13px;
+    color:var(--muted);
+}
+
+.form-group{
+    margin-bottom:20px;
+}
+
+.form-group label{
+    display:block;
+    margin-bottom:8px;
+    font-weight:500;
+    font-size:14px;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select{
+    width:100%;
+    padding:12px;
+    border:1px solid var(--border);
+    border-radius:12px;
+    font-family:inherit;
+    font-size:14px;
+    transition:0.2s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus{
+    outline:none;
+    border-color:var(--primary);
+    box-shadow:0 0 0 3px rgba(99,102,241,0.1);
+}
+
+.quick-actions{
+    display:flex;
+    gap:10px;
+    margin-bottom:20px;
+    flex-wrap:wrap;
+}
+
+.quick-btn{
+    flex:1;
+    background:#f8fafc;
+    border:1px solid var(--border);
+    padding:10px;
+    border-radius:10px;
+    cursor:pointer;
+    font-size:13px;
+    transition:0.2s;
+}
+
+.quick-btn:hover{
+    background:var(--primary);
+    color:white;
+    border-color:var(--primary);
+}
+
+.btn-submit{
+    background:linear-gradient(135deg,#6366f1,#8b5cf6);
+    color:white;
+    border:none;
+    padding:12px 24px;
+    border-radius:12px;
+    cursor:pointer;
+    font-weight:600;
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    transition:0.2s;
+}
+
+.btn-submit:hover{
+    transform:translateY(-2px);
+    box-shadow:0 5px 15px rgba(99,102,241,0.3);
+}
+
+.btn-secondary{
+    background:#f1f5f9;
+    color:#475569;
+    border:none;
+    padding:10px 20px;
+    border-radius:10px;
+    cursor:pointer;
+    font-weight:500;
+    margin-left:10px;
+}
+
 /* =========================
 STATS
 ========================= */
@@ -307,6 +417,145 @@ STATS
 .purple-bg{
     background:#f3e8ff;
     color:#7e22ce;
+}
+
+/* =========================
+TEAM SECTION
+========================= */
+
+.team-section{
+    background:white;
+    border-radius:18px;
+    padding:20px;
+    margin-bottom:20px;
+    box-shadow:0 2px 10px rgba(0,0,0,0.04);
+}
+
+.team-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
+    flex-wrap:wrap;
+    gap:12px;
+}
+
+.team-header h2{
+    font-size:20px;
+}
+
+.team-header p{
+    font-size:13px;
+    color:var(--muted);
+    margin-top:4px;
+}
+
+.btn-invite{
+    border:none;
+    background:linear-gradient(135deg,#10b981,#059669);
+    color:white;
+    padding:10px 18px;
+    border-radius:12px;
+    cursor:pointer;
+    font-weight:600;
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+
+.team-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+    gap:16px;
+}
+
+.team-card{
+    border:1px solid var(--border);
+    border-radius:16px;
+    padding:16px;
+    transition:0.2s;
+    cursor:pointer;
+}
+
+.team-card:hover{
+    transform:translateY(-3px);
+    box-shadow:0 8px 20px rgba(0,0,0,0.08);
+}
+
+.team-card.active{
+    border-color:var(--primary);
+    background:#f8fafc;
+}
+
+.team-card-header{
+    display:flex;
+    gap:12px;
+    margin-bottom:12px;
+}
+
+.team-avatar{
+    width:48px;
+    height:48px;
+    border-radius:12px;
+    background:linear-gradient(135deg,#6366f1,#8b5cf6);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:700;
+    font-size:18px;
+}
+
+.team-info{
+    flex:1;
+}
+
+.team-info h4{
+    font-size:16px;
+    margin-bottom:4px;
+}
+
+.team-info small{
+    color:var(--muted);
+    font-size:11px;
+}
+
+.team-stats{
+    margin:12px 0;
+    padding:10px;
+    background:#f8fafc;
+    border-radius:10px;
+}
+
+.team-stat-item{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:6px;
+    font-size:12px;
+}
+
+.team-stat-label{
+    color:var(--muted);
+}
+
+.team-stat-value{
+    font-weight:600;
+    color:var(--primary);
+}
+
+.view-tasks-btn{
+    width:100%;
+    padding:8px;
+    background:#f1f5f9;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+    font-weight:500;
+    margin-top:10px;
+    transition:0.2s;
+}
+
+.view-tasks-btn:hover{
+    background:#e2e8f0;
 }
 
 /* =========================
@@ -380,6 +629,7 @@ TASKS
     cursor:pointer;
     font-size:12px;
     font-weight:600;
+    transition:0.2s;
 }
 
 .filter-btn.active{
@@ -576,6 +826,17 @@ select{
     font-weight:600;
 }
 
+.secondary-btn{
+    width:100%;
+    border:1px solid var(--border);
+    background:white;
+    padding:10px;
+    border-radius:12px;
+    cursor:pointer;
+    margin-top:10px;
+    font-weight:500;
+}
+
 .info-box{
     background:#eef2ff;
     color:#4338ca;
@@ -635,44 +896,34 @@ RESPONSIVE
 ========================= */
 
 @media(max-width:1000px){
-
     .stats-grid{
         grid-template-columns:repeat(2,1fr);
     }
-
     .charts-grid{
         grid-template-columns:1fr;
     }
-
 }
 
 @media(max-width:768px){
-
     .sidebar{
         display:none;
     }
-
     .main{
         margin-left:0;
     }
-
     .stats-grid{
         grid-template-columns:1fr;
     }
-
     .tasks-grid{
         grid-template-columns:1fr;
     }
-
     .top-bar{
         flex-direction:column;
         align-items:stretch;
     }
-
     .search-box{
         width:100%;
     }
-
 }
 
 </style>
@@ -684,41 +935,37 @@ RESPONSIVE
 <script>
 
 const API_URL = (() => {
-        const host = window.location.hostname;
-        if (host === 'localhost' || host === '127.0.0.1') {
-            return 'http://localhost:9040/api';
-        }
-        return `${window.location.origin}/api`;
-    })();
+    const host = window.location.hostname;
+    if (host === 'localhost' || host === '127.0.0.1') {
+        return 'http://localhost:9040/api';
+    }
+    return `${window.location.origin}/api`;
+})();
 
 let currentUser = null;
 let authToken = null;
 let tasks = [];
+let teamMembers = [];
 let currentTask = null;
 let currentFilter = 'all';
+let currentView = 'dashboard';
+let selectedMember = null;
 
 let statusChart = null;
 let priorityChart = null;
 
-const savedToken =
-    localStorage.getItem('token') ||
-    sessionStorage.getItem('token');
-
-const savedUser =
-    localStorage.getItem('user') ||
-    sessionStorage.getItem('user');
+const savedToken = localStorage.getItem('token') || sessionStorage.getItem('token');
+const savedUser = localStorage.getItem('user') || sessionStorage.getItem('user');
 
 if(savedToken && savedUser){
-
     authToken = savedToken;
     currentUser = JSON.parse(savedUser);
-
+    
     if(currentUser.role !== 'client'){
         window.location.href = '/';
     }else{
         initDashboard();
     }
-
 }else{
     window.location.href = '/';
 }
@@ -728,100 +975,127 @@ INIT
 ========================= */
 
 async function initDashboard(){
-
     await loadTasks();
-
+    await loadTeamMembers();
     renderDashboard();
-
-    setInterval(loadTasksSilently,30000);
-
+    setInterval(loadTasksSilently, 30000);
+    setInterval(loadTeamMembersSilently, 60000);
 }
 
 /* =========================
-API
+API - TEAM MEMBERS
+========================= */
+// Change from:
+// await fetch(`${API_URL}/admin/users`, {...})
+
+// To these:
+
+// Load team members
+async function loadTeamMembers() {
+    try {
+        const res = await fetch(`${API_URL}/client/team-members`, {
+            headers: { 'Authorization': `Bearer ${authToken}` }
+        });
+        const data = await res.json();
+        if (data.success) {
+            teamMembers = data.teamMembers || [];
+            console.log('Team members loaded:', teamMembers.length);
+        }
+    } catch (error) {
+        console.error('Error loading team members:', error);
+    }
+}
+
+// Invite team member
+async function inviteTeamMember(email, name) {
+    try {
+        const res = await fetch(`${API_URL}/client/invite-team-member`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${authToken}`
+            },
+            body: JSON.stringify({ name, email })
+        });
+        const data = await res.json();
+        return { success: res.ok, data };
+    } catch (error) {
+        console.error('Error inviting team member:', error);
+        return { success: false, error: error.message };
+    }
+}
+
+// Load all tasks (client + team members)
+async function loadAllTasks() {
+    try {
+        const res = await fetch(`${API_URL}/client/all-tasks`, {
+            headers: { 'Authorization': `Bearer ${authToken}` }
+        });
+        const data = await res.json();
+        if (data.success) {
+            allTasks = data.tasks || [];
+            console.log('Tasks loaded:', allTasks.length);
+        }
+    } catch (error) {
+        console.error('Error loading tasks:', error);
+    }
+}
+
+/* =========================
+API - TASKS
 ========================= */
 
 async function loadTasks(){
-
     try{
-
         const res = await fetch(`${API_URL}/tasks`,{
-            headers:{
-                'Authorization':`Bearer ${authToken}`
-            }
+            headers: { 'Authorization': `Bearer ${authToken}` }
         });
-
         const data = await res.json();
-
         tasks = data.tasks || [];
-
     }catch(error){
-
         console.error(error);
-
-        showNotification(
-            'Failed to load tasks',
-            'error'
-        );
-
+        showNotification('Failed to load tasks', 'error');
     }
-
 }
 
 async function loadTasksSilently(){
-
     try{
-
         const res = await fetch(`${API_URL}/tasks`,{
-            headers:{
-                'Authorization':`Bearer ${authToken}`
-            }
+            headers: { 'Authorization': `Bearer ${authToken}` }
         });
-
         const data = await res.json();
-
         tasks = data.tasks || [];
-
-        updateTasksGrid();
-
+        
+        if(currentView === 'dashboard'){
+            updateStatsAndCharts();
+            updateTasksGrid();
+        } else if(currentView === 'member-tasks'){
+            renderMemberTasksView();
+        }
     }catch(error){
         console.error(error);
     }
-
 }
 
-async function createTask(title,description,priority){
-
+async function createTask(title, description, priority){
     try{
-
         const res = await fetch(`${API_URL}/tasks`,{
             method:'POST',
             headers:{
                 'Content-Type':'application/json',
                 'Authorization':`Bearer ${authToken}`
             },
-            body:JSON.stringify({
-                title,
-                description,
-                priority
-            })
+            body:JSON.stringify({ title, description, priority })
         });
-
         return res.ok;
-
     }catch(error){
-
         console.error(error);
-
         return false;
     }
-
 }
 
-async function addComment(taskId,text){
-
+async function addComment(taskId, text){
     try{
-
         const res = await fetch(`${API_URL}/tasks/${taskId}/comments`,{
             method:'POST',
             headers:{
@@ -830,843 +1104,720 @@ async function addComment(taskId,text){
             },
             body:JSON.stringify({ text })
         });
-
         return res.ok;
-
     }catch(error){
-
         return false;
-
     }
-
 }
 
 /* =========================
-STATS
+STATS & DATA PROCESSING
 ========================= */
 
 function getStats(){
-
+    const myTasks = tasks.filter(t => t.createdBy?._id === currentUser._id);
     return{
-        total:tasks.length,
-        pending:tasks.filter(t=>t.status === 'pending').length,
-        inProgress:tasks.filter(t=>t.status === 'in-progress').length,
-        completed:tasks.filter(t=>t.status === 'completed').length,
-        highPriority:tasks.filter(t=>t.priority === 'high' || t.priority === 'critical').length,
-        mediumPriority:tasks.filter(t=>t.priority === 'medium').length,
-        lowPriority:tasks.filter(t=>t.priority === 'low').length
+        total: tasks.length,
+        myTasks: myTasks.length,
+        pending: tasks.filter(t => t.status === 'pending').length,
+        inProgress: tasks.filter(t => t.status === 'in-progress').length,
+        completed: tasks.filter(t => t.status === 'completed').length,
+        highPriority: tasks.filter(t => t.priority === 'high' || t.priority === 'critical').length,
+        mediumPriority: tasks.filter(t => t.priority === 'medium').length,
+        lowPriority: tasks.filter(t => t.priority === 'low').length
     };
+}
 
+function getTeamMemberStats(memberId){
+    const memberTasks = tasks.filter(t => t.assignedTo?._id === memberId);
+    return {
+        total: memberTasks.length,
+        completed: memberTasks.filter(t => t.status === 'completed').length,
+        inProgress: memberTasks.filter(t => t.status === 'in-progress').length,
+        pending: memberTasks.filter(t => t.status === 'pending').length,
+        completionRate: memberTasks.length > 0 
+            ? Math.round((memberTasks.filter(t => t.status === 'completed').length / memberTasks.length) * 100)
+            : 0
+    };
 }
 
 function getFilteredTasks(){
-
-    if(currentFilter === 'all'){
-        return tasks;
+    let filtered = tasks;
+    
+    if(selectedMember){
+        filtered = filtered.filter(t => t.assignedTo?._id === selectedMember);
     }
-
-    return tasks.filter(
-        task => task.status === currentFilter
-    );
-
+    
+    if(currentFilter !== 'all'){
+        filtered = filtered.filter(task => task.status === currentFilter);
+    }
+    
+    return filtered;
 }
 
 function calculateProgress(task){
-
     if(!task.checklist || task.checklist.length === 0){
-
-        if(task.status === 'completed'){
-            return 100;
-        }
-
-        if(task.status === 'in-progress'){
-            return 60;
-        }
-
-        if(task.status === 'pending'){
-            return 10;
-        }
-
+        if(task.status === 'completed') return 100;
+        if(task.status === 'in-progress') return 60;
+        if(task.status === 'pending') return 10;
         return 20;
     }
-
-    const completed =
-        task.checklist.filter(i=>i.completed).length;
-
-    return Math.round(
-        (completed / task.checklist.length) * 100
-    );
-
+    const completed = task.checklist.filter(i => i.completed).length;
+    return Math.round((completed / task.checklist.length) * 100);
 }
 
 /* =========================
-RENDER
+RENDER - DASHBOARD
 ========================= */
 
 function renderDashboard(){
-
+    currentView = 'dashboard';
     const stats = getStats();
-
     const filteredTasks = getFilteredTasks();
-
-    document.getElementById('app').innerHTML = `
     
+    document.getElementById('app').innerHTML = `
     <div class="app">
-
-        <aside class="sidebar">
-
-            <div class="logo">
-                <div class="logo-icon">
-                    <i class="fas fa-layer-group"></i>
-                </div>
-                <div>
-                    <h2>ScaleFlow</h2>
-                    <small>Client Workspace</small>
-                </div>
-            </div>
-
-            <div class="user-card">
-                <div class="avatar">
-                    ${currentUser.name.charAt(0).toUpperCase()}
-                </div>
-                <div class="user-info">
-                    <h4>${escapeHtml(currentUser.name)}</h4>
-                    <small>Client</small>
-
-                    <div class="company-pill">
-                        <i class="fas fa-building"></i>
-                        ${escapeHtml(currentUser.company || 'Organization')}
-                    </div>
-                </div>
-            </div>
-
-            <div class="nav-item active">
-                <i class="fas fa-chart-line"></i>
-                Dashboard
-            </div>
-
-            <button class="logout-btn" onclick="logout()">
-                <i class="fas fa-sign-out-alt"></i>
-                Logout
-            </button>
-
-        </aside>
-
+        ${renderSidebar()}
         <main class="main">
-
-            <div class="top-bar">
-
-                <div class="welcome">
-                    <h1>
-                        Welcome back,
-                        ${escapeHtml(currentUser.name.split(' ')[0])}
-                    </h1>
-
-                    <p>
-                        Create project requests, track progress and collaborate with the ScaleFlow team.
-                    </p>
-                </div>
-
-                <div style="display:flex; gap:12px;">
-
-                    <div class="search-box">
-                        <i class="fas fa-search"></i>
-
-                        <input
-                            type="text"
-                            placeholder="Search tasks..."
-                            id="searchInput"
-                            onkeyup="searchTasks()"
-                        />
-                    </div>
-
-                    <button
-                        class="btn-create"
-                        onclick="openCreateTaskModal()"
-                    >
-                        <i class="fas fa-plus"></i>
-                        New Request
-                    </button>
-
-                </div>
-
-            </div>
-
+            ${renderTopBar()}
+            ${renderCreateTaskCard()}
             <div class="stats-grid">
-
-                <div class="stat-card">
-                    <div class="stat-info">
-                        <h3>${stats.total}</h3>
-                        <p>Total Requests</p>
-                    </div>
-
-                    <div class="stat-icon primary-bg">
-                        <i class="fas fa-tasks"></i>
-                    </div>
-                </div>
-
-                <div class="stat-card">
-                    <div class="stat-info">
-                        <h3>${stats.pending}</h3>
-                        <p>Pending Review</p>
-                    </div>
-
-                    <div class="stat-icon purple-bg">
-                        <i class="fas fa-hourglass-half"></i>
-                    </div>
-                </div>
-
-                <div class="stat-card">
-                    <div class="stat-info">
-                        <h3>${stats.inProgress}</h3>
-                        <p>In Progress</p>
-                    </div>
-
-                    <div class="stat-icon warning-bg">
-                        <i class="fas fa-spinner"></i>
-                    </div>
-                </div>
-
-                <div class="stat-card">
-                    <div class="stat-info">
-                        <h3>${stats.completed}</h3>
-                        <p>Completed</p>
-                    </div>
-
-                    <div class="stat-icon success-bg">
-                        <i class="fas fa-check-circle"></i>
-                    </div>
-                </div>
-
+                ${renderStatsCards(stats)}
             </div>
-
+            <div class="team-section">
+                ${renderTeamSection()}
+            </div>
             <div class="charts-grid">
-
-                <div class="chart-card">
-                    <h3>
-                        <i class="fas fa-chart-pie"></i>
-                        Request Status
-                    </h3>
-
-                    <canvas id="statusChart"></canvas>
-                </div>
-
-                <div class="chart-card">
-                    <h3>
-                        <i class="fas fa-chart-bar"></i>
-                        Priority Distribution
-                    </h3>
-
-                    <canvas id="priorityChart"></canvas>
-                </div>
-
+                ${renderCharts()}
             </div>
-
             <div class="tasks-section">
-
-                <div class="tasks-header">
-
-                    <div>
-                        <h2>Project Requests</h2>
-                        <p>
-                            Monitor request progress and collaborate with the team.
-                        </p>
-                    </div>
-
-                    <div class="filter-group">
-
-                        <button
-                            class="filter-btn ${currentFilter === 'all' ? 'active' : ''}"
-                            onclick="setFilter('all')"
-                        >
-                            All
-                        </button>
-
-                        <button
-                            class="filter-btn ${currentFilter === 'pending' ? 'active' : ''}"
-                            onclick="setFilter('pending')"
-                        >
-                            Pending
-                        </button>
-
-                        <button
-                            class="filter-btn ${currentFilter === 'in-progress' ? 'active' : ''}"
-                            onclick="setFilter('in-progress')"
-                        >
-                            In Progress
-                        </button>
-
-                        <button
-                            class="filter-btn ${currentFilter === 'completed' ? 'active' : ''}"
-                            onclick="setFilter('completed')"
-                        >
-                            Completed
-                        </button>
-
-                    </div>
-
-                </div>
-
+                ${renderTasksHeader()}
                 <div class="tasks-grid" id="tasksGrid">
                     ${renderTaskCards(filteredTasks)}
                 </div>
-
             </div>
-
         </main>
-
     </div>
-
-    <!-- TASK MODAL -->
-
-    <div class="modal" id="taskModal">
-
-        <div class="modal-content">
-
-            <div class="modal-header">
-
-                <h2 id="modalTitle"></h2>
-
-                <button
-                    class="close-btn"
-                    onclick="closeModal('taskModal')"
-                >
-                    <i class="fas fa-times"></i>
-                </button>
-
-            </div>
-
-            <div id="modalBody"></div>
-
-        </div>
-
-    </div>
-
-    <!-- CREATE TASK -->
-
-    <div class="modal" id="createTaskModal">
-
-        <div class="modal-content">
-
-            <div class="modal-header">
-
-                <h2>
-                    <i class="fas fa-plus-circle"></i>
-                    Create New Request
-                </h2>
-
-                <button
-                    class="close-btn"
-                    onclick="closeModal('createTaskModal')"
-                >
-                    <i class="fas fa-times"></i>
-                </button>
-
-            </div>
-
-            <div class="detail-card">
-
-                <h3>Request Details</h3>
-
-                <label>Title *</label>
-
-                <input
-                    type="text"
-                    id="taskTitle"
-                    placeholder="Enter request title"
-                />
-
-                <label>Description *</label>
-
-                <textarea
-                    id="taskDesc"
-                    rows="4"
-                    placeholder="Describe your request..."
-                ></textarea>
-
-                <label>Priority</label>
-
-                <select id="taskPriority">
-                    <option value="low">Low</option>
-                    <option value="medium" selected>Medium</option>
-                    <option value="high">High</option>
-                </select>
-
-                <div class="info-box">
-                    <i class="fas fa-info-circle"></i>
-                    Your request will first be reviewed by the ScaleFlow team before developer assignment and execution begins.
-                </div>
-
-                <button
-                    class="primary-btn"
-                    onclick="submitCreateTask()"
-                >
-                    Submit Request
-                </button>
-
-            </div>
-
-        </div>
-
-    </div>
-
+    ${renderModals()}
     `;
-
+    
     initializeCharts(stats);
+    attachEventListeners();
+}
 
+function renderCreateTaskCard(){
+    return `
+    <div class="create-task-card">
+        <div class="create-task-header">
+            <h2><i class="fas fa-plus-circle"></i> Create New Request</h2>
+            <p>Submit a new development request directly to the ScaleFlow team</p>
+        </div>
+        <form id="clientCreateTaskForm" onsubmit="event.preventDefault(); submitClientCreateTask()">
+            <div class="form-group">
+                <label>Request Title *</label>
+                <input type="text" id="clientTaskTitle" required placeholder="e.g., Add payment gateway integration">
+            </div>
+            <div class="form-group">
+                <label>Description *</label>
+                <textarea id="clientTaskDesc" rows="3" required placeholder="Provide detailed description of your request..."></textarea>
+            </div>
+            <div class="form-group">
+                <label>Priority</label>
+                <select id="clientTaskPriority">
+                    <option value="low">Low - Nice to have</option>
+                    <option value="medium" selected>Medium - Important</option>
+                    <option value="high">High - Urgent</option>
+                    <option value="critical">Critical - Blocking</option>
+                </select>
+            </div>
+            <div class="quick-actions">
+                <button type="button" class="quick-btn" onclick="fillTemplate('bug')">
+                    <i class="fas fa-bug"></i> Bug Report
+                </button>
+                <button type="button" class="quick-btn" onclick="fillTemplate('feature')">
+                    <i class="fas fa-star"></i> Feature Request
+                </button>
+                <button type="button" class="quick-btn" onclick="fillTemplate('improvement')">
+                    <i class="fas fa-chart-line"></i> Improvement
+                </button>
+            </div>
+            <button type="submit" class="btn-submit">
+                <i class="fas fa-paper-plane"></i> Submit Request
+            </button>
+        </form>
+    </div>
+    `;
+}
+
+function fillTemplate(type){
+    if(type === 'bug'){
+        document.getElementById('clientTaskTitle').value = '[BUG] ';
+        document.getElementById('clientTaskDesc').value = '## Bug Description\n\n**Expected behavior:**\n\n**Actual behavior:**\n\n**Steps to reproduce:**\n1. \n2. \n3. \n\n**Screenshots/Additional info:**';
+    } else if(type === 'feature'){
+        document.getElementById('clientTaskTitle').value = '[FEATURE] ';
+        document.getElementById('clientTaskDesc').value = '## Feature Request\n\n**Problem statement:**\n\n**Proposed solution:**\n\n**Benefits:**\n\n**Additional context:**';
+    } else if(type === 'improvement'){
+        document.getElementById('clientTaskTitle').value = '[IMPROVEMENT] ';
+        document.getElementById('clientTaskDesc').value = '## Improvement Suggestion\n\n**Current behavior:**\n\n**Suggested improvement:**\n\n**Expected outcome:**\n\n**Priority justification:**';
+    }
+}
+
+async function submitClientCreateTask(){
+    const title = document.getElementById('clientTaskTitle').value.trim();
+    const description = document.getElementById('clientTaskDesc').value.trim();
+    const priority = document.getElementById('clientTaskPriority').value;
+    
+    if(!title || !description){
+        showNotification('Please fill in all fields', 'error');
+        return;
+    }
+    
+    showNotification('Submitting your request...', 'info');
+    
+    const success = await createTask(title, description, priority);
+    
+    if(success){
+        showNotification('Request submitted successfully! The ScaleFlow team will review it.', 'success');
+        document.getElementById('clientCreateTaskForm').reset();
+        await loadTasks();
+        updateStatsAndCharts();
+        updateTasksGrid();
+        updateTeamSection();
+    }else{
+        showNotification('Failed to submit request. Please try again.', 'error');
+    }
+}
+
+function renderSidebar(){
+    return `
+    <aside class="sidebar">
+        <div class="logo">
+            <div class="logo-icon"><i class="fas fa-layer-group"></i></div>
+            <div>
+                <h2>ScaleFlow</h2>
+                <small>Client Workspace</small>
+            </div>
+        </div>
+        <div class="user-card">
+            <div class="avatar">${currentUser.name.charAt(0).toUpperCase()}</div>
+            <div class="user-info">
+                <h4>${escapeHtml(currentUser.name)}</h4>
+                <small>Client</small>
+                <div class="company-pill">
+                    <i class="fas fa-building"></i>
+                    ${escapeHtml(currentUser.company || 'Organization')}
+                </div>
+            </div>
+        </div>
+        <div class="nav-item ${currentView === 'dashboard' ? 'active' : ''}" onclick="switchView('dashboard')">
+            <i class="fas fa-chart-line"></i> Dashboard
+        </div>
+        <div class="nav-item ${currentView === 'team' ? 'active' : ''}" onclick="switchView('team')">
+            <i class="fas fa-users"></i> Team Members
+        </div>
+        <button class="logout-btn" onclick="logout()">
+            <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
+    </aside>
+    `;
+}
+
+function renderTopBar(){
+    return `
+    <div class="top-bar">
+        <div class="welcome">
+            <h1>Welcome back, ${escapeHtml(currentUser.name.split(' ')[0])}</h1>
+            <p>Create requests, track progress and collaborate with your development team.</p>
+        </div>
+        <div style="display:flex; gap:12px;">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search tasks..." id="searchInput" onkeyup="searchTasks()" />
+            </div>
+        </div>
+    </div>
+    `;
+}
+
+function renderStatsCards(stats){
+    return `
+        <div class="stat-card">
+            <div class="stat-info"><h3>${stats.total}</h3><p>Total Requests</p></div>
+            <div class="stat-icon primary-bg"><i class="fas fa-tasks"></i></div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-info"><h3>${stats.myTasks}</h3><p>My Requests</p></div>
+            <div class="stat-icon purple-bg"><i class="fas fa-user"></i></div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-info"><h3>${stats.inProgress}</h3><p>In Progress</p></div>
+            <div class="stat-icon warning-bg"><i class="fas fa-spinner"></i></div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-info"><h3>${stats.completed}</h3><p>Completed</p></div>
+            <div class="stat-icon success-bg"><i class="fas fa-check-circle"></i></div>
+        </div>
+    `;
+}
+
+function renderTeamSection(){
+    const activeMembers = teamMembers.filter(m => m.isActive !== false);
+    
+    return `
+        <div class="team-header">
+            <div>
+                <h2><i class="fas fa-users"></i> Your Development Team</h2>
+                <p>${activeMembers.length} developer${activeMembers.length !== 1 ? 's' : ''} assigned to your requests</p>
+            </div>
+            <button class="btn-invite" onclick="openInviteModal()">
+                <i class="fas fa-user-plus"></i> Request Developer
+            </button>
+        </div>
+        <div class="team-grid">
+            ${activeMembers.length === 0 ? `
+                <div class="empty-state" style="grid-column:1/-1;">
+                    <i class="fas fa-user-friends"></i>
+                    <p>No developers assigned yet. Click "Request Developer" to add developers to your team!</p>
+                </div>
+            ` : activeMembers.map(member => {
+                const stats = getTeamMemberStats(member._id);
+                const isSelected = selectedMember === member._id;
+                return `
+                    <div class="team-card ${isSelected ? 'active' : ''}" onclick="selectTeamMember('${member._id}')">
+                        <div class="team-card-header">
+                            <div class="team-avatar">${member.name.charAt(0).toUpperCase()}</div>
+                            <div class="team-info">
+                                <h4>${escapeHtml(member.name)}</h4>
+                                <small>${escapeHtml(member.email)}</small>
+                            </div>
+                        </div>
+                        <div class="team-stats">
+                            <div class="team-stat-item">
+                                <span class="team-stat-label">Tasks Completed</span>
+                                <span class="team-stat-value">${stats.completed}/${stats.total}</span>
+                            </div>
+                            <div class="team-stat-item">
+                                <span class="team-stat-label">Completion Rate</span>
+                                <span class="team-stat-value">${stats.completionRate}%</span>
+                            </div>
+                            <div class="team-stat-item">
+                                <span class="team-stat-label">Active Tasks</span>
+                                <span class="team-stat-value">${stats.inProgress}</span>
+                            </div>
+                        </div>
+                        <button class="view-tasks-btn" onclick="event.stopPropagation(); viewMemberTasks('${member._id}', '${escapeHtml(member.name)}')">
+                            <i class="fas fa-tasks"></i> View Tasks
+                        </button>
+                    </div>
+                `;
+            }).join('')}
+        </div>
+    `;
+}
+
+function selectTeamMember(memberId){
+    if(selectedMember === memberId){
+        selectedMember = null;
+    } else {
+        selectedMember = memberId;
+    }
+    updateTasksGrid();
+    updateTeamSection();
+}
+
+function updateTeamSection(){
+    const teamSection = document.querySelector('.team-section');
+    if(teamSection && currentView === 'dashboard'){
+        teamSection.innerHTML = renderTeamSection();
+    }
+}
+
+function renderCharts(){
+    return `
+        <div class="chart-card">
+            <h3><i class="fas fa-chart-pie"></i> Request Status</h3>
+            <canvas id="statusChart"></canvas>
+        </div>
+        <div class="chart-card">
+            <h3><i class="fas fa-chart-bar"></i> Priority Distribution</h3>
+            <canvas id="priorityChart"></canvas>
+        </div>
+    `;
+}
+
+function renderTasksHeader(){
+    return `
+        <div class="tasks-header">
+            <div>
+                <h2>Project Requests</h2>
+                <p>Monitor request progress and collaborate with the development team.</p>
+            </div>
+            <div class="filter-group">
+                <button class="filter-btn ${currentFilter === 'all' ? 'active' : ''}" onclick="setFilter('all')">All</button>
+                <button class="filter-btn ${currentFilter === 'pending' ? 'active' : ''}" onclick="setFilter('pending')">Pending</button>
+                <button class="filter-btn ${currentFilter === 'in-progress' ? 'active' : ''}" onclick="setFilter('in-progress')">In Progress</button>
+                <button class="filter-btn ${currentFilter === 'completed' ? 'active' : ''}" onclick="setFilter('completed')">Completed</button>
+                ${selectedMember ? `<button class="filter-btn" onclick="clearMemberFilter()">Clear Filter</button>` : ''}
+            </div>
+        </div>
+    `;
 }
 
 function renderTaskCards(tasksList){
-
     if(tasksList.length === 0){
-
-        return `
-            <div class="empty-state">
-                <i class="fas fa-inbox"></i>
-                <p>No requests found</p>
-            </div>
-        `;
-
+        return `<div class="empty-state"><i class="fas fa-inbox"></i><p>No requests found</p></div>`;
     }
-
-    return tasksList.map(task=>{
-
+    
+    return tasksList.map(task => {
         const progress = calculateProgress(task);
-
-        let statusClass = 'todo';
-
-        if(task.status === 'pending'){
-            statusClass = 'pending';
-        }
-        else if(task.status === 'in-progress'){
-            statusClass = 'in-progress';
-        }
-        else if(task.status === 'completed'){
-            statusClass = 'completed';
-        }
-
+        let statusClass = task.status === 'pending' ? 'pending' : (task.status === 'in-progress' ? 'in-progress' : (task.status === 'completed' ? 'completed' : 'todo'));
+        const isMyTask = task.createdBy?._id === currentUser._id;
+        
         return `
-
-        <div
-            class="task-card"
-            onclick="openTask('${task._id}')"
-        >
-
+        <div class="task-card" onclick="openTask('${task._id}')">
             <div class="task-top">
-
                 <div>
-
-                    <div class="task-id">
-                        ${escapeHtml(task.taskNumber || task._id.slice(-6))}
-                    </div>
-
-                    <div class="task-title">
-                        ${escapeHtml(task.title)}
-                    </div>
-
+                    <div class="task-id">${escapeHtml(task.taskNumber || task._id.slice(-6))}</div>
+                    <div class="task-title">${escapeHtml(task.title)}</div>
                 </div>
-
-                <div class="badge status-${statusClass}">
-                    ${statusClass.replace('-', ' ')}
-                </div>
-
+                <div class="badge status-${statusClass}">${statusClass.replace('-', ' ')}</div>
             </div>
-
-            <div class="task-desc">
-                ${escapeHtml(
-                    (task.description || '').substring(0,120)
-                )}
-            </div>
-
+            <div class="task-desc">${escapeHtml((task.description || '').substring(0, 120))}</div>
             <div>
-                <span class="badge priority-${task.priority || 'medium'}">
-                    ${(task.priority || 'medium').toUpperCase()}
-                </span>
+                <span class="badge priority-${task.priority || 'medium'}">${(task.priority || 'medium').toUpperCase()}</span>
+                ${isMyTask ? '<span class="badge" style="background:#e0e7ff; color:#4338ca; margin-left:8px;"><i class="fas fa-user"></i> Created by me</span>' : ''}
             </div>
-
             <div class="progress-wrapper">
-                <div class="progress-bar">
-                    <div
-                        class="progress-fill"
-                        style="width:${progress}%"
-                    ></div>
-                </div>
+                <div class="progress-bar"><div class="progress-fill" style="width:${progress}%"></div></div>
             </div>
-
             <div class="task-meta">
-
-                <span>
-                    <i class="fas fa-user"></i>
-                    ${escapeHtml(task.assignedTo?.name || 'Awaiting Assignment')}
-                </span>
-
-                <span>
-                    <i class="fas fa-comment"></i>
-                    ${task.comments?.length || 0}
-                </span>
-
+                <span><i class="fas fa-user"></i> ${escapeHtml(task.assignedTo?.name || 'Awaiting Assignment')}</span>
+                <span><i class="fas fa-comment"></i> ${task.comments?.length || 0}</span>
             </div>
-
         </div>
-
         `;
-
     }).join('');
-
-}
-
-function updateTasksGrid(){
-
-    const filteredTasks = getFilteredTasks();
-
-    const grid =
-        document.getElementById('tasksGrid');
-
-    if(grid){
-        grid.innerHTML =
-            renderTaskCards(filteredTasks);
-    }
-
 }
 
 /* =========================
-TASK MODAL
+TEAM VIEW
+========================= */
+
+function switchView(view){
+    currentView = view;
+    if(view === 'dashboard'){
+        renderDashboard();
+    } else if(view === 'team'){
+        renderTeamView();
+    }
+}
+
+function renderTeamView(){
+    currentView = 'team';
+    
+    document.getElementById('app').innerHTML = `
+    <div class="app">
+        ${renderSidebar()}
+        <main class="main">
+            <div class="top-bar">
+                <div class="welcome">
+                    <h1>Development Team</h1>
+                    <p>Manage your assigned developers and track their progress</p>
+                </div>
+                <button class="btn-create" onclick="openInviteModal()">
+                    <i class="fas fa-user-plus"></i> Request Developer
+                </button>
+            </div>
+            <div class="team-section" style="margin-top:0;">
+                <div class="team-header">
+                    <div>
+                        <h2><i class="fas fa-users"></i> Your Development Team</h2>
+                        <p>${teamMembers.filter(m => m.isActive !== false).length} developer${teamMembers.length !== 1 ? 's' : ''} assigned</p>
+                    </div>
+                </div>
+                <div class="team-grid">
+                    ${teamMembers.length === 0 ? `
+                        <div class="empty-state" style="grid-column:1/-1;">
+                            <i class="fas fa-user-friends"></i>
+                            <p>No developers assigned yet. Click "Request Developer" to add developers to your team!</p>
+                        </div>
+                    ` : teamMembers.map(member => {
+                        const stats = getTeamMemberStats(member._id);
+                        return `
+                            <div class="team-card">
+                                <div class="team-card-header">
+                                    <div class="team-avatar">${member.name.charAt(0).toUpperCase()}</div>
+                                    <div class="team-info">
+                                        <h4>${escapeHtml(member.name)}</h4>
+                                        <small>${escapeHtml(member.email)}</small>
+                                        <div><small class="badge" style="background:#e2e8f0; margin-top:5px;">${member.isActive !== false ? 'Active' : 'Inactive'}</small></div>
+                                    </div>
+                                </div>
+                                <div class="team-stats">
+                                    <div class="team-stat-item">
+                                        <span class="team-stat-label">Total Tasks</span>
+                                        <span class="team-stat-value">${stats.total}</span>
+                                    </div>
+                                    <div class="team-stat-item">
+                                        <span class="team-stat-label">Completed</span>
+                                        <span class="team-stat-value">${stats.completed}</span>
+                                    </div>
+                                    <div class="team-stat-item">
+                                        <span class="team-stat-label">In Progress</span>
+                                        <span class="team-stat-value">${stats.inProgress}</span>
+                                    </div>
+                                    <div class="team-stat-item">
+                                        <span class="team-stat-label">Completion Rate</span>
+                                        <span class="team-stat-value">${stats.completionRate}%</span>
+                                    </div>
+                                </div>
+                                <button class="view-tasks-btn" onclick="viewMemberTasks('${member._id}', '${escapeHtml(member.name)}')">
+                                    <i class="fas fa-tasks"></i> View All Tasks
+                                </button>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            </div>
+        </main>
+    </div>
+    ${renderModals()}
+    `;
+    
+    attachEventListeners();
+}
+
+function viewMemberTasks(memberId, memberName){
+    currentView = 'member-tasks';
+    selectedMember = memberId;
+    const memberTasks = tasks.filter(t => t.assignedTo?._id === memberId);
+    
+    document.getElementById('app').innerHTML = `
+    <div class="app">
+        ${renderSidebar()}
+        <main class="main">
+            <div class="top-bar">
+                <div class="welcome">
+                    <h1><i class="fas fa-user"></i> ${escapeHtml(memberName)}'s Tasks</h1>
+                    <p>View all tasks assigned to this developer</p>
+                </div>
+                <button class="btn-create" onclick="switchView('team')">
+                    <i class="fas fa-arrow-left"></i> Back to Team
+                </button>
+            </div>
+            <div class="tasks-section">
+                <div class="tasks-header">
+                    <div>
+                        <h2>Tasks Assigned to ${escapeHtml(memberName)}</h2>
+                        <p>${memberTasks.length} total tasks</p>
+                    </div>
+                </div>
+                <div class="tasks-grid">
+                    ${memberTasks.length === 0 ? `
+                        <div class="empty-state" style="grid-column:1/-1;">
+                            <i class="fas fa-tasks"></i>
+                            <p>No tasks assigned to this developer yet.</p>
+                        </div>
+                    ` : renderTaskCards(memberTasks)}
+                </div>
+            </div>
+        </main>
+    </div>
+    ${renderModals()}
+    `;
+    
+    attachEventListeners();
+}
+
+function clearMemberFilter(){
+    selectedMember = null;
+    currentFilter = 'all';
+    renderDashboard();
+}
+
+function renderModals(){
+    return `
+    <div class="modal" id="taskModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle"></h2>
+                <button class="close-btn" onclick="closeModal('taskModal')"><i class="fas fa-times"></i></button>
+            </div>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+    <div class="modal" id="inviteModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-user-plus"></i> Request Developer</h2>
+                <button class="close-btn" onclick="closeModal('inviteModal')"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="detail-card">
+                <h3>Developer Details</h3>
+                <label>Full Name *</label>
+                <input type="text" id="inviteName" placeholder="Enter developer's name" />
+                <label>Email Address *</label>
+                <input type="email" id="inviteEmail" placeholder="developer@company.com" />
+                <div class="info-box">
+                    <i class="fas fa-info-circle"></i>
+                    The developer will receive an email invitation to join your team and start working on your requests.
+                </div>
+                <button class="primary-btn" onclick="submitInvite()">Send Request</button>
+            </div>
+        </div>
+    </div>
+    `;
+}
+
+/* =========================
+TASK MODAL FUNCTIONS
 ========================= */
 
 async function openTask(taskId){
-
-    const task =
-        tasks.find(t=>t._id === taskId);
-
-    if(!task){
-        return;
-    }
-
+    const task = tasks.find(t => t._id === taskId);
+    if(!task) return;
     currentTask = task;
-
-    let statusClass = 'todo';
-
-    if(task.status === 'pending'){
-        statusClass = 'pending';
-    }
-    else if(task.status === 'in-progress'){
-        statusClass = 'in-progress';
-    }
-    else if(task.status === 'completed'){
-        statusClass = 'completed';
-    }
-
-    document.getElementById('modalTitle').innerHTML = `
-        <i class="fas fa-tasks"></i>
-        ${escapeHtml(task.title)}
-    `;
-
+    
+    let statusClass = task.status === 'pending' ? 'pending' : (task.status === 'in-progress' ? 'in-progress' : (task.status === 'completed' ? 'completed' : 'todo'));
+    
+    document.getElementById('modalTitle').innerHTML = `<i class="fas fa-tasks"></i> ${escapeHtml(task.title)}`;
     document.getElementById('modalBody').innerHTML = `
-
         <div style="display:grid; gap:16px;">
-
             <div class="detail-card">
-
                 <h3>Description</h3>
-
-                <p style="line-height:1.7; color:#475569;">
-                    ${escapeHtml(task.description || 'No description')}
-                </p>
-
+                <p style="line-height:1.7; color:#475569;">${escapeHtml(task.description || 'No description')}</p>
             </div>
-
             <div class="detail-card">
-
                 <h3>Request Details</h3>
-
                 <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
-
-                    <div>
-                        <small>Request #</small>
-                        <h4>${escapeHtml(task.taskNumber || task._id.slice(-6))}</h4>
-                    </div>
-
-                    <div>
-                        <small>Status</small>
-                        <h4>
-                            <span class="badge status-${statusClass}">
-                                ${task.status}
-                            </span>
-                        </h4>
-                    </div>
-
-                    <div>
-                        <small>Priority</small>
-                        <h4>
-                            <span class="badge priority-${task.priority || 'medium'}">
-                                ${(task.priority || 'medium').toUpperCase()}
-                            </span>
-                        </h4>
-                    </div>
-
-                    <div>
-                        <small>Assigned Developer</small>
-                        <h4>
-                            ${escapeHtml(task.assignedTo?.name || 'Awaiting Assignment')}
-                        </h4>
-                    </div>
-
-                    <div>
-                        <small>Workflow Stage</small>
-                        <h4>
-                            ${escapeHtml(task.workflowStage || 'planning')}
-                        </h4>
-                    </div>
-
-                    <div>
-                        <small>Created At</small>
-                        <h4>
-                            ${new Date(task.createdAt).toLocaleDateString()}
-                        </h4>
-                    </div>
-
+                    <div><small>Request #</small><h4>${escapeHtml(task.taskNumber || task._id.slice(-6))}</h4></div>
+                    <div><small>Status</small><h4><span class="badge status-${statusClass}">${task.status}</span></h4></div>
+                    <div><small>Priority</small><h4><span class="badge priority-${task.priority || 'medium'}">${(task.priority || 'medium').toUpperCase()}</span></h4></div>
+                    <div><small>Assigned Developer</small><h4>${escapeHtml(task.assignedTo?.name || 'Awaiting Assignment')}</h4></div>
+                    <div><small>Workflow Stage</small><h4>${escapeHtml(task.workflowStage || 'planning')}</h4></div>
+                    <div><small>Created At</small><h4>${new Date(task.createdAt).toLocaleDateString()}</h4></div>
+                    <div><small>Created By</small><h4>${escapeHtml(task.createdBy?.name || 'Unknown')}</h4></div>
                 </div>
-
             </div>
-
             <div class="detail-card">
-
-                <h3>
-                    💬 Comments
-                    (${(task.comments || []).length})
-                </h3>
-
-                <div
-                    style="max-height:300px; overflow-y:auto; margin-bottom:14px;"
-                >
-
-                    ${(task.comments || []).length === 0
-
-                        ? `
-                            <p style="text-align:center; color:#94a3b8; padding:20px;">
-                                No comments yet
-                            </p>
-                        `
-
-                        : task.comments.map(comment=>`
-
-                            <div class="comment-item">
-
-                                <div class="comment-top">
-
-                                    <div>
-                                        <span class="comment-author">
-                                            ${escapeHtml(comment.author)}
-                                        </span>
-
-                                        <span class="comment-role">
-                                            ${comment.authorRole}
-                                        </span>
-                                    </div>
-
-                                    <small>
-                                        ${new Date(comment.createdAt).toLocaleString()}
-                                    </small>
-
-                                </div>
-
-                                <div class="comment-text">
-                                    ${escapeHtml(comment.text)}
-                                </div>
-
+                <h3>💬 Comments (${(task.comments || []).length})</h3>
+                <div style="max-height:300px; overflow-y:auto; margin-bottom:14px;">
+                    ${(task.comments || []).length === 0 ? '<p style="text-align:center; color:#94a3b8; padding:20px;">No comments yet</p>' : task.comments.map(comment => `
+                        <div class="comment-item">
+                            <div class="comment-top">
+                                <div><span class="comment-author">${escapeHtml(comment.author)}</span><span class="comment-role">${comment.authorRole}</span></div>
+                                <small>${new Date(comment.createdAt).toLocaleString()}</small>
                             </div>
-
-                        `).join('')
-                    }
-
+                            <div class="comment-text">${escapeHtml(comment.text)}</div>
+                        </div>
+                    `).join('')}
                 </div>
-
-                <textarea
-                    id="commentInput"
-                    rows="3"
-                    placeholder="Add your feedback or response..."
-                ></textarea>
-
-                <button
-                    class="primary-btn"
-                    onclick="postComment()"
-                >
-                    <i class="fas fa-paper-plane"></i>
-                    Post Comment
-                </button>
-
+                <textarea id="commentInput" rows="3" placeholder="Add your feedback or response..."></textarea>
+                <button class="primary-btn" onclick="postComment()"><i class="fas fa-paper-plane"></i> Post Comment</button>
             </div>
-
         </div>
-
     `;
-
+    
     document.getElementById('taskModal').style.display = 'flex';
-
 }
 
 /* =========================
-ACTIONS
+ACTION FUNCTIONS
 ========================= */
 
 function setFilter(filter){
-
     currentFilter = filter;
+    if(currentView === 'dashboard'){
+        updateTasksGrid();
+    } else if(currentView === 'member-tasks'){
+        renderMemberTasksView();
+    } else {
+        renderDashboard();
+    }
+}
 
-    renderDashboard();
+function updateTasksGrid(){
+    const filteredTasks = getFilteredTasks();
+    const grid = document.getElementById('tasksGrid');
+    if(grid){
+        grid.innerHTML = renderTaskCards(filteredTasks);
+    }
+}
 
+function updateStatsAndCharts(){
+    const stats = getStats();
+    const statsGrid = document.querySelector('.stats-grid');
+    if(statsGrid){
+        statsGrid.innerHTML = renderStatsCards(stats);
+    }
+    initializeCharts(stats);
 }
 
 function searchTasks(){
-
-    const keyword =
-        document.getElementById('searchInput')
-        .value
-        .toLowerCase();
-
-    const cards =
-        document.querySelectorAll('.task-card');
-
-    cards.forEach(card=>{
-
-        const text =
-            card.innerText.toLowerCase();
-
-        card.style.display =
-            text.includes(keyword)
-            ? 'block'
-            : 'none';
-
+    const keyword = document.getElementById('searchInput')?.value.toLowerCase() || '';
+    const cards = document.querySelectorAll('.task-card');
+    cards.forEach(card => {
+        const text = card.innerText.toLowerCase();
+        card.style.display = text.includes(keyword) ? 'block' : 'none';
     });
-
 }
 
-function openCreateTaskModal(){
-
-    document.getElementById('taskTitle').value = '';
-    document.getElementById('taskDesc').value = '';
-    document.getElementById('taskPriority').value = 'medium';
-
-    document.getElementById('createTaskModal').style.display = 'flex';
-
+function openInviteModal(){
+    document.getElementById('inviteName').value = '';
+    document.getElementById('inviteEmail').value = '';
+    document.getElementById('inviteModal').style.display = 'flex';
 }
 
-async function submitCreateTask(){
-
-    const title =
-        document.getElementById('taskTitle')
-        .value
-        .trim();
-
-    const description =
-        document.getElementById('taskDesc')
-        .value
-        .trim();
-
-    const priority =
-        document.getElementById('taskPriority')
-        .value;
-
-    if(!title){
-
-        showNotification(
-            'Please enter request title',
-            'error'
-        );
-
+async function submitInvite(){
+    const name = document.getElementById('inviteName').value.trim();
+    const email = document.getElementById('inviteEmail').value.trim();
+    
+    if(!name || !email){
+        showNotification('Please fill in all fields', 'error');
         return;
     }
-
-    if(!description){
-
-        showNotification(
-            'Please enter request description',
-            'error'
-        );
-
+    
+    if(!email.includes('@')){
+        showNotification('Please enter a valid email address', 'error');
         return;
     }
-
-    const success = await createTask(
-        title,
-        description,
-        priority
-    );
-
+    
+    const success = await inviteTeamMember(email, name);
     if(success){
-
-        showNotification(
-            'Request submitted successfully!',
-            'success'
-        );
-
-        closeModal('createTaskModal');
-
-        await loadTasks();
-
-        renderDashboard();
-
+        showNotification(`Developer request sent to ${email}!`, 'success');
+        closeModal('inviteModal');
+        await loadTeamMembers();
+        if(currentView === 'team'){
+            renderTeamView();
+        } else {
+            renderDashboard();
+        }
     }else{
-
-        showNotification(
-            'Failed to submit request',
-            'error'
-        );
-
+        showNotification('Failed to send request', 'error');
     }
-
 }
 
 async function postComment(){
-
-    const input =
-        document.getElementById('commentInput');
-
-    const text =
-        input.value.trim();
-
+    const input = document.getElementById('commentInput');
+    const text = input.value.trim();
     if(!text){
-
-        showNotification(
-            'Please enter comment',
-            'error'
-        );
-
+        showNotification('Please enter comment', 'error');
         return;
     }
-
-    const success =
-        await addComment(currentTask._id,text);
-
+    
+    const success = await addComment(currentTask._id, text);
     if(success){
-
         input.value = '';
-
-        showNotification(
-            'Comment added successfully',
-            'success'
-        );
-
+        showNotification('Comment added successfully', 'success');
         await loadTasks();
-
         openTask(currentTask._id);
-
     }else{
-
-        showNotification(
-            'Failed to add comment',
-            'error'
-        );
-
+        showNotification('Failed to add comment', 'error');
     }
-
 }
 
 function closeModal(modalId){
-
-    document.getElementById(modalId)
-        .style.display = 'none';
-
+    document.getElementById(modalId).style.display = 'none';
 }
 
 /* =========================
@@ -1674,166 +1825,93 @@ CHARTS
 ========================= */
 
 function initializeCharts(stats){
-
-    if(statusChart){
-        statusChart.destroy();
-    }
-
-    if(priorityChart){
-        priorityChart.destroy();
-    }
-
-    const statusCtx =
-        document.getElementById('statusChart');
-
-    const priorityCtx =
-        document.getElementById('priorityChart');
-
+    if(statusChart) statusChart.destroy();
+    if(priorityChart) priorityChart.destroy();
+    
+    const statusCtx = document.getElementById('statusChart');
+    const priorityCtx = document.getElementById('priorityChart');
+    
     if(statusCtx){
-
-        statusChart = new Chart(statusCtx,{
-            type:'doughnut',
-            data:{
-                labels:[
-                    'Pending',
-                    'In Progress',
-                    'Completed'
-                ],
-                datasets:[{
-                    data:[
-                        stats.pending,
-                        stats.inProgress,
-                        stats.completed
-                    ],
-                    backgroundColor:[
-                        '#9333ea',
-                        '#3b82f6',
-                        '#10b981'
-                    ],
-                    borderWidth:0
+        statusChart = new Chart(statusCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Pending', 'In Progress', 'Completed'],
+                datasets: [{
+                    data: [stats.pending, stats.inProgress, stats.completed],
+                    backgroundColor: ['#9333ea', '#3b82f6', '#10b981'],
+                    borderWidth: 0
                 }]
             },
-            options:{
-                responsive:true,
-                plugins:{
-                    legend:{
-                        position:'bottom'
-                    }
-                }
-            }
+            options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
         });
-
     }
-
+    
     if(priorityCtx){
-
-        priorityChart = new Chart(priorityCtx,{
-            type:'bar',
-            data:{
-                labels:[
-                    'High',
-                    'Medium',
-                    'Low'
-                ],
-                datasets:[{
-                    data:[
-                        stats.highPriority,
-                        stats.mediumPriority,
-                        stats.lowPriority
-                    ],
-                    backgroundColor:[
-                        '#ef4444',
-                        '#f59e0b',
-                        '#10b981'
-                    ],
-                    borderRadius:10
+        priorityChart = new Chart(priorityCtx, {
+            type: 'bar',
+            data: {
+                labels: ['High', 'Medium', 'Low'],
+                datasets: [{
+                    data: [stats.highPriority, stats.mediumPriority, stats.lowPriority],
+                    backgroundColor: ['#ef4444', '#f59e0b', '#10b981'],
+                    borderRadius: 10
                 }]
             },
-            options:{
-                responsive:true,
-                plugins:{
-                    legend:{
-                        display:false
-                    }
-                },
-                scales:{
-                    y:{
-                        beginAtZero:true
-                    }
-                }
-            }
+            options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
         });
-
     }
+}
 
+function attachEventListeners(){
+    // Re-attach any dynamic event listeners if needed
 }
 
 /* =========================
-UTILS
+UTILITIES
 ========================= */
 
-function showNotification(message,type){
-
-    const toast =
-        document.createElement('div');
-
+function showNotification(message, type){
+    const colors = {
+        success: '#10b981',
+        error: '#ef4444',
+        info: '#3b82f6',
+        warning: '#f59e0b'
+    };
+    
+    const toast = document.createElement('div');
     toast.style.cssText = `
-        position:fixed;
-        bottom:20px;
-        right:20px;
-        background:${type === 'success' ? '#10b981' : '#ef4444'};
-        color:white;
-        padding:12px 18px;
-        border-radius:12px;
-        z-index:2000;
-        font-size:13px;
-        font-weight:600;
-        box-shadow:0 10px 25px rgba(0,0,0,0.15);
+        position:fixed; bottom:20px; right:20px; background:${colors[type] || colors.info};
+        color:white; padding:12px 18px; border-radius:12px; z-index:2000; font-size:13px;
+        font-weight:600; box-shadow:0 10px 25px rgba(0,0,0,0.15); animation:slideIn 0.3s ease;
     `;
-
-    toast.innerHTML = `
-        <i class="fas ${
-            type === 'success'
-            ? 'fa-check-circle'
-            : 'fa-exclamation-circle'
-        }"></i>
-        ${message}
-    `;
-
+    toast.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : (type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle')}"></i> ${message}`;
     document.body.appendChild(toast);
-
-    setTimeout(()=>{
-        toast.remove();
-    },3000);
-
+    setTimeout(() => toast.remove(), 3000);
 }
 
 function escapeHtml(text){
-
-    if(!text){
-        return '';
-    }
-
-    const div =
-        document.createElement('div');
-
+    if(!text) return '';
+    const div = document.createElement('div');
     div.textContent = text;
-
     return div.innerHTML;
-
 }
 
 function logout(){
-
     localStorage.clear();
-
     sessionStorage.clear();
-
     window.location.href = '/';
-
 }
 
-</script>
+// Add animation keyframes
+const styleSheet = document.createElement('style');
+styleSheet.textContent = `
+    @keyframes slideIn {
+        from { transform: translateX(100%); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+    }
+`;
+document.head.appendChild(styleSheet);
 
+</script>
 </body>
 </html>

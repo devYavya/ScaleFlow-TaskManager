@@ -19,12 +19,14 @@
     --bg: #f1f5f9;
     --card: #ffffff;
     --primary: #6366f1;
+    --primary-dark: #4f46e5;
     --text: #0f172a;
     --muted: #64748b;
     --border: #e2e8f0;
     --success: #10b981;
     --warning: #f59e0b;
     --danger: #ef4444;
+    --purple: #9333ea;
 }
 
 body {
@@ -149,19 +151,29 @@ body {
 .project-name { font-size: 13px; font-weight: 500; }
 .project-task-count { font-size: 10px; opacity: 0.6; }
 
-.logout-btn {
-    margin: 20px;
-    padding: 10px;
-    background: rgba(239,68,68,0.15);
-    border: none;
-    border-radius: 10px;
-    color: #ef4444;
-    font-weight: 600;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
+.logout-btn{
+    width: 230px;
+    position:absolute;
+    left:20px;
+    right:20px;
+    bottom:20px;
+    border:none;
+    background:rgba(239,68,68,0.15);
+    color:#ef4444;
+    padding:12px;
+    border-radius:12px;
+    cursor:pointer;
+    font-weight:600;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    transition:0.2s;
+}
+
+.logout-btn:hover{
+    background:#ef4444;
+    color:white;
 }
 
 /* Task Panel */
@@ -219,6 +231,7 @@ body {
     border-radius: 10px;
     padding: 10px;
     text-align: center;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
 }
 
 .stat-mini h4 { font-size: 20px; font-weight: 700; }
@@ -287,6 +300,17 @@ body {
 .priority-medium { background: #fef3c7; color: #92400e; }
 .priority-low { background: #dcfce7; color: #166534; }
 
+.status-badge {
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 9px;
+    font-weight: 600;
+}
+
+.status-todo { background: #e2e8f0; color: #475569; }
+.status-in-progress { background: #dbeafe; color: #1e40af; }
+.status-completed { background: #dcfce7; color: #166534; }
+
 .progress-bar {
     height: 4px;
     background: #e2e8f0;
@@ -341,12 +365,12 @@ body {
     border-radius: 12px;
 }
 
-.meta-item small { font-size: 11px; color: var(--muted); }
-.meta-item h4 { font-size: 16px; margin-top: 6px; }
+.meta-item small { font-size: 11px; color: var(--muted); display: block; margin-bottom: 6px; }
+.meta-item h4 { font-size: 16px; }
 
 .detail-grid {
     display: grid;
-    grid-template-columns: 1fr 300px;
+    grid-template-columns: 1fr 320px;
     gap: 20px;
 }
 
@@ -361,6 +385,7 @@ body {
 .detail-card h3 {
     font-size: 14px;
     margin-bottom: 16px;
+    font-weight: 600;
 }
 
 .checklist-item {
@@ -389,8 +414,7 @@ body {
 }
 
 .comment-author { font-weight: 600; color: #6366f1; }
-.comment-role { font-size: 9px; padding: 2px 6px; background: #e2e8f0; border-radius: 10px; }
-.comment-text { font-size: 13px; line-height: 1.5; }
+.comment-text { font-size: 13px; line-height: 1.5; margin-top: 4px; }
 
 textarea {
     width: 100%;
@@ -432,6 +456,24 @@ textarea {
     border-radius: 10px;
     font-weight: 600;
     cursor: pointer;
+    transition: 0.2s;
+}
+
+.primary-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(99,102,241,0.3);
+}
+
+.secondary-btn {
+    width: 100%;
+    padding: 10px;
+    background: #f1f5f9;
+    color: #475569;
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 10px;
 }
 
 .empty-state {
@@ -439,46 +481,6 @@ textarea {
     padding: 60px;
     color: #94a3b8;
 }
-
-.status-badge {
-    display: inline-block;
-    padding: 4px 10px;
-    border-radius: 20px;
-    font-size: 11px;
-    font-weight: 600;
-}
-
-.status-todo { background: #e2e8f0; color: #475569; }
-.status-in-progress { background: #dbeafe; color: #1e40af; }
-.status-completed { background: #dcfce7; color: #166534; }
-.status-present { background: #dcfce7; color: #166534; }
-.status-absent { background: #fee2e2; color: #991b1b; }
-.status-pending { background: #fef3c7; color: #92400e; }
-.status-approved { background: #dcfce7; color: #166534; }
-
-.overdue { color: #ef4444; }
-
-.activity-item {
-    display: flex;
-    gap: 12px;
-    padding: 12px 0;
-    border-bottom: 1px solid #f1f5f9;
-}
-
-.activity-icon {
-    width: 32px;
-    height: 32px;
-    background: #eef2ff;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #6366f1;
-}
-
-.activity-content { flex: 1; }
-.activity-content p { font-size: 12px; }
-.activity-content small { font-size: 10px; color: #94a3b8; }
 
 /* Modal */
 .modal {
@@ -554,6 +556,7 @@ textarea {
 }
 .notification.success { background: #10b981; }
 .notification.error { background: #ef4444; }
+.notification.info { background: #3b82f6; }
 @keyframes slideInRight { from { transform: translateX(100px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
 
 @media (max-width: 1200px) {
@@ -575,12 +578,14 @@ textarea {
 
 <script>
 const API_URL = (() => {
-        const host = window.location.hostname;
-        if (host === 'localhost' || host === '127.0.0.1') {
-            return 'http://localhost:9040/api';
-        }
-        return `${window.location.origin}/api`;
-    })();let currentUser = null;
+    const host = window.location.hostname;
+    if (host === 'localhost' || host === '127.0.0.1') {
+        return 'http://localhost:9040/api';
+    }
+    return `${window.location.origin}/api`;
+})();
+
+let currentUser = null;
 let authToken = null;
 let allTasks = [];
 let currentTask = null;
@@ -599,12 +604,12 @@ if (savedToken && savedUser) {
     authToken = savedToken;
     currentUser = JSON.parse(savedUser);
     if (currentUser.role !== 'developer') {
-        window.location.href = currentUser.role === 'admin' ? '/admin' : '/dashboard';
+        window.location.href = currentUser.role === 'admin' ? '/admin' : '/';
     } else {
         initDashboard();
     }
 } else {
-    window.location.href = '/login.html';
+    window.location.href = '/';
 }
 
 async function initDashboard() {
@@ -620,7 +625,11 @@ async function loadTasks() {
         });
         const data = await res.json();
         allTasks = data.tasks || [];
-    } catch (error) { console.error('Error loading tasks:', error); }
+        console.log('Tasks loaded:', allTasks.length);
+    } catch (error) { 
+        console.error('Error loading tasks:', error);
+        showNotification('Failed to load tasks', 'error');
+    }
 }
 
 async function loadAttendance() {
@@ -630,7 +639,9 @@ async function loadAttendance() {
         });
         const data = await res.json();
         myAttendance = data.attendance || [];
-    } catch (error) { console.error('Error loading attendance:', error); }
+    } catch (error) { 
+        console.error('Error loading attendance:', error);
+    }
 }
 
 async function loadLeaves() {
@@ -640,51 +651,91 @@ async function loadLeaves() {
         });
         const data = await res.json();
         myLeaves = data.leaves || [];
-    } catch (error) { console.error('Error loading leaves:', error); }
+    } catch (error) { 
+        console.error('Error loading leaves:', error);
+    }
 }
 
 async function updateTask(taskId, updates) {
     try {
         const res = await fetch(`${API_URL}/tasks/${taskId}`, {
             method: 'PUT',
-            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
+            headers: { 
+                'Content-Type': 'application/json', 
+                'Authorization': `Bearer ${authToken}` 
+            },
             body: JSON.stringify(updates)
         });
-        return res.ok;
-    } catch (error) { return false; }
+        const data = await res.json();
+        if (res.ok) {
+            showNotification('Task updated successfully', 'success');
+            return true;
+        } else {
+            showNotification(data.error || 'Failed to update task', 'error');
+            return false;
+        }
+    } catch (error) { 
+        showNotification('Error updating task', 'error');
+        return false;
+    }
 }
 
 async function addComment(taskId, text) {
     try {
         const res = await fetch(`${API_URL}/tasks/${taskId}/comments`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
+            headers: { 
+                'Content-Type': 'application/json', 
+                'Authorization': `Bearer ${authToken}` 
+            },
             body: JSON.stringify({ text })
         });
-        return res.ok;
-    } catch (error) { return false; }
+        if (res.ok) {
+            showNotification('Comment posted', 'success');
+            return true;
+        }
+        return false;
+    } catch (error) { 
+        return false;
+    }
 }
 
 async function markAttendance(status, checkIn, checkOut, workDescription) {
     try {
         const res = await fetch(`${API_URL}/attendance/mark`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
-            body: JSON.stringify({ status, checkIn, checkOut, hadWork: !!workDescription, workDescription })
+            headers: { 
+                'Content-Type': 'application/json', 
+                'Authorization': `Bearer ${authToken}` 
+            },
+            body: JSON.stringify({ 
+                status, 
+                checkIn, 
+                checkOut, 
+                hadWork: !!workDescription, 
+                workDescription 
+            })
         });
         return res.ok;
-    } catch (error) { return false; }
+    } catch (error) { 
+        return false;
+    }
 }
 
 async function applyLeave(startDate, endDate, reason, type) {
     try {
         const res = await fetch(`${API_URL}/leaves/apply`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
+            headers: { 
+                'Content-Type': 'application/json', 
+                'Authorization': `Bearer ${authToken}` 
+            },
             body: JSON.stringify({ startDate, endDate, reason, type })
         });
         return res.ok;
-    } catch (error) { return false; }
+    } catch (error) { 
+        return false;
+    }
 }
 
 async function cancelLeave(leaveId) {
@@ -694,7 +745,9 @@ async function cancelLeave(leaveId) {
             headers: { 'Authorization': `Bearer ${authToken}` }
         });
         return res.ok;
-    } catch (error) { return false; }
+    } catch (error) { 
+        return false;
+    }
 }
 
 function organizeProjects() {
@@ -751,6 +804,12 @@ function getStatusText(status) {
     }
 }
 
+function getProgress(task) {
+    if (task.status === 'completed') return 100;
+    if (task.status === 'in-progress') return 50;
+    return 10;
+}
+
 function renderApp() {
     const stats = getStats();
     const filteredTasks = getFilteredTasks();
@@ -762,7 +821,13 @@ function renderApp() {
             <aside class="sidebar">
                 <div class="sidebar-header">
                     <div class="logo"><div class="logo-icon"><i class="fas fa-tasks"></i></div><h2>ScaleFlow</h2></div>
-                    <div class="user-card"><div class="user-avatar">${currentUser.name.charAt(0).toUpperCase()}</div><div class="user-info"><h4>${escapeHtml(currentUser.name)}</h4><small>Developer</small></div></div>
+                    <div class="user-card">
+                        <div class="user-avatar">${currentUser.name.charAt(0).toUpperCase()}</div>
+                        <div class="user-info">
+                            <h4>${escapeHtml(currentUser.name)}</h4>
+                            <small>Developer</small>
+                        </div>
+                    </div>
                 </div>
                 <div class="section-title">Navigation</div>
                 <div class="nav-item ${currentSection === 'tasks' ? 'active' : ''}" onclick="showSection('tasks')"><i class="fas fa-tasks"></i> My Tasks</div>
@@ -772,7 +837,10 @@ function renderApp() {
                 ${projects.map(project => `
                     <div class="project-item ${currentProject?.id === project.id ? 'active' : ''}" onclick="selectProject('${project.id}')">
                         <div class="project-icon"><i class="fas fa-folder"></i></div>
-                        <div style="flex:1"><div class="project-name">${escapeHtml(project.name)}</div><div class="project-task-count">${project.tasks.length} tasks</div></div>
+                        <div style="flex:1">
+                            <div class="project-name">${escapeHtml(project.name)}</div>
+                            <div class="project-task-count">${project.tasks.length} tasks</div>
+                        </div>
                     </div>
                 `).join('')}
                 <button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
@@ -781,7 +849,12 @@ function renderApp() {
             <div class="task-panel">
                 <div class="panel-header">
                     <h2>${currentSection === 'tasks' ? 'My Tasks' : (currentSection === 'attendance' ? 'Attendance History' : 'Leave History')}</h2>
-                    <div class="search-box"><i class="fas fa-search"></i><input type="text" placeholder="Search..." onkeyup="searchTasks(this.value)"></div>
+                    ${currentSection === 'tasks' ? `
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" placeholder="Search tasks..." onkeyup="searchTasks(this.value)">
+                        </div>
+                    ` : ''}
                     <div class="stats-mini">
                         ${currentSection === 'tasks' ? `
                             <div class="stat-mini"><h4>${stats.total}</h4><p>Total</p></div>
@@ -804,26 +877,44 @@ function renderApp() {
                 <div class="task-list">
                     ${currentSection === 'tasks' ? filteredTasks.map(task => `
                         <div class="task-card ${currentTask?._id === task._id ? 'active' : ''}" onclick="selectTask('${task._id}')">
-                            <div class="task-header"><div class="task-id">${task.taskNumber || task._id.slice(-6).toUpperCase()}</div><div class="priority-badge ${getPriorityClass(task.priority)}">${(task.priority || 'medium').toUpperCase()}</div></div>
+                            <div class="task-header">
+                                <div class="task-id">${task.taskNumber || task._id.slice(-6).toUpperCase()}</div>
+                                <div class="priority-badge ${getPriorityClass(task.priority)}">${(task.priority || 'medium').toUpperCase()}</div>
+                            </div>
                             <div class="task-title">${escapeHtml(task.title)}</div>
                             <div class="task-desc">${escapeHtml((task.description || '').substring(0, 80))}${(task.description || '').length > 80 ? '...' : ''}</div>
-                            <div class="progress-bar"><div class="progress-fill" style="width:${task.status === 'completed' ? 100 : (task.status === 'in-progress' ? 50 : 10)}%"></div></div>
-                            <div class="task-footer"><span><i class="fas fa-user"></i> ${escapeHtml(task.assignedTo?.name?.split(' ')[0] || 'Me')}</span><span><i class="fas fa-comment"></i> ${task.comments?.length || 0}</span></div>
+                            <div class="progress-bar"><div class="progress-fill" style="width:${getProgress(task)}%"></div></div>
+                            <div class="task-footer">
+                                <span><i class="fas fa-user"></i> ${escapeHtml(task.assignedTo?.name?.split(' ')[0] || 'Me')}</span>
+                                <span><i class="fas fa-comment"></i> ${task.comments?.length || 0}</span>
+                            </div>
                         </div>
                     `).join('') : currentSection === 'attendance' ? myAttendance.slice(0, 15).map(a => `
                         <div class="task-card">
-                            <div class="task-header"><div class="task-id">${new Date(a.date).toLocaleDateString()}</div><div class="priority-badge status-${a.status}">${a.status}</div></div>
+                            <div class="task-header">
+                                <div class="task-id">${new Date(a.date).toLocaleDateString()}</div>
+                                <div class="status-badge status-${a.status}">${a.status}</div>
+                            </div>
                             <div class="task-desc">Check In: ${a.checkIn || '-'} | Check Out: ${a.checkOut || '-'}</div>
-                            <div class="task-footer"><span><i class="fas fa-clock"></i> Hours: ${a.hoursWorked || '-'}</span><span>${escapeHtml(a.workDescription?.substring(0, 30) || 'No work log')}</span></div>
+                            <div class="task-footer">
+                                <span><i class="fas fa-clock"></i> Hours: ${a.hoursWorked || '-'}</span>
+                                <span>${escapeHtml(a.workDescription?.substring(0, 30) || 'No work log')}</span>
+                            </div>
                         </div>
                     `).join('') : myLeaves.map(l => `
                         <div class="task-card">
-                            <div class="task-header"><div class="task-id">${new Date(l.startDate).toLocaleDateString()} - ${new Date(l.endDate).toLocaleDateString()}</div><div class="priority-badge status-${l.status}">${l.status}</div></div>
+                            <div class="task-header">
+                                <div class="task-id">${new Date(l.startDate).toLocaleDateString()} - ${new Date(l.endDate).toLocaleDateString()}</div>
+                                <div class="status-badge status-${l.status}">${l.status}</div>
+                            </div>
                             <div class="task-desc">${escapeHtml(l.reason)}</div>
-                            <div class="task-footer"><span><i class="fas fa-tag"></i> ${l.type}</span><span>${l.adminComments ? `Admin: ${escapeHtml(l.adminComments)}` : ''}</span></div>
+                            <div class="task-footer">
+                                <span><i class="fas fa-tag"></i> ${l.type}</span>
+                                <span>${l.adminComments ? `Admin: ${escapeHtml(l.adminComments)}` : ''}</span>
+                            </div>
                         </div>
                     `).join('')}
-                    ${(currentSection === 'tasks' && filteredTasks.length === 0) ? '<div class="empty-state">No tasks found</div>' : (currentSection === 'attendance' && myAttendance.length === 0) ? '<div class="empty-state">No attendance records</div>' : (currentSection === 'leaves' && myLeaves.length === 0) ? '<div class="empty-state">No leave requests</div>' : ''}
+                    ${(currentSection === 'tasks' && filteredTasks.length === 0) ? '<div class="empty-state">No tasks assigned</div>' : (currentSection === 'attendance' && myAttendance.length === 0) ? '<div class="empty-state">No attendance records</div>' : (currentSection === 'leaves' && myLeaves.length === 0) ? '<div class="empty-state">No leave requests</div>' : ''}
                 </div>
             </div>
 
@@ -832,7 +923,6 @@ function renderApp() {
                   currentSection === 'attendance' ? renderAttendancePanel() : renderLeavePanel()}
             </div>
         </div>
-        ${renderModals()}
     `;
     document.getElementById('app').innerHTML = appHtml;
 }
@@ -840,30 +930,105 @@ function renderApp() {
 function renderTaskDetails() {
     return `
         <div class="detail-header">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 16px;">
                 <div class="task-id">${currentTask.taskNumber || currentTask._id.slice(-6).toUpperCase()}</div>
                 <div class="priority-badge ${getPriorityClass(currentTask.priority)}">${(currentTask.priority || 'medium').toUpperCase()}</div>
             </div>
             <div class="detail-title">${escapeHtml(currentTask.title)}</div>
             <p style="color:#64748b; font-size:13px; margin-top:8px;">${escapeHtml(currentTask.description || 'No description')}</p>
             <div class="detail-meta">
-                <div class="meta-item"><small>Status</small><h4><span class="status-badge status-${currentTask.status === 'in-progress' ? 'in-progress' : (currentTask.status === 'completed' ? 'completed' : 'todo')}">${getStatusText(currentTask.status)}</span></h4></div>
-                <div class="meta-item"><small>Due Date</small><h4>${currentTask.dueDate ? new Date(currentTask.dueDate).toLocaleDateString() : 'Not set'}</h4></div>
-                <div class="meta-item"><small>Client</small><h4>${escapeHtml(currentTask.clientId?.company || currentTask.clientId?.name || 'N/A')}</h4></div>
-                <div class="meta-item"><small>Workflow</small><h4>${escapeHtml(currentTask.workflowStage || 'planning')}</h4></div>
+                <div class="meta-item">
+                    <small>Status</small>
+                    <h4><span class="status-badge status-${currentTask.status === 'in-progress' ? 'in-progress' : (currentTask.status === 'completed' ? 'completed' : 'todo')}">${getStatusText(currentTask.status)}</span></h4>
+                </div>
+                <div class="meta-item">
+                    <small>Due Date</small>
+                    <h4>${currentTask.dueDate ? new Date(currentTask.dueDate).toLocaleDateString() : 'Not set'}</h4>
+                </div>
+                <div class="meta-item">
+                    <small>Client</small>
+                    <h4>${escapeHtml(currentTask.clientId?.company || currentTask.clientId?.name || 'N/A')}</h4>
+                </div>
+                <div class="meta-item">
+                    <small>Workflow</small>
+                    <h4>${escapeHtml(currentTask.workflowStage || 'planning')}</h4>
+                </div>
             </div>
         </div>
         <div class="detail-grid">
             <div>
-                <div class="detail-card"><h3>Checklist</h3>${(currentTask.checklist || []).length === 0 ? '<p style="color:#94a3b8;">No checklist items</p>' : (currentTask.checklist || []).map((item, idx) => `<div class="checklist-item ${item.completed ? 'completed' : ''}" onclick="toggleChecklistItem(${idx})"><input type="checkbox" ${item.completed ? 'checked' : ''} onclick="event.stopPropagation()"><span>${escapeHtml(item.text)}</span></div>`).join('')}</div>
-                <div class="detail-card"><h3>Comments</h3><div id="commentsContainer" style="max-height:300px; overflow-y:auto; margin-bottom:12px;">${(currentTask.comments || []).length === 0 ? '<p style="color:#94a3b8; text-align:center; padding:20px;">No comments yet</p>' : (currentTask.comments || []).map(c => `<div class="comment-item"><div class="comment-header"><span>${escapeHtml(c.author)}</span><span>${new Date(c.createdAt).toLocaleString()}</span></div><div>${escapeHtml(c.text)}</div></div>`).join('')}</div><textarea id="commentInput" rows="2" placeholder="Write your comment..."></textarea><button class="primary-btn" onclick="postComment()">Post Comment</button></div>
+                <div class="detail-card">
+                    <h3>Checklist</h3>
+                    ${(currentTask.checklist || []).length === 0 ? '<p style="color:#94a3b8;">No checklist items</p>' : (currentTask.checklist || []).map((item, idx) => `
+                        <div class="checklist-item ${item.completed ? 'completed' : ''}" onclick="toggleChecklistItem(${idx})">
+                            <input type="checkbox" ${item.completed ? 'checked' : ''} onclick="event.stopPropagation()">
+                            <span>${escapeHtml(item.text)}</span>
+                        </div>
+                    `).join('')}
+                </div>
+                <div class="detail-card">
+                    <h3>Comments</h3>
+                    <div id="commentsContainer" style="max-height:300px; overflow-y:auto; margin-bottom:12px;">
+                        ${(currentTask.comments || []).length === 0 ? '<p style="color:#94a3b8; text-align:center; padding:20px;">No comments yet</p>' : (currentTask.comments || []).map(c => `
+                            <div class="comment-item">
+                                <div class="comment-header">
+                                    <span><strong class="comment-author">${escapeHtml(c.author)}</strong> (${c.authorRole})</span>
+                                    <span>${new Date(c.createdAt).toLocaleString()}</span>
+                                </div>
+                                <div class="comment-text">${escapeHtml(c.text)}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <textarea id="commentInput" rows="2" placeholder="Write your comment..."></textarea>
+                    <button class="primary-btn" onclick="postComment()">Post Comment</button>
+                </div>
             </div>
             <div>
-                <div class="action-card"><h3>Quick Actions</h3><label>Status</label><select id="statusSelect" class="select-box" onchange="updateTaskField('status', this.value)"><option value="todo" ${currentTask.status === 'todo' ? 'selected' : ''}>Todo</option><option value="in-progress" ${currentTask.status === 'in-progress' ? 'selected' : ''}>In Progress</option><option value="completed" ${currentTask.status === 'completed' ? 'selected' : ''}>Completed</option></select>
-                <label>Actual Hours</label><input type="number" id="actualHoursInput" class="input-box" step="0.5" value="${currentTask.actualHours || ''}" onchange="updateTaskField('actualHours', this.value)">
-                <label>Workflow</label><select id="workflowSelect" class="select-box" onchange="updateTaskField('workflowStage', this.value)"><option value="planning" ${currentTask.workflowStage === 'planning' ? 'selected' : ''}>Planning</option><option value="development" ${currentTask.workflowStage === 'development' ? 'selected' : ''}>Development</option><option value="testing" ${currentTask.workflowStage === 'testing' ? 'selected' : ''}>Testing</option><option value="review" ${currentTask.workflowStage === 'review' ? 'selected' : ''}>Review</option><option value="deployment" ${currentTask.workflowStage === 'deployment' ? 'selected' : ''}>Deployment</option></select>
-                <button class="primary-btn" onclick="refreshTask()">Refresh</button></div>
-                <div class="action-card"><h3>Task Metrics</h3><div style="display:flex; justify-content:space-between; margin:10px 0;"><span>Estimated Hours:</span><strong>${currentTask.estimatedHours || 0}h</strong></div><div style="display:flex; justify-content:space-between; margin:10px 0;"><span>Actual Hours:</span><strong>${currentTask.actualHours || 0}h</strong></div><div style="display:flex; justify-content:space-between; margin:10px 0;"><span>Created:</span><strong>${new Date(currentTask.createdAt).toLocaleDateString()}</strong></div></div>
+                <div class="action-card">
+                    <h3>Update Task</h3>
+                    <label>Status</label>
+                    <select id="statusSelect" class="select-box">
+                        <option value="todo" ${currentTask.status === 'todo' ? 'selected' : ''}>Todo</option>
+                        <option value="in-progress" ${currentTask.status === 'in-progress' ? 'selected' : ''}>In Progress</option>
+                        <option value="completed" ${currentTask.status === 'completed' ? 'selected' : ''}>Completed</option>
+                    </select>
+                    
+                    <label>Workflow Stage</label>
+                    <select id="workflowSelect" class="select-box">
+                        <option value="planning" ${currentTask.workflowStage === 'planning' ? 'selected' : ''}>Planning</option>
+                        <option value="development" ${currentTask.workflowStage === 'development' ? 'selected' : ''}>Development</option>
+                        <option value="testing" ${currentTask.workflowStage === 'testing' ? 'selected' : ''}>Testing</option>
+                        <option value="review" ${currentTask.workflowStage === 'review' ? 'selected' : ''}>Review</option>
+                        <option value="deployment" ${currentTask.workflowStage === 'deployment' ? 'selected' : ''}>Deployment</option>
+                    </select>
+                    
+                    <label>Actual Hours</label>
+                    <input type="number" id="actualHoursInput" class="input-box" step="0.5" value="${currentTask.actualHours || ''}" placeholder="Enter hours spent">
+                    
+                    <button class="primary-btn" onclick="updateTaskFromForm()">Update Task</button>
+                    <button class="secondary-btn" onclick="refreshTask()">Refresh</button>
+                </div>
+                <div class="action-card">
+                    <h3>Task Metrics</h3>
+                    <div style="display:flex; justify-content:space-between; margin:10px 0;">
+                        <span>Estimated Hours:</span>
+                        <strong>${currentTask.estimatedHours || 0}h</strong>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; margin:10px 0;">
+                        <span>Actual Hours:</span>
+                        <strong>${currentTask.actualHours || 0}h</strong>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; margin:10px 0;">
+                        <span>Created:</span>
+                        <strong>${new Date(currentTask.createdAt).toLocaleDateString()}</strong>
+                    </div>
+                    ${currentTask.completedAt ? `
+                    <div style="display:flex; justify-content:space-between; margin:10px 0;">
+                        <span>Completed:</span>
+                        <strong>${new Date(currentTask.completedAt).toLocaleDateString()}</strong>
+                    </div>
+                    ` : ''}
+                </div>
             </div>
         </div>
     `;
@@ -871,32 +1036,98 @@ function renderTaskDetails() {
 
 function renderAttendancePanel() {
     return `
-        <div class="detail-header"><h2>Mark Today's Attendance</h2><p>Record your daily work status</p></div>
-        <div class="detail-card"><h3>Today's Status</h3>
-            <div class="form-group"><label>Status</label><select id="attStatus" class="select-box"><option value="present">Present</option><option value="absent">Absent</option><option value="late">Late</option><option value="half-day">Half Day</option></select></div>
-            <div class="form-row"><div class="form-group"><label>Check In</label><input type="time" id="checkIn" class="input-box"></div><div class="form-group"><label>Check Out</label><input type="time" id="checkOut" class="input-box"></div></div>
-            <div class="form-group"><label>Work Done Today</label><textarea id="workDescription" rows="2" placeholder="What did you work on today?"></textarea></div>
+        <div class="detail-header">
+            <h2>Mark Today's Attendance</h2>
+            <p>Record your daily work status</p>
+        </div>
+        <div class="detail-card">
+            <h3>Today's Status</h3>
+            <div class="form-group">
+                <label>Status</label>
+                <select id="attStatus" class="select-box">
+                    <option value="present">Present</option>
+                    <option value="absent">Absent</option>
+                    <option value="late">Late</option>
+                    <option value="half-day">Half Day</option>
+                </select>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Check In</label>
+                    <input type="time" id="checkIn" class="input-box">
+                </div>
+                <div class="form-group">
+                    <label>Check Out</label>
+                    <input type="time" id="checkOut" class="input-box">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Work Done Today</label>
+                <textarea id="workDescription" rows="2" placeholder="What did you work on today?"></textarea>
+            </div>
             <button class="primary-btn" onclick="submitAttendance()">Mark Attendance</button>
         </div>
-        <div class="detail-card"><h3>Recent Activity</h3>${myAttendance.slice(0, 5).map(a => `<div class="activity-item"><div class="activity-icon"><i class="fas fa-calendar-day"></i></div><div class="activity-content"><p><strong>${new Date(a.date).toLocaleDateString()}</strong> - ${a.status}</p><small>${a.workDescription?.substring(0, 50) || 'No work log'}</small></div></div>`).join('')}</div>
+        <div class="detail-card">
+            <h3>Recent Activity</h3>
+            ${myAttendance.slice(0, 5).map(a => `
+                <div class="activity-item">
+                    <div class="activity-icon"><i class="fas fa-calendar-day"></i></div>
+                    <div class="activity-content">
+                        <p><strong>${new Date(a.date).toLocaleDateString()}</strong> - ${a.status}</p>
+                        <small>${a.workDescription?.substring(0, 50) || 'No work log'}</small>
+                    </div>
+                </div>
+            `).join('')}
+        </div>
     `;
 }
 
 function renderLeavePanel() {
     return `
-        <div class="detail-header"><h2>Apply for Leave</h2><p>Submit leave request for approval</p></div>
-        <div class="detail-card"><h3>New Leave Request</h3>
-            <div class="form-group"><label>Leave Type</label><select id="leaveType" class="select-box"><option value="casual">Casual</option><option value="sick">Sick</option><option value="earned">Earned</option><option value="emergency">Emergency</option></select></div>
-            <div class="form-row"><div class="form-group"><label>Start Date</label><input type="date" id="startDate" class="input-box"></div><div class="form-group"><label>End Date</label><input type="date" id="endDate" class="input-box"></div></div>
-            <div class="form-group"><label>Reason</label><textarea id="reason" rows="2" placeholder="Please provide reason for leave"></textarea></div>
+        <div class="detail-header">
+            <h2>Apply for Leave</h2>
+            <p>Submit leave request for approval</p>
+        </div>
+        <div class="detail-card">
+            <h3>New Leave Request</h3>
+            <div class="form-group">
+                <label>Leave Type</label>
+                <select id="leaveType" class="select-box">
+                    <option value="casual">Casual</option>
+                    <option value="sick">Sick</option>
+                    <option value="earned">Earned</option>
+                    <option value="emergency">Emergency</option>
+                </select>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Start Date</label>
+                    <input type="date" id="startDate" class="input-box">
+                </div>
+                <div class="form-group">
+                    <label>End Date</label>
+                    <input type="date" id="endDate" class="input-box">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Reason</label>
+                <textarea id="reason" rows="2" placeholder="Please provide reason for leave"></textarea>
+            </div>
             <button class="primary-btn" onclick="submitLeave()">Submit Request</button>
         </div>
-        <div class="detail-card"><h3>Recent Requests</h3>${myLeaves.slice(0, 5).map(l => `<div class="activity-item"><div class="activity-icon"><i class="fas fa-umbrella-beach"></i></div><div class="activity-content"><p><strong>${new Date(l.startDate).toLocaleDateString()} - ${new Date(l.endDate).toLocaleDateString()}</strong> (${l.type})</p><small>Status: ${l.status} | ${l.adminComments ? `Admin: ${l.adminComments}` : ''}</small></div></div>`).join('')}</div>
+        <div class="detail-card">
+            <h3>Recent Requests</h3>
+            ${myLeaves.slice(0, 5).map(l => `
+                <div class="activity-item">
+                    <div class="activity-icon"><i class="fas fa-umbrella-beach"></i></div>
+                    <div class="activity-content">
+                        <p><strong>${new Date(l.startDate).toLocaleDateString()} - ${new Date(l.endDate).toLocaleDateString()}</strong> (${l.type})</p>
+                        <small>Status: ${l.status} | ${l.adminComments ? `Admin: ${l.adminComments}` : ''}</small>
+                    </div>
+                </div>
+            `).join('')}
+        </div>
     `;
-}
-
-function renderModals() {
-    return ``;
 }
 
 function selectProject(projectId) {
@@ -910,51 +1141,208 @@ function selectTask(taskId) {
     renderApp();
 }
 
-function searchTasks(term) { searchTerm = term; renderApp(); }
-function showSection(section) { currentSection = section; renderApp(); }
+function searchTasks(term) { 
+    searchTerm = term; 
+    renderApp();
+}
+
+function showSection(section) { 
+    currentSection = section; 
+    renderApp();
+}
+// Replace the entire updateTaskField and updateTaskFromForm functions with these:
 
 async function updateTaskField(field, value) {
     if (!currentTask) return;
-    if (await updateTask(currentTask._id, { [field]: field === 'actualHours' ? parseFloat(value) : value })) {
-        await loadTasks();
-        currentTask = allTasks.find(t => t._id === currentTask._id);
-        showNotification(`${field} updated!`, 'success');
-        renderApp();
+    
+    // Prepare the update object
+    let updates = {};
+    
+    // Handle different field types
+    if (field === 'actualHours') {
+        updates[field] = parseFloat(value) || 0;
+    } else if (field === 'estimatedHours') {
+        updates[field] = parseFloat(value) || 0;
+    } else {
+        updates[field] = value;
+    }
+    
+    console.log('Updating task:', currentTask._id, updates);
+    
+    try {
+        const res = await fetch(`${API_URL}/tasks/${currentTask._id}`, {
+            method: 'PUT',
+            headers: { 
+                'Content-Type': 'application/json', 
+                'Authorization': `Bearer ${authToken}` 
+            },
+            body: JSON.stringify(updates)
+        });
+        
+        const data = await res.json();
+        
+        if (res.ok) {
+            showNotification(`${field} updated successfully`, 'success');
+            await loadTasks();
+            currentTask = allTasks.find(t => t._id === currentTask._id);
+            renderApp();
+        } else {
+            console.error('Update error:', data);
+            showNotification(data.error || 'Failed to update task', 'error');
+        }
+    } catch (error) {
+        console.error('Update error:', error);
+        showNotification('Error updating task', 'error');
     }
 }
 
+async function updateTaskFromForm() {
+    if (!currentTask) return;
+    
+    // Get values from form
+    const status = document.getElementById('statusSelect')?.value;
+    const workflowStage = document.getElementById('workflowSelect')?.value;
+    let actualHours = document.getElementById('actualHoursInput')?.value;
+    
+    // Build updates object - only include fields that have values
+    const updates = {};
+    
+    if (status && status !== currentTask.status) {
+        updates.status = status;
+    }
+    
+    if (workflowStage && workflowStage !== currentTask.workflowStage) {
+        updates.workflowStage = workflowStage;
+    }
+    
+    if (actualHours !== undefined && actualHours !== '') {
+        const hoursNum = parseFloat(actualHours);
+        if (!isNaN(hoursNum) && hoursNum !== currentTask.actualHours) {
+            updates.actualHours = hoursNum;
+        }
+    }
+    
+    // Check if there's anything to update
+    if (Object.keys(updates).length === 0) {
+        showNotification('No changes to update', 'info');
+        return;
+    }
+    
+    console.log('Updating task with:', updates);
+    
+    try {
+        const res = await fetch(`${API_URL}/tasks/${currentTask._id}`, {
+            method: 'PUT',
+            headers: { 
+                'Content-Type': 'application/json', 
+                'Authorization': `Bearer ${authToken}` 
+            },
+            body: JSON.stringify(updates)
+        });
+        
+        const data = await res.json();
+        
+        if (res.ok) {
+            showNotification('Task updated successfully', 'success');
+            await loadTasks();
+            currentTask = allTasks.find(t => t._id === currentTask._id);
+            renderApp();
+        } else {
+            console.error('Update error response:', data);
+            showNotification(data.error || 'Failed to update task', 'error');
+        }
+    } catch (error) {
+        console.error('Update error:', error);
+        showNotification('Error updating task. Please try again.', 'error');
+    }
+}
+
+// Also fix the toggleChecklistItem function
 async function toggleChecklistItem(index) {
     if (!currentTask?.checklist) return;
-    currentTask.checklist[index].completed = !currentTask.checklist[index].completed;
-    if (await updateTask(currentTask._id, { checklist: currentTask.checklist })) {
-        showNotification('Checklist updated', 'success');
-        renderApp();
+    
+    // Create a copy of the checklist
+    const updatedChecklist = [...currentTask.checklist];
+    updatedChecklist[index].completed = !updatedChecklist[index].completed;
+    
+    try {
+        const res = await fetch(`${API_URL}/tasks/${currentTask._id}`, {
+            method: 'PUT',
+            headers: { 
+                'Content-Type': 'application/json', 
+                'Authorization': `Bearer ${authToken}` 
+            },
+            body: JSON.stringify({ checklist: updatedChecklist })
+        });
+        
+        if (res.ok) {
+            showNotification('Checklist updated', 'success');
+            await loadTasks();
+            currentTask = allTasks.find(t => t._id === currentTask._id);
+            renderApp();
+        } else {
+            showNotification('Failed to update checklist', 'error');
+        }
+    } catch (error) {
+        console.error('Checklist update error:', error);
+        showNotification('Error updating checklist', 'error');
     }
 }
 
+// Fix postComment function
 async function postComment() {
     const text = document.getElementById('commentInput')?.value;
-    if (!text?.trim()) return showNotification('Enter a comment', 'error');
-    if (await addComment(currentTask._id, text)) {
-        showNotification('Comment posted!', 'success');
-        await loadTasks();
-        currentTask = allTasks.find(t => t._id === currentTask._id);
-        renderApp();
+    if (!text?.trim()) {
+        showNotification('Enter a comment', 'error');
+        return;
+    }
+    
+    try {
+        const res = await fetch(`${API_URL}/tasks/${currentTask._id}/comments`, {
+            method: 'POST',
+            headers: { 
+                'Content-Type': 'application/json', 
+                'Authorization': `Bearer ${authToken}` 
+            },
+            body: JSON.stringify({ text: text.trim() })
+        });
+        
+        if (res.ok) {
+            showNotification('Comment posted', 'success');
+            document.getElementById('commentInput').value = '';
+            await loadTasks();
+            currentTask = allTasks.find(t => t._id === currentTask._id);
+            renderApp();
+        } else {
+            const data = await res.json();
+            showNotification(data.error || 'Failed to post comment', 'error');
+        }
+    } catch (error) {
+        console.error('Comment error:', error);
+        showNotification('Error posting comment', 'error');
     }
 }
 
-async function refreshTask() { await loadTasks(); currentTask = allTasks.find(t => t._id === currentTask?._id); renderApp(); showNotification('Refreshed', 'success'); }
+async function refreshTask() { 
+    await loadTasks(); 
+    currentTask = allTasks.find(t => t._id === currentTask?._id); 
+    renderApp(); 
+    showNotification('Task refreshed', 'success');
+}
 
 async function submitAttendance() {
     const status = document.getElementById('attStatus')?.value;
     const checkIn = document.getElementById('checkIn')?.value;
     const checkOut = document.getElementById('checkOut')?.value;
     const workDescription = document.getElementById('workDescription')?.value;
+    
     if (await markAttendance(status, checkIn, checkOut, workDescription)) {
         showNotification('Attendance marked!', 'success');
         await loadAttendance();
         renderApp();
-    } else { showNotification('Failed to mark attendance', 'error'); }
+    } else { 
+        showNotification('Failed to mark attendance', 'error'); 
+    }
 }
 
 async function submitLeave() {
@@ -962,24 +1350,41 @@ async function submitLeave() {
     const endDate = document.getElementById('endDate')?.value;
     const reason = document.getElementById('reason')?.value;
     const type = document.getElementById('leaveType')?.value;
-    if (!startDate || !endDate || !reason) return showNotification('Please fill all fields', 'error');
+    
+    if (!startDate || !endDate || !reason) {
+        showNotification('Please fill all fields', 'error');
+        return;
+    }
+    
     if (await applyLeave(startDate, endDate, reason, type)) {
         showNotification('Leave request submitted! Admin will be notified.', 'success');
         await loadLeaves();
         renderApp();
-    } else { showNotification('Failed to submit leave', 'error'); }
+    } else { 
+        showNotification('Failed to submit leave', 'error'); 
+    }
 }
 
 function showNotification(msg, type) {
     const toast = document.createElement('div');
-    toast.style.cssText = `position:fixed; bottom:20px; right:20px; background:${type === 'success' ? '#10b981' : '#ef4444'}; color:white; padding:10px 16px; border-radius:10px; z-index:2000; font-size:13px;`;
+    toast.className = `notification ${type}`;
     toast.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i> ${msg}`;
     document.body.appendChild(toast);
     setTimeout(() => toast.remove(), 3000);
 }
 
-function escapeHtml(text) { if (!text) return ''; const div = document.createElement('div'); div.textContent = text; return div.innerHTML; }
-function logout() { localStorage.clear(); sessionStorage.clear(); window.location.href = '/login.html'; }
+function escapeHtml(text) { 
+    if (!text) return ''; 
+    const div = document.createElement('div'); 
+    div.textContent = text; 
+    return div.innerHTML; 
+}
+
+function logout() { 
+    localStorage.clear(); 
+    sessionStorage.clear(); 
+    window.location.href = '/'; 
+}
 </script>
 </body>
 </html>

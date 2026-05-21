@@ -14,7 +14,8 @@ const adminRoutes = require('./routes/adminRoutes');
 const logRoutes = require('./routes/logRoutes');
 const attendanceRoutes = require('./routes/attendanceRoutes');
 const leaveRoutes = require('./routes/leaveRoutes');
-
+const clientRoutes = require('./routes/clientRoutes');
+const clientTeamRoutes = require('./routes/clientRoutes'); // ADD THIS LINE
 
 const app = express();
 
@@ -22,7 +23,8 @@ const app = express();
 app.use(cors({
     origin: [
         'https://task-tracker.scaleflowsoftware.com',
-        'http://localhost:9040'
+        'http://localhost:9040',
+        'http://localhost:3000'
     ],
     credentials: true
 }));
@@ -89,10 +91,16 @@ app.get('/api', (req, res) => {
                 updateUser: 'PUT /api/admin/users/:id',
                 deleteUser: 'DELETE /api/admin/users/:id',
                 stats: 'GET /api/admin/stats'
+            },
+            client: {
+                teamMembers: 'GET /api/client/team-members',
+                inviteTeamMember: 'POST /api/client/invite-team-member',
+                removeTeamMember: 'DELETE /api/client/team-members/:id',
+                allTasks: 'GET /api/client/all-tasks',
+                teamStats: 'GET /api/client/team-stats'
             }
         },
         health: 'GET /health'
-
     });
 });
 
@@ -103,6 +111,8 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/logs', logRoutes);
 app.use('/api/attendance', attendanceRoutes);
 app.use('/api/leaves', leaveRoutes);
+app.use('/api/client', clientRoutes);
+app.use('/api/client', clientTeamRoutes); // ADD THIS LINE
 
 // ============ FRONTEND ROUTES ============
 // Serve login page at root
@@ -115,7 +125,7 @@ app.get('/admin', (req, res) => {
     res.sendFile(path.join(frontendPath, 'admin-dashboard.html'));
 });
 
-// Serve user dashboard
+// Serve developer dashboard
 app.get('/developer', (req, res) => {
     res.sendFile(path.join(frontendPath, 'developer-dashboard.html'));
 });
@@ -123,6 +133,11 @@ app.get('/developer', (req, res) => {
 // Serve client dashboard
 app.get('/client', (req, res) => {
     res.sendFile(path.join(frontendPath, 'client-dashboard.html'));
+});
+
+// Serve client team member dashboard (for client-team role)
+app.get('/team-member', (req, res) => {
+    res.sendFile(path.join(frontendPath, 'client-team.html'));
 });
 
 // ============ ERROR HANDLING ============
@@ -137,12 +152,22 @@ mongoose.connect(process.env.MONGODB_URI)
         console.log('MongoDB Connected!');
         console.log('Database:', mongoose.connection.name);
         app.listen(PORT, () => {
-            console.log(`ScaleFlow Server running on https://task-tracker.scaleflowsoftware.com`);
-            console.log(`Login Page: https://task-tracker.scaleflowsoftware.com/`);
-            console.log(`Admin Dashboard: https://task-tracker.scaleflowsoftware.com/admin`);
-            console.log(`User Dashboard: https://task-tracker.scaleflowsoftware.com/dashboard`);
-            console.log(`Health Check: https://task-tracker.scaleflowsoftware.com/health`);
-            console.log(`API Endpoint: https://task-tracker.scaleflowsoftware.com/api\n`);
+            console.log(`ScaleFlow Server running on port ${PORT}`);
+            console.log(`Login Page: http://localhost:${PORT}/`);
+            console.log(`Admin Dashboard: http://localhost:${PORT}/admin`);
+            console.log(`Developer Dashboard: http://localhost:${PORT}/developer`);
+            console.log(`Client Dashboard: http://localhost:${PORT}/client`);
+            console.log(`Health Check: http://localhost:${PORT}/health`);
+            console.log(`API Endpoint: http://localhost:${PORT}/api\n`);
+            
+            console.log('Available API Endpoints:');
+            console.log('  Client Team Management:');
+            console.log('    GET    /api/client/team-members');
+            console.log('    POST   /api/client/invite-team-member');
+            console.log('    DELETE /api/client/team-members/:id');
+            console.log('    GET    /api/client/all-tasks');
+            console.log('    GET    /api/client/team-stats');
+            console.log('    GET    /api/client/team-members/:id/tasks');
         });
     })
     .catch(err => {

@@ -69,9 +69,13 @@ router.get('/users/:id', async (req, res, next) => {
 
 // @route   POST /api/admin/users
 // @desc    Create new user (client or developer) & send invitation
+// @route   POST /api/admin/users
+// @desc    Create new user (client or developer) & send invitation
 router.post('/users', validate.createUserByAdmin, async (req, res, next) => {
     try {
         const { name, email, role, company } = req.body;
+        
+        console.log('🔵 ADMIN: Creating new user:', { name, email, role });
         
         // Check if user already exists
         const existingUser = await User.findOne({ email });
@@ -92,9 +96,31 @@ router.post('/users', validate.createUserByAdmin, async (req, res, next) => {
         });
         
         await user.save();
+        console.log('✅ User saved to database:', user._id);
         
         // Send invitation email with password reset link
-        await sendInvitationEmail(email, name, tempPassword, role);
+        console.log('📧 Attempting to send invitation email to:', email);
+        const emailResult = await sendInvitationEmail(email, name, tempPassword, role);
+        console.log('📧 Email result:', emailResult);
+        
+        if (!emailResult.success) {
+            console.warn('⚠️ Email failed but user was created. Error:', emailResult.error);
+            // Still return success for user creation, but warn about email
+            return res.status(201).json({
+                success: true,
+                message: `User created but invitation email failed to send. Please reset password manually.`,
+                warning: `Email error: ${emailResult.error}`,
+                user: {
+                    id: user._id,
+                    name: user.name,
+                    email: user.email,
+                    role: user.role,
+                    company: user.company,
+                    createdAt: user.createdAt
+                },
+                tempPassword: process.env.NODE_ENV === 'development' ? tempPassword : undefined
+            });
+        }
         
         res.status(201).json({
             success: true,
@@ -107,13 +133,13 @@ router.post('/users', validate.createUserByAdmin, async (req, res, next) => {
                 company: user.company,
                 createdAt: user.createdAt
             },
-            tempPassword // Only show this once for testing, not in production!
+            tempPassword: process.env.NODE_ENV === 'development' ? tempPassword : undefined
         });
     } catch (error) {
+        console.error('🔴 Error in user creation:', error);
         next(error);
     }
 });
-
 // @route   PUT /api/admin/users/:id
 // @desc    Update user (deactivate, change role, etc.)
 router.put('/users/:id', async (req, res, next) => {

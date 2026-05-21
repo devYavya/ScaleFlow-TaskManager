@@ -13,6 +13,7 @@ const taskPopulate = [
     { path: 'createdBy', select: 'name email role' },
     { path: 'assignedTo', select: 'name email role' },
     { path: 'clientId', select: 'name email company role' },
+    { path: 'teamMemberId', select: 'name email role' },
     { path: 'watchers', select: 'name email role' },
     { path: 'blockedBy', select: 'title taskNumber status' },
     { path: 'comments.authorId', select: 'name email role' },
@@ -29,7 +30,12 @@ router.get('/', authenticate, async (req, res, next) => {
 
         // Role-based filtering
         if (req.user.role === 'client') {
+            // Client sees all tasks from their company (including team member tasks)
             query.clientId = req.user._id;
+        } else if (req.user.role === 'client-team') {
+            // Team member sees tasks they created
+            query.createdBy = req.user._id;
+            query.clientId = req.user.clientId;
         } else if (req.user.role === 'developer') {
             query.assignedTo = req.user._id;
         }
@@ -39,7 +45,8 @@ router.get('/', authenticate, async (req, res, next) => {
         if (req.query.priority) query.priority = req.query.priority;
         if (req.query.workflowStage) query.workflowStage = req.query.workflowStage;
         if (req.query.assignedTo) query.assignedTo = req.query.assignedTo;
-        if (req.query.clientId && req.user.role === 'admin') {
+        if (req.query.createdBy) query.createdBy = req.query.createdBy;
+        if (req.query.clientId && (req.user.role === 'admin' || req.user.role === 'client')) {
             query.clientId = req.query.clientId;
         }
 
@@ -87,11 +94,19 @@ router.get('/:id', authenticate, async (req, res, next) => {
             });
         }
 
-        const hasAccess =
-            req.user.role === 'admin' ||
-            task.assignedTo?._id?.toString() === req.user._id.toString() ||
-            task.clientId?._id?.toString() === req.user._id.toString() ||
-            task.createdBy?._id?.toString() === req.user._id.toString();
+        // Check access based on user role
+        let hasAccess = false;
+        
+        if (req.user.role === 'admin') {
+            hasAccess = true;
+        } else if (req.user.role === 'client') {
+            hasAccess = task.clientId?._id?.toString() === req.user._id.toString();
+        } else if (req.user.role === 'client-team') {
+            hasAccess = task.createdBy?._id?.toString() === req.user._id.toString() ||
+                       task.clientId?._id?.toString() === req.user.clientId?.toString();
+        } else if (req.user.role === 'developer') {
+            hasAccess = task.assignedTo?._id?.toString() === req.user._id.toString();
+        }
 
         if (!hasAccess) {
             return res.status(403).json({
@@ -116,7 +131,7 @@ router.get('/:id', authenticate, async (req, res, next) => {
 router.post(
     '/',
     authenticate,
-    requireRole('admin', 'client'),
+    requireRole('admin', 'client', 'client-team'),
     async (req, res, next) => {
         try {
 
@@ -150,22 +165,45 @@ router.post(
             }
 
             // ======================================================
-            // CLIENT RESTRICTIONS
+            // ROLE-BASED HANDLING
             // ======================================================
 
+            let teamMemberId = null;
+            let createdByRole = req.user.role;
+
             if (req.user.role === 'client') {
-
-                // Force ownership
+                // Client creating task for themselves
                 clientId = req.user._id;
-
-                // Clients cannot control workflow
                 assignedTo = null;
                 workflowStage = 'planning';
                 startDate = null;
                 dueDate = null;
                 estimatedHours = 0;
                 tags = [];
-
+                
+            } else if (req.user.role === 'client-team') {
+                // Team member creating task for their client
+                if (!req.user.clientId) {
+                    return res.status(400).json({
+                        error: 'Team member not associated with any client'
+                    });
+                }
+                clientId = req.user.clientId;
+                teamMemberId = req.user._id;
+                assignedTo = null;
+                workflowStage = 'planning';
+                startDate = null;
+                dueDate = null;
+                estimatedHours = 0;
+                tags = [];
+                
+            } else if (req.user.role === 'admin') {
+                // Admin creating task - need clientId
+                if (!clientId) {
+                    return res.status(400).json({
+                        error: 'Client ID is required when creating task as admin'
+                    });
+                }
             }
 
             // ======================================================
@@ -175,7 +213,6 @@ router.post(
             let developer = null;
 
             if (assignedTo) {
-
                 developer = await User.findOne({
                     _id: assignedTo,
                     role: 'developer'
@@ -216,39 +253,32 @@ router.post(
             const task = new Task({
                 title: title.trim(),
                 description: description.trim(),
-
                 priority: priority || 'medium',
-
                 workflowStage: workflowStage || 'planning',
-
-                status: req.user.role === 'client'
-                    ? 'pending'
+                status: (req.user.role === 'client' || req.user.role === 'client-team') 
+                    ? 'pending' 
                     : 'todo',
-
                 createdBy: req.user._id,
-
+                createdByRole: createdByRole,
                 assignedTo: assignedTo || null,
-
-                clientId,
-
+                clientId: clientId,
+                teamMemberId: teamMemberId,
                 startDate,
                 dueDate,
-
                 estimatedHours: estimatedHours || 0,
-
                 tags: tags || [],
-
                 checklist: [],
                 watchers: [],
-
+                source: req.user.role === 'client-team' ? 'team-member-portal' : 'client-portal',
                 activityLogs: [
                     {
                         action: 'TASK_CREATED',
                         performedBy: req.user._id,
+                        performedByRole: req.user.role,
                         newValue: {
                             title,
-                            status: req.user.role === 'client'
-                                ? 'pending'
+                            status: (req.user.role === 'client' || req.user.role === 'client-team') 
+                                ? 'pending' 
                                 : 'todo'
                         }
                     }
@@ -256,7 +286,6 @@ router.post(
             });
 
             await task.save();
-
             await task.populate(taskPopulate);
 
             res.status(201).json({
@@ -274,10 +303,55 @@ router.post(
 // ======================================================
 // UPDATE TASK
 // ======================================================
+// ======================================================
+// UPDATE TASK
+// ======================================================
 
 router.put('/:id', authenticate, async (req, res, next) => {
     try {
+        // ======================================================
+        // SANITIZE INPUT - Remove fields that shouldn't be updated
+        // ======================================================
+        
+        const sanitizedBody = {};
+        const allowedFields = {
+            admin: ['title', 'description', 'status', 'priority', 'workflowStage', 'assignedTo', 
+                    'dueDate', 'startDate', 'estimatedHours', 'actualHours', 'tags', 'checklist', 
+                    'milestone', 'sprint'],
+            developer: ['status', 'actualHours', 'checklist', 'workflowStage'],
+            client: ['title', 'description', 'priority'],
+            'client-team': ['title', 'description', 'priority']
+        };
+        
+        // Fields that should NEVER be updated
+        const immutableFields = ['_id', 'createdBy', 'createdByRole', 'clientId', 'teamMemberId', 
+                                 'taskNumber', 'isDeleted', 'deletedAt', 'deletedBy', 'activityLogs'];
+        
+        // Sanitize request body
+        Object.keys(req.body).forEach(key => {
+            // Skip immutable fields
+            if (immutableFields.includes(key)) {
+                console.log(`Skipping immutable field: ${key}`);
+                return;
+            }
+            
+            // Skip undefined/null/empty values
+            const value = req.body[key];
+            if (value === undefined || value === null || value === '' || value === 'undefined') {
+                console.log(`Skipping empty field: ${key}`);
+                return;
+            }
+            
+            sanitizedBody[key] = value;
+        });
 
+        if (Object.keys(sanitizedBody).length === 0) {
+            return res.status(400).json({
+                error: 'No valid fields to update'
+            });
+        }
+
+        // Find the task
         const task = await Task.findOne({
             _id: req.params.id,
             isDeleted: false
@@ -289,127 +363,79 @@ router.put('/:id', authenticate, async (req, res, next) => {
             });
         }
 
-        const isAdmin =
-            req.user.role === 'admin';
+        // Check permissions
+        const isAdmin = req.user.role === 'admin';
+        const isAssignedDeveloper = task.assignedTo?.toString() === req.user._id.toString();
+        const isClient = task.clientId?.toString() === req.user._id.toString();
+        const isCreator = task.createdBy?.toString() === req.user._id.toString();
 
-        const isAssignedDeveloper =
-            task.assignedTo?.toString() === req.user._id.toString();
+        let hasAccess = false;
+        
+        if (isAdmin) hasAccess = true;
+        else if (isAssignedDeveloper) hasAccess = true;
+        else if (isClient) hasAccess = true;
+        else if (isCreator && req.user.role === 'client-team') hasAccess = true;
 
-        const isClient =
-            task.clientId?.toString() === req.user._id.toString();
-
-        if (!isAdmin && !isAssignedDeveloper && !isClient) {
+        if (!hasAccess) {
             return res.status(403).json({
                 error: 'Access denied'
             });
         }
 
-        // ======================================================
-        // STORE OLD VALUES
-        // ======================================================
+        // Determine allowed fields based on role
+        let allowedRoleFields = [];
+        if (isAdmin) allowedRoleFields = allowedFields.admin;
+        else if (isAssignedDeveloper) allowedRoleFields = allowedFields.developer;
+        else if (isClient) allowedRoleFields = allowedFields.client;
+        else if (isCreator && req.user.role === 'client-team') allowedRoleFields = allowedFields['client-team'];
 
+        // Store old values for activity log
         const previousData = {
             status: task.status,
             priority: task.priority,
             workflowStage: task.workflowStage,
-            assignedTo: task.assignedTo
+            assignedTo: task.assignedTo,
+            title: task.title,
+            description: task.description,
+            actualHours: task.actualHours
         };
 
-        // ======================================================
-        // CLIENT UPDATE RESTRICTIONS
-        // ======================================================
-
-        let allowedFields = [];
-
-        if (isAdmin) {
-
-            allowedFields = [
-                'title',
-                'description',
-                'status',
-                'priority',
-                'workflowStage',
-                'assignedTo',
-                'dueDate',
-                'startDate',
-                'estimatedHours',
-                'actualHours',
-                'tags',
-                'checklist',
-                'milestone',
-                'sprint'
-            ];
-
-        } else if (isAssignedDeveloper) {
-
-            allowedFields = [
-                'status',
-                'actualHours',
-                'checklist'
-            ];
-
-        } else if (isClient) {
-
-            allowedFields = [
-                'title',
-                'description',
-                'priority'
-            ];
-
-        }
-
-        // ======================================================
-        // VALIDATE DEVELOPER ASSIGNMENT
-        // ======================================================
-
-        if (req.body.assignedTo) {
-
-            const developer = await User.findOne({
-                _id: req.body.assignedTo,
-                role: 'developer'
-            });
-
-            if (!developer) {
-                return res.status(400).json({
-                    error: 'Assigned developer not found'
-                });
-            }
-        }
-
-        // ======================================================
-        // APPLY UPDATES
-        // ======================================================
-
-        allowedFields.forEach(field => {
-            if (req.body[field] !== undefined) {
-                task[field] = req.body[field];
+        // Apply updates
+        let hasUpdates = false;
+        allowedRoleFields.forEach(field => {
+            if (sanitizedBody[field] !== undefined) {
+                // Special handling for actualHours (ensure it's a number)
+                if (field === 'actualHours') {
+                    task[field] = parseFloat(sanitizedBody[field]) || 0;
+                } else {
+                    task[field] = sanitizedBody[field];
+                }
+                hasUpdates = true;
             }
         });
 
-        // ======================================================
-        // COMPLETION DATE
-        // ======================================================
+        if (!hasUpdates) {
+            return res.status(400).json({
+                error: 'No valid fields to update based on your role'
+            });
+        }
 
-        if (
-            req.body.status === 'completed' &&
-            !task.completedAt
-        ) {
+        // Set completion date if status changed to completed
+        if (sanitizedBody.status === 'completed' && task.status !== 'completed') {
             task.completedAt = new Date();
         }
 
-        // ======================================================
-        // ACTIVITY LOG
-        // ======================================================
-
+        // Add activity log
         task.activityLogs.push({
             action: 'TASK_UPDATED',
             performedBy: req.user._id,
+            performedByRole: req.user.role,
             oldValue: previousData,
-            newValue: req.body
+            newValue: sanitizedBody
         });
 
-        await task.save();
-
+        // Save with validation options
+        await task.save({ validateModifiedOnly: true });
         await task.populate(taskPopulate);
 
         res.json({
@@ -419,6 +445,25 @@ router.put('/:id', authenticate, async (req, res, next) => {
         });
 
     } catch (error) {
+        console.error('Update error:', error);
+        
+        // Handle validation errors
+        if (error.name === 'ValidationError') {
+            const errors = Object.values(error.errors).map(e => e.message);
+            return res.status(400).json({
+                error: 'Validation Error',
+                details: errors
+            });
+        }
+        
+        // Handle CastError
+        if (error.name === 'CastError') {
+            return res.status(400).json({
+                error: 'Invalid ID format',
+                details: error.message
+            });
+        }
+        
         next(error);
     }
 });
@@ -438,11 +483,19 @@ router.post('/:id/comments', authenticate, async (req, res, next) => {
             });
         }
 
-        const hasAccess =
-            req.user.role === 'admin' ||
-            task.assignedTo?.toString() === req.user._id.toString() ||
-            task.clientId?.toString() === req.user._id.toString() ||
-            task.createdBy?.toString() === req.user._id.toString();
+        // Check access
+        let hasAccess = false;
+        
+        if (req.user.role === 'admin') {
+            hasAccess = true;
+        } else if (req.user.role === 'client') {
+            hasAccess = task.clientId?.toString() === req.user._id.toString();
+        } else if (req.user.role === 'client-team') {
+            hasAccess = task.createdBy?.toString() === req.user._id.toString() ||
+                       task.clientId?.toString() === req.user.clientId?.toString();
+        } else if (req.user.role === 'developer') {
+            hasAccess = task.assignedTo?.toString() === req.user._id.toString();
+        }
 
         if (!hasAccess) {
             return res.status(403).json({
@@ -468,13 +521,13 @@ router.post('/:id/comments', authenticate, async (req, res, next) => {
         task.activityLogs.push({
             action: 'COMMENT_ADDED',
             performedBy: req.user._id,
+            performedByRole: req.user.role,
             newValue: {
                 comment: text.trim()
             }
         });
 
         await task.save();
-
         await task.populate(taskPopulate);
 
         res.status(201).json({
@@ -503,11 +556,19 @@ router.get('/:id/comments', authenticate, async (req, res, next) => {
             });
         }
 
-        const hasAccess =
-            req.user.role === 'admin' ||
-            task.assignedTo?.toString() === req.user._id.toString() ||
-            task.clientId?.toString() === req.user._id.toString() ||
-            task.createdBy?.toString() === req.user._id.toString();
+        // Check access
+        let hasAccess = false;
+        
+        if (req.user.role === 'admin') {
+            hasAccess = true;
+        } else if (req.user.role === 'client') {
+            hasAccess = task.clientId?.toString() === req.user._id.toString();
+        } else if (req.user.role === 'client-team') {
+            hasAccess = task.createdBy?.toString() === req.user._id.toString() ||
+                       task.clientId?.toString() === req.user.clientId?.toString();
+        } else if (req.user.role === 'developer') {
+            hasAccess = task.assignedTo?.toString() === req.user._id.toString();
+        }
 
         if (!hasAccess) {
             return res.status(403).json({
@@ -541,13 +602,25 @@ router.post('/:id/checklist', authenticate, async (req, res, next) => {
             });
         }
 
+        // Only admins and assigned developers can add checklist items
+        const canModify = req.user.role === 'admin' || 
+                         task.assignedTo?.toString() === req.user._id.toString();
+
+        if (!canModify) {
+            return res.status(403).json({
+                error: 'Only admins and assigned developers can modify checklist'
+            });
+        }
+
         task.checklist.push({
-            text: req.body.text
+            text: req.body.text,
+            completed: false
         });
 
         task.activityLogs.push({
             action: 'CHECKLIST_ITEM_ADDED',
             performedBy: req.user._id,
+            performedByRole: req.user.role,
             newValue: {
                 text: req.body.text
             }
@@ -590,7 +663,8 @@ router.delete(
 
             task.activityLogs.push({
                 action: 'TASK_DELETED',
-                performedBy: req.user._id
+                performedBy: req.user._id,
+                performedByRole: req.user.role
             });
 
             await task.save();
@@ -613,12 +687,13 @@ router.delete(
 router.get('/stats/dashboard', authenticate, async (req, res, next) => {
     try {
 
-        let query = {
-            isDeleted: false
-        };
+        let query = { isDeleted: false };
 
         if (req.user.role === 'client') {
             query.clientId = req.user._id;
+        } else if (req.user.role === 'client-team') {
+            query.createdBy = req.user._id;
+            query.clientId = req.user.clientId;
         } else if (req.user.role === 'developer') {
             query.assignedTo = req.user._id;
         }
@@ -661,6 +736,16 @@ router.get('/stats/dashboard', authenticate, async (req, res, next) => {
             status: { $ne: 'completed' }
         });
 
+        // Get tasks created by team members for clients
+        let teamMemberTasks = 0;
+        if (req.user.role === 'client') {
+            teamMemberTasks = await Task.countDocuments({
+                clientId: req.user._id,
+                createdByRole: 'client-team',
+                isDeleted: false
+            });
+        }
+
         res.json({
             success: true,
             stats: {
@@ -672,11 +757,56 @@ router.get('/stats/dashboard', authenticate, async (req, res, next) => {
                 blocked,
                 completed,
                 overdue,
-                completionRate:
-                    total > 0
-                        ? ((completed / total) * 100).toFixed(1)
-                        : 0
+                teamMemberTasks: teamMemberTasks || 0,
+                completionRate: total > 0
+                    ? ((completed / total) * 100).toFixed(1)
+                    : 0
             }
+        });
+
+    } catch (error) {
+        next(error);
+    }
+});
+
+// ======================================================
+// GET TASKS BY CLIENT (For client dashboard)
+// ======================================================
+
+router.get('/client/:clientId/tasks', authenticate, async (req, res, next) => {
+    try {
+        const { clientId } = req.params;
+        
+        // Check access
+        if (req.user.role !== 'admin' && req.user._id.toString() !== clientId) {
+            return res.status(403).json({
+                error: 'Access denied'
+            });
+        }
+
+        const tasks = await Task.find({
+            clientId: clientId,
+            isDeleted: false
+        })
+        .populate(taskPopulate)
+        .sort({ createdAt: -1 });
+
+        // Separate client tasks from team member tasks
+        const clientTasks = tasks.filter(t => t.createdByRole === 'client');
+        const teamMemberTasks = tasks.filter(t => t.createdByRole === 'client-team');
+
+        res.json({
+            success: true,
+            total: tasks.length,
+            clientTasks: {
+                count: clientTasks.length,
+                tasks: clientTasks
+            },
+            teamMemberTasks: {
+                count: teamMemberTasks.length,
+                tasks: teamMemberTasks
+            },
+            allTasks: tasks
         });
 
     } catch (error) {

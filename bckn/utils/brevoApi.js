@@ -1,33 +1,41 @@
-const brevo = require('@getbrevo/brevo');
+const axios = require('axios');
 
-let apiInstance = null;
+const BREVO_API_KEY = process.env.EMAIL_API;
+const FROM_EMAIL = process.env.EMAIL_FROM;
+const FROM_NAME = process.env.EMAIL_FROM_NAME;
 
-const initAPI = () => {
-    if (apiInstance) return apiInstance;
-    
-    apiInstance = new brevo.TransactionalEmailsApi();
-    apiInstance.setApiKey(brevo.TransactionalEmailsApiApiKeys.apiKey, process.env.EMAIL_API);
-    return apiInstance;
-};
+const sendEmail = async (to, subject, htmlContent, textContent) => {
+    if (!BREVO_API_KEY || !FROM_EMAIL) {
+        console.log('📧 [MOCK] Email would be sent:', { to, subject });
+        return { success: true, mock: true };
+    }
 
-const sendEmailViaAPI = async (to, subject, htmlContent, textContent) => {
     try {
-        const api = initAPI();
-        const sendSmtpEmail = {
-            to: [{ email: to }],
-            sender: { email: process.env.EMAIL_FROM, name: process.env.EMAIL_FROM_NAME },
-            subject: subject,
-            htmlContent: htmlContent,
-            textContent: textContent
-        };
+        const response = await axios.post(
+            'https://api.brevo.com/v3/smtp/email',
+            {
+                sender: { name: FROM_NAME, email: FROM_EMAIL },
+                to: [{ email: to }],
+                subject: subject,
+                htmlContent: htmlContent,
+                textContent: textContent || htmlContent.replace(/<[^>]*>/g, '')
+            },
+            {
+                headers: {
+                    'accept': 'application/json',
+                    'api-key': BREVO_API_KEY,
+                    'content-type': 'application/json'
+                },
+                timeout: 10000
+            }
+        );
         
-        const data = await api.sendTransacEmail(sendSmtpEmail);
-        console.log(`✅ Email sent via Brevo API: ${data.messageId}`);
-        return { success: true, messageId: data.messageId };
+        console.log(`✅ Email sent to ${to}`);
+        return { success: true, messageId: response.data.messageId };
     } catch (error) {
-        console.error('❌ Brevo API error:', error.message);
+        console.error('❌ Email error:', error.response?.data?.message || error.message);
         return { success: false, error: error.message };
     }
 };
 
-module.exports = { sendEmailViaAPI };
+module.exports = { sendEmail };
