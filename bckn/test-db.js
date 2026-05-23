@@ -2,7 +2,7 @@
 require('dotenv').config();
 const mongoose = require('mongoose');
 
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://scaleflowsoftware_db_user:LIv7mSH2YYUjTF4X@slf-taskmanagercluster0.fftkjtp.mongodb.net/SFS_TaskManager?retryWrites=true&w=majority';
+const MONGODB_URI = process.env.MONGODB_URI;
 
 // Simple schema definitions for migration
 const userSchema = new mongoose.Schema({
